@@ -12,9 +12,6 @@
 .. |Azure-test| image:: https://img.shields.io/badge/Testing-Passed-brightgreen
 .. _Azure-test: https://dev.azure.com/giotto-learn/flagser-pybind/_build/results?buildId=342&view=ms.vss-test-web.build-test-results-tab
 
-.. |binder| image:: https://mybinder.org/badge_logo.svg
-.. _binder: https://mybinder.org/v2/gh/giotto-learn/flagser-pybind/master?filepath=examples
-
 
 flagser-pybind
 ============
@@ -107,9 +104,6 @@ Important links
 - Official source code repo: https://github.com/giotto-learn/flagser-pybind
 - Download releases: https://pypi.org/project/giotto-learn/
 - Issue tracker: https://github.com/giotto-learn/flagser-pybind/issues
-
-
-
 
 
 Contacts:
