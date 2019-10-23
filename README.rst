@@ -36,6 +36,8 @@ Dependencies
 flagser-pybind requires:
 
 - Python (>= 3.5)
+- numpy (>= 1.17.0)
+- scipy (>= 0.17.0)
 
 User installation
 ~~~~~~~~~~~~~~~~~
