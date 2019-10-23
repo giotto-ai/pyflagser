@@ -1,7 +1,7 @@
 .. image:: https://www.giotto.ai/static/vector/logo.svg
    :width: 850
 
-|Azure|_ |Azure-cov|_ |Azure-test|_ |binder|_
+|Azure|_ |Azure-cov|_ |Azure-test|_
 
 .. |Azure| image:: https://dev.azure.com/giotto-learn/flagser-pybind/_apis/build/status/giotto-learn.flagser-pybind?branchName=master
 .. _Azure: https://dev.azure.com/giotto-learn/flagser-pybind/
