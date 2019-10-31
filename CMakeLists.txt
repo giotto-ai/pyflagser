@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.9)
 project(flagser_pybind LANGUAGES CXX)
 
 find_package(pybind11 REQUIRED)
-set(BINDINGS_DIR "flagser_pybind")
-
+set(BINDINGS_DIR "flagser_binding")
 
 find_package(OpenMP)
 
 pybind11_add_module(flagser_pybind "${BINDINGS_DIR}/flagser_bindings.cpp")
+include_directories(.)
 if(OpenMP_FOUND)
   target_link_libraries(flagser_pybind PRIVATE OpenMP::OpenMP_CXX)
 endif()
