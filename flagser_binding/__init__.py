@@ -1,1 +1,1 @@
-from .flagser import flagser
+from .flagser import flagser, flagser_file
