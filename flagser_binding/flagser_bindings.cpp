@@ -74,8 +74,8 @@ PYBIND11_MODULE(flagser_pybind, m) {
     return compute_homology(graph, named_arguments, max_entries, modulus);
   });
 
-  m.def("compute_homology", [](std::vector<value_t>& vertexes,
-                               std::vector<std::vector<value_t>>& vertices,
+  m.def("compute_homology", [](std::vector<value_t>& vertices,
+                               std::vector<std::vector<value_t>>& edges,
                                bool directed) {
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
@@ -85,33 +85,33 @@ PYBIND11_MODULE(flagser_pybind, m) {
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
 
-    auto graph = filtered_directed_graph_t(vertexes, directed);
+    auto graph = filtered_directed_graph_t(vertices, directed);
 
     // If we have at least one vertice
-    if (vertices.size() && has_edge_filtration == HAS_EDGE_FILTRATION::MAYBE) {
+    if (edges.size() && has_edge_filtration == HAS_EDGE_FILTRATION::MAYBE) {
       // If the edge has three components, then there are also
       // filtration values, which we assume to come last
-      has_edge_filtration = vertices[0].size() == 2 ? HAS_EDGE_FILTRATION::NO
+      has_edge_filtration = edges[0].size() == 2 ? HAS_EDGE_FILTRATION::NO
                                                     : HAS_EDGE_FILTRATION::YES;
     }
 
-    for (auto& vertice : vertices) {
+    for (auto& edge : edges) {
       if (has_edge_filtration == NO) {
-        graph.add_edge(vertice[0], vertice[1]);
+        graph.add_edge(edge[0], edge[1]);
       } else {
-        if (vertice[2] < std::max(vertexes[vertice[0]], vertexes[vertice[1]])) {
+        if (edge[2] < std::max(vertices[edge[0]], vertices[edge[1]])) {
           std::cerr << "The data contains an edge "
                        "filtration that contradicts the vertex "
                        "filtration, the edge ("
-                    << vertice[0] << ", " << vertice[1]
-                    << ") has filtration value " << vertice[2]
-                    << ", which is lower than min(" << vertexes[vertice[0]]
-                    << ", " << vertexes[vertice[1]]
-                    << "), the filtrations of its vertices.";
+                    << edge[0] << ", " << edge[1]
+                    << ") has filtration value " << edge[2]
+                    << ", which is lower than min(" << vertices[edge[0]]
+                    << ", " << vertices[edge[1]]
+                    << "), the filtrations of its edges.";
           exit(-1);
         }
-        graph.add_filtered_edge((vertex_index_t)vertice[0],
-                                (vertex_index_t)vertice[1], vertice[2]);
+        graph.add_filtered_edge((vertex_index_t)edge[0],
+                                (vertex_index_t)edge[1], edge[2]);
       }
     }
     return compute_homology(graph, named_arguments, max_entries, modulus);
