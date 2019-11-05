@@ -70,15 +70,15 @@ def flagser_file(file_data):
     return graphs
 
 
-def flagser(vertexes, vertices, directed=True):
+def flagser(vertices, edges, directed=True):
     """Compute persistent homology for directed flag complexes. Important: the
     input graphs cannot contain self-loops. i.e. edges that start and end in
     the same vertex.
 
     Parameters
     ----------
-    vertexes: TODO
     vertices: TODO
+    edges: TODO
     directed: if true, computes the directed flag complex. Otherwise it
     computes the undirected flag
 
@@ -110,7 +110,7 @@ def flagser(vertexes, vertices, directed=True):
     # Because of that, an temporary output file is provided and will be delete
     # after the completion of `compute_homology
 
-    homology = compute_homology(vertexes, vertices, directed)
+    homology = compute_homology(vertices, edges, directed)
 
     # Clean the file genereated by flagser library
     os.remove(output_file)
