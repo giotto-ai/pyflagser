@@ -1,28 +1,29 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""Testing for the python bindings of the C++ flagser library."""
+# License : Apache 2.0
 
-"""
-File: test_flagser.py
-Description: This file contains test to check if flagser works.
-"""
-__license__ = "Apache 2.0"
-
-from flagser_binding import flagser, flagser_file
 import numpy as np
+import os
+import pytest
+from flagser_binding import flagser, flagser_file
 
 
 def test_flagser_on_file_works():
-    ret = flagser_file('large-test-data.flag')
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'large-test-data.flag')
+
+    ret = flagser_file(filename)
     assert len(ret) == 1
     assert ret[0]['betti'] == [0, 90999, 378, 0]
 
 
 def test_flagser_works():
-    data_file = 'large-test-data.flag'
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'large-test-data.flag')
+
     is_dim0 = True
-    vertices = []
+    edges = []
     # Convert flagser format file to numpy arrays
-    with open(data_file, 'r') as f:
+    with open(filename, 'r') as f:
         for line in f:
             line = line.strip()
             if line == 'dim 1':
@@ -32,12 +33,11 @@ def test_flagser_works():
                 continue
 
             if is_dim0:
-                vertexes = np.asarray(list(map(float, line.split(' '))))
+                vertices = np.asarray(list(map(float, line.split(' '))))
             else:
-                vertices.append(list(map(float, line.split(' '))))
+                edges.append(list(map(float, line.split(' '))))
 
-    vertices = np.asarray(vertices)
-    ret = flagser(vertexes, vertices)
+    edges = np.asarray(edges)
+    ret = flagser(vertices, edges)
     assert len(ret) == 1
     assert ret[0]['betti'] == [0, 90999, 378, 0]
-
