@@ -12,23 +12,23 @@ from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-version_file = os.path.join('flagser_binding', '_version.py')
+version_file = os.path.join('flagser_bindings', '_version.py')
 with open(version_file) as f:
     exec(f.read())
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
-DISTNAME = 'flagser-pybind'
+DISTNAME = 'flagser-bindings'
 DESCRIPTION = 'Python bindings for the flagser C++ library.'
 with codecs.open('README.rst', encoding='utf-8-sig') as f:
     LONG_DESCRIPTION = f.read()
 LONG_DESCRIPTION_TYPE = 'text/x-rst'
 MAINTAINER = 'Guillaume Tauzin'
 MAINTAINER_EMAIL = 'maintainers@giotto.ai'
-URL = 'https://github.com/giotto-learn/flagser-pybind'
+URL = 'https://github.com/giotto-ai/flagser-bindings'
 LICENSE = 'Apache 2.0'
-DOWNLOAD_URL = 'https://github.com/giotto-learn/flagser-pybind/tarball/v0.1.0'
+DOWNLOAD_URL = 'https://github.com/giotto-learn/flagser-bindings/tarball/v0.1.0'
 VERSION = __version__ # noqa
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',
@@ -166,5 +166,5 @@ setup(name=DISTNAME,
       keywords=KEYWORDS,
       install_requires=INSTALL_REQUIRES,
       extras_require=EXTRAS_REQUIRE,
-      ext_modules=[CMakeExtension('flagser_pybind')],
+      ext_modules=[CMakeExtension('flagser_bindings')],
       cmdclass=dict(build_ext=CMakeBuild))
