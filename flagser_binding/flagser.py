@@ -1,14 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-File: flagser.py
-Description: This file implements the python of the flagser library written in
-    C++.
-"""
-__license__ = "Apache 2.0"
-__credits__ = ["Daniel Lütgehetmann"]
-
+""" Implementation of the python API for the flagser C++ library."""
 
 import os
 from flagser_pybind import compute_homology
@@ -109,7 +99,6 @@ def flagser(vertices, edges, directed=True):
     # Due to current implementation of flagser, an output file is required.
     # Because of that, an temporary output file is provided and will be delete
     # after the completion of `compute_homology
-
     homology = compute_homology(vertices, edges, directed)
 
     # Clean the file genereated by flagser library
@@ -126,7 +115,3 @@ def flagser(vertices, edges, directed=True):
         graphs.append(ret_dict)
 
     return graphs
-
-
-if __name__ == "__main__":
-    pass
