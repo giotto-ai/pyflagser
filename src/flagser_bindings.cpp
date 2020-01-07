@@ -3,6 +3,7 @@
 // #define USE_COEFFICIENTS
 // #define MANY_VERTICES
 #include <iostream>
+#include <stdio.h>
 
 #include <flagser/include/argparser.h>
 #include <pybind11/pybind11.h>
@@ -33,50 +34,9 @@ PYBIND11_MODULE(flagser_pybind, m) {
            py::overload_cast<size_t>(
                &persistence_computer_inst::get_persistence_diagram));
 
-  m.def("compute_homology", [](std::vector<std::string> argv) {
-    std::vector<char*> cstrs;
-    // Because flagser manage the first argument of argv (binary path)
-    // this is a trick to let the user from python call this method
-    // without the need to manage this
-    argv.insert(argv.begin(), "");
-    cstrs.reserve(argv.size());
-    for (auto& s : argv) {
-      cstrs.push_back(const_cast<char*>(s.c_str()));
-    }
-    auto arguments = parse_arguments(cstrs.size(), cstrs.data());
-
-    auto positional_arguments = get_positional_arguments(arguments);
-    auto named_arguments = get_named_arguments(arguments);
-    if (named_arguments.find("help") != named_arguments.end()) {
-      print_usage_and_exit(-1);
-    }
-
-    if (positional_arguments.size() == 0) {
-      print_usage_and_exit(-1);
-    }
-    const char* input_filename = positional_arguments[0];
-
-    filtered_directed_graph_t graph =
-        read_filtered_directed_graph(input_filename, named_arguments);
-
-    size_t max_entries = std::numeric_limits<size_t>::max();
-    coefficient_t modulus = 2;
-    named_arguments_t::const_iterator it;
-    if ((it = named_arguments.find("approximate")) != named_arguments.end()) {
-      max_entries = atoi(it->second);
-    }
-#ifdef USE_COEFFICIENTS
-    if ((it = named_arguments.find("modulus")) != named_arguments.end()) {
-      modulus = atoi(it->second);
-    }
-#endif
-
-    return compute_homology(graph, named_arguments, max_entries, modulus);
-  });
-
   m.def("compute_homology", [](std::vector<value_t>& vertices,
                                std::vector<std::vector<value_t>>& edges,
-                               bool directed) {
+                               unsigned short max_dim, bool directed) {
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
@@ -84,6 +44,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
     coefficient_t modulus = 2;
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
+    // named_arguments["max-dim"] = std::to_string(max_dim).c_str();
 
     auto graph = filtered_directed_graph_t(vertices, directed);
 
@@ -114,8 +75,14 @@ PYBIND11_MODULE(flagser_pybind, m) {
                                 (vertex_index_t)edge[1], edge[2]);
       }
     }
-    return compute_homology(graph, named_arguments, max_entries, modulus);
+
+    auto ret = compute_homology(graph, named_arguments, max_entries, modulus);
+
+    if(remove(named_arguments["out"]) != 0)
+      perror("Error deleting flagser output file");
+
+    return ret;
   });
 
-  m.doc() = "Flagser bindings for python";
+  m.doc() = "Python bindings for flagser";
 }
