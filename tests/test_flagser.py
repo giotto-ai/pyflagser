@@ -1,5 +1,4 @@
 """Testing for the python bindings of the C++ flagser library."""
-# License : Apache 2.0
 
 import numpy as np
 import scipy.sparse as sp
@@ -16,7 +15,23 @@ for file in os.listdir(dirname):
     if file.endswith(".flag"):
         flag_files.append(os.path.join(dirname, file))
 
-print(flag_files)
+betti = {'e.flag': [5, 0],
+         'double-d3-allzero.flag':[4, 0],
+         'd.flag': [5, 0],
+         'double-d3.flag': [1, 0, 5],
+         'c.flag': [8, 0],
+         'd7.flag': [1, 0, 0, 0, 0, 0, 1854],
+         'b.flag': [4, 0],
+         'd4.flag': [1, 0, 0, 9],
+         'a.flag': [5, 0],
+         'medium-test-data.flag': [14237, 39477, 378, 0],
+         'd5.flag': [1, 0, 0, 0, 44],
+         'd2.flag': [1, 1],
+         'f.flag': [3, 0],
+         'd4-allzero.flag': [4, 0],
+         'd3.flag': [1, 0, 2],
+         'd3-allzero.flag': [3, 0],
+         'd10.flag': [1, 0, 0, 0, 0, 0, 0, 0, 0, 1334961]}
 
 def test_flagio():
     for flag_file in flag_files:
@@ -24,22 +39,18 @@ def test_flagio():
         _, fname_temp = os.path.split(flag_file)
         saveflag(fname_temp, flag_matrix)
         flag_matrix_temp = loadflag(fname_temp)
-        print(flag_matrix)
-        print('-----------')
-        print(flag_matrix_temp)
+        os.remove(fname_temp)
 
-        assert_almost_equal(flag_matrix.diagonal(), flag_matrix_temp.diagonal())
+        assert_almost_equal(flag_matrix.diagonal(),
+                            flag_matrix_temp.diagonal())
         assert_almost_equal(np.sort(np.hstack([sp.find(flag_matrix)])),
                             np.sort(np.hstack([sp.find(flag_matrix_temp)])))
-#        break
 
-# def test_flagser():
-#     dirname = os.path.dirname(__file__)
-#     filename = os.path.join(dirname, 'large-test-data.flag')
+def test_flagser():
+    for flag_file in flag_files:
+        print(flag_file)
+        flag_matrix = loadflag(flag_file)
 
-#     flag_matrix = loadflag(filename)
-
-#     ret = flagser(flag_matrix)
-#     print('The H0 value is different from what is shown in stdout: ', ret['betti'])
-#     assert ret['betti'] == [0, 90999, 378, 0]
-#     # assert False
+        ret = flagser(flag_matrix)
+        assert_almost_equal(ret['betti'],
+                            betti[os.path.split(flag_file)[1]])
