@@ -26,7 +26,9 @@ def flagser(flag_matrix, max_dimension=2, directed=True, coeff=2):
         If true, computes the directed flag complex. Otherwise it
         computes the undirected flag complex.
     coeff : int, optional (default: 2)
-
+        Compute homology with coefficients in the prime field
+        :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
+        :math:`p` equals `coeff`.
 
     Returns
     -------
