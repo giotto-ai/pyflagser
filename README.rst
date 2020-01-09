@@ -4,7 +4,7 @@
 |Azure|_ |Azure-cov|_ |Azure-test|_
 
 .. |Azure| image:: https://dev.azure.com/maintainers/Giotto/_apis/build/status/giotto-ai.pyflagser?branchName=master
-.. _Azure: https://dev.azure.com/maintainers/Giotto/_build/latest?definitionId=2&branchName=master
+.. _Azure: https://dev.azure.com/maintainers/Giotto/_build/latest?definitionId=5&branchName=master
 
 .. |Azure-cov| image:: https://img.shields.io/badge/Coverage
 .. _Azure-cov: https://dev.azure.com/maintainers/Giotto/_build/results?buildId=6&view=codecoverage-tab
@@ -12,9 +12,8 @@
 .. |Azure-test| image:: https://img.shields.io/badge/Testing
 .. _Azure-test: https://dev.azure.com/maintainers/Giotto/_build/results?buildId=6&view=ms.vss-test-web.build-test-results-tab
 
-
 pyflagser
-============
+=========
 
 
 pyflagser s a python API for the flagser C++ library by Daniel Lütgehetmann which computes the homology of directed flag complexes. Please check out the original `luetge/flagser <https://github.com/luetge/flagser>`_ GitHub repository for more information.
