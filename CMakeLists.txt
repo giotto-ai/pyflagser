@@ -11,7 +11,7 @@ include_directories(.)
 if(OpenMP_FOUND)
   target_link_libraries(flagser_pybind PRIVATE OpenMP::OpenMP_CXX)
 endif()
-target_compile_options(flagser_pybind PUBLIC -Ofast -DNDEBUG -Wno-deprecated-declarations)
+target_compile_options(flagser_pybind PUBLIC -Ofast -DNDEBUG)
 target_compile_options(flagser_pybind PUBLIC $<$<CONFIG:DEBUG>:-O2 -ggdb -D_GLIBCXX_DEBUG>)
 # Cannot have two inlined namespace !
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
