@@ -3,7 +3,6 @@
 import numpy as np
 import scipy.sparse as sp
 import os
-import pytest
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, saveflag, flagser
@@ -16,7 +15,7 @@ for file in os.listdir(dirname):
         flag_files.append(os.path.join(dirname, file))
 
 betti = {'e.flag': [5, 0],
-         'double-d3-allzero.flag':[4, 0],
+         'double-d3-allzero.flag': [4, 0],
          'd.flag': [5, 0],
          'double-d3.flag': [1, 0, 5],
          'c.flag': [8, 0],
@@ -33,6 +32,7 @@ betti = {'e.flag': [5, 0],
          'd3-allzero.flag': [3, 0],
          'd10.flag': [1, 0, 0, 0, 0, 0, 0, 0, 0, 1334961]}
 
+
 def test_flagio():
     for flag_file in flag_files:
         flag_matrix = loadflag(flag_file)
@@ -45,6 +45,7 @@ def test_flagio():
                             flag_matrix_temp.diagonal())
         assert_almost_equal(np.sort(np.hstack([sp.find(flag_matrix)])),
                             np.sort(np.hstack([sp.find(flag_matrix_temp)])))
+
 
 def test_flagser():
     for flag_file in flag_files:

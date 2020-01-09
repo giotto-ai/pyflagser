@@ -3,6 +3,7 @@
 import numpy as np
 import scipy.sparse as sp
 
+
 def loadflag(fname, fmt=None, dtype=None):
     """
     Load a flag matrix from a ``.flag`` file.
@@ -33,9 +34,11 @@ def loadflag(fname, fmt=None, dtype=None):
 
         for line in f.readlines()[1:]:
             edge = line.strip().split(' ')
-            flag_matrix[int(float(edge[0])), int(float(edge[1]))] = float(edge[2])
+            flag_matrix[int(float(edge[0])), int(float(edge[1]))] = \
+                float(edge[2])
 
     return flag_matrix.asformat(fmt)
+
 
 def saveflag(fname, flag_matrix):
     """

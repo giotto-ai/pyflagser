@@ -58,7 +58,8 @@ def flagser(flag_matrix, max_dimension=2, directed=True, coeff=2):
     else:
         edges = np.hstack([sp.find(edges)]).T
 
-    homology = compute_homology(vertices, edges, max_dimension, directed, coeff)
+    homology = compute_homology(vertices, edges, max_dimension,
+                                directed, coeff)
     # Creating dictionary of returns values
     ret = {}
     ret['dgms'] = homology[0].get_persistence_diagram()
