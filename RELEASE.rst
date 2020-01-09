@@ -6,7 +6,7 @@ Initial release of pyflagser.
 Major Features and Improvements
 -------------------------------
 
-The following submodules where added:
+The following methods where added:
 
 -  `loadflag` enable the user to load a `.flag` file into a `scipy` or `numpy` matrix.
 -  `saveflag` enables the user to save a `scipy` or `numpy` matrix into a `.flag` file.
