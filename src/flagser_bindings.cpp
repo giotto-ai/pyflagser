@@ -48,9 +48,6 @@ PYBIND11_MODULE(flagser_pybind, m) {
     named_arguments["--max-dim"] = std::to_string(max_dim).c_str();
     named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
 
-    std::cout << std::to_string(max_dim).c_str() << ", " << max_dim << "\n";
-    std::cout << std::to_string(min_dim).c_str() << ", " << min_dim << "\n";
-
     auto graph = filtered_directed_graph_t(vertices, directed);
 
     // If we have at least one vertice
