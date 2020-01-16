@@ -5,7 +5,8 @@ import numpy as np
 from flagser_pybind import compute_homology
 
 
-def flagser(flag_matrix, max_dimension=2, directed=True, coeff=2):
+def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
+            coeff=2):
     """Compute persistent homology for directed flag complexes from
     the flag matrix of a directed/undirected weighted/unweighted
     graph.
@@ -58,7 +59,7 @@ def flagser(flag_matrix, max_dimension=2, directed=True, coeff=2):
     else:
         edges = np.hstack([sp.find(edges)]).T
 
-    homology = compute_homology(vertices, edges, max_dimension,
+    homology = compute_homology(vertices, edges, max_dimension, min_dimension,
                                 directed, coeff)
     # Creating dictionary of returns values
     ret = {}
