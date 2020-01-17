@@ -2,8 +2,8 @@
 // #define KEEP_FLAG_COMPLEX_IN_MEMORY
 // #define USE_COEFFICIENTS
 // #define MANY_VERTICES
-#include <iostream>
 #include <stdio.h>
+#include <iostream>
 
 #include <flagser/include/argparser.h>
 #include <pybind11/pybind11.h>
@@ -36,8 +36,8 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
   m.def("compute_homology", [](std::vector<value_t>& vertices,
                                std::vector<std::vector<value_t>>& edges,
-                               unsigned short max_dim, bool directed,
-                               coefficient_t modulus) {
+                               unsigned short max_dim, unsigned short min_dim,
+                               bool directed, coefficient_t modulus) {
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
@@ -45,7 +45,8 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
-    // named_arguments["max-dim"] = std::to_string(max_dim).c_str();
+    named_arguments["--max-dim"] = std::to_string(max_dim).c_str();
+    named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
 
     auto graph = filtered_directed_graph_t(vertices, directed);
 
@@ -54,7 +55,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
       // If the edge has three components, then there are also
       // filtration values, which we assume to come last
       has_edge_filtration = edges[0].size() == 2 ? HAS_EDGE_FILTRATION::NO
-                                                    : HAS_EDGE_FILTRATION::YES;
+                                                 : HAS_EDGE_FILTRATION::YES;
     }
 
     for (auto& edge : edges) {
@@ -65,10 +66,9 @@ PYBIND11_MODULE(flagser_pybind, m) {
           std::cerr << "The data contains an edge "
                        "filtration that contradicts the vertex "
                        "filtration, the edge ("
-                    << edge[0] << ", " << edge[1]
-                    << ") has filtration value " << edge[2]
-                    << ", which is lower than min(" << vertices[edge[0]]
-                    << ", " << vertices[edge[1]]
+                    << edge[0] << ", " << edge[1] << ") has filtration value "
+                    << edge[2] << ", which is lower than min("
+                    << vertices[edge[0]] << ", " << vertices[edge[1]]
                     << "), the filtrations of its edges.";
           exit(-1);
         }
@@ -78,9 +78,10 @@ PYBIND11_MODULE(flagser_pybind, m) {
     }
 
     std::cout.rdbuf(nullptr);
+
     auto ret = compute_homology(graph, named_arguments, max_entries, modulus);
 
-    if(remove(named_arguments["out"]) != 0)
+    if (remove(named_arguments["out"]) != 0)
       perror("Error deleting flagser output file");
 
     return ret;
