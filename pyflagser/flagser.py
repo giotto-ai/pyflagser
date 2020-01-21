@@ -6,7 +6,7 @@ from flagser_pybind import compute_homology
 
 
 def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
-            coeff=2):
+            coeff=2, approximation=-1):
     """Compute persistent homology for directed flag complexes from
     the flag matrix of a directed/undirected weighted/unweighted
     graph.
@@ -30,6 +30,11 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
         Compute homology with coefficients in the prime field
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
         :math:`p` equals `coeff`.
+    approximation : int, optional (default: -1)
+        Skip all cells creating columns in the reduction matrix with more than
+        n entries. Use this for hard problems, a good value is often 100000.
+        Increase for higher precision, decrease for faster computation.
+        A negative value computes highest possible precision
 
     Returns
     -------
@@ -54,13 +59,16 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
     edges = flag_matrix.tolil()
     edges.setdiag(0)
 
+    if not approximation:
+        approximation = -1
+
     if edges.dtype == bool:
         edges = np.hstack([sp.find(edges)]).T[:, :2]
     else:
         edges = np.hstack([sp.find(edges)]).T
 
     homology = compute_homology(vertices, edges, max_dimension, min_dimension,
-                                directed, coeff)
+                                directed, coeff, approximation)
     # Creating dictionary of returns values
     ret = {}
     ret['dgms'] = homology[0].get_persistence_diagram()
