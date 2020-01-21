@@ -23,6 +23,8 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
         weight.
     max_dimension : int, optional (default: 2)
         Maximum dimension.
+    min_dimension : int, optional (default: 0)
+        Minimal dimension.
     directed : bool, optional (default:``True``)
         If true, computes the directed flag complex. Otherwise it
         computes the undirected flag complex.
