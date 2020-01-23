@@ -37,11 +37,16 @@ PYBIND11_MODULE(flagser_pybind, m) {
   m.def("compute_homology", [](std::vector<value_t>& vertices,
                                std::vector<std::vector<value_t>>& edges,
                                unsigned short max_dim, unsigned short min_dim,
-                               bool directed, coefficient_t modulus) {
+                               bool directed, coefficient_t modulus,
+                               signed int approximation) {
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
-    size_t max_entries = std::numeric_limits<size_t>::max();
+    // Approximation should only be a positive value
+    // Otherwise it falls back to type::numeric_limits
+    size_t max_entries = approximation >= 0
+                             ? approximation
+                             : std::numeric_limits<size_t>::max();
 
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
