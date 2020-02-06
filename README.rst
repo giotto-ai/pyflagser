@@ -60,7 +60,7 @@ the easiest way to install pyflagser is using ``pip``   ::
 Documentation
 -------------
 
-- HTML documentation (stable release): https://docs.giotto.ai
+- HTML documentation (stable release): https://docs-pyflagser.giotto.ai
 
 Contributing
 ------------
@@ -71,7 +71,7 @@ making a contribution to pyflagser, please see the `CONTRIBUTING.rst
 <https://github.com/giotto-ai/pyflagser/blob/master/CONTRIBUTING.rst>`_ file.
 
 Developer installation
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 C++ dependencies:
 '''''''''''''''''
