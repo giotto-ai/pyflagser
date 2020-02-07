@@ -36,7 +36,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
   m.def("compute_homology", [](std::vector<value_t>& vertices,
                                std::vector<std::vector<value_t>>& edges,
-                               unsigned short max_dim, unsigned short min_dim,
+                               unsigned short min_dim, short max_dim,
                                bool directed, coefficient_t modulus,
                                signed int approximation) {
     HAS_EDGE_FILTRATION has_edge_filtration =
@@ -48,9 +48,12 @@ PYBIND11_MODULE(flagser_pybind, m) {
                              ? approximation
                              : std::numeric_limits<size_t>::max();
 
+    unsigned short effective_max_dim = max_dim;
+    if(max_dim < 0) effective_max_dim = std::numeric_limits<unsigned short>::max();
+
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
-    named_arguments["--max-dim"] = std::to_string(max_dim).c_str();
+    named_arguments["--max-dim"] = std::to_string(effective_max_dim).c_str();
     named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
 
     auto graph = filtered_directed_graph_t(vertices, directed);
