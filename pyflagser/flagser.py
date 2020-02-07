@@ -10,15 +10,15 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     """Compute persistent homology of a directed/undirected
     weighted/unweighted flag complexes.
 
-    Important: the input graphs cannot contain self-loops. i.e. edges
+    Important: the input graphs cannot contain self-loops, i.e. edges
     that start and end in the same vertex, therefore diagonal elements
-    of the flag matrix store vertices weight.
+    of the flag matrix store vertex weights.
 
     Parameters
     ----------
     flag_matrix : ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected
-        weighted/unweighted graph. Diagonal elements are vertices
+        weighted/unweighted graph. Diagonal elements are vertex
         weights.
 
     min_dimension : int, optional, default: ``0``
@@ -45,7 +45,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     Returns
     -------
     out: dict of list of ``max_dimension`` elements
-        A dictionnary holding all of the results of the flagser
+        A dictionary holding all of the results of the flagser
         computation as follows:
         {
          'dgms': list of ``max_dimension - min_dimension`` ndarrays of

@@ -10,10 +10,10 @@ def loadflag(fname, fmt='csr', dtype=None):
     Parameters
     ----------
     fname : file, str, or pathlib.Path, required
-        Filename of extension``.flag``.
+        Filename of extension ``.flag``.
 
     fmt : {"dense", "dia", "csr", "csc", "lil", ...}, optional
-        Matrix format of the result.  By default a CSR sparse matrix
+        Matrix format of the result. By default, a CSR sparse matrix
         is returned. Keep in mind that some matrix format do not
         track `0` values.
 
@@ -24,7 +24,7 @@ def loadflag(fname, fmt='csr', dtype=None):
     -------
     flag_matrix : matrix of format `format`
         Matrix representation of a directed/undirected
-        weighted/unweighted graph. Diagonal elements are vertices
+        weighted/unweighted graph. Diagonal elements are vertex
         weights.
 
     """
@@ -54,7 +54,7 @@ def saveflag(fname, flag_matrix):
 
     flag_matrix : numpy 2d array or scipy sparse matrix, required
         Matrix representation of a directed/undirected
-        weighted/unweighted graph. Diagonal elements are vertices
+        weighted/unweighted graph. Diagonal elements are vertex
         weights.
 
     """
