@@ -11,7 +11,7 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
     the flag matrix of a directed/undirected weighted/unweighted
     graph.
 
-    Important: the input graphs cannot contain self-loops. i.e. edges
+    Important: the input graphs cannot contain self-loops, i.e. edges
     that start and end in the same vertex, therefore diagonal elements
     of the flag matrix store vertices weight.
 
@@ -21,17 +21,22 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
         Matrix representation of a directed/undirected
         weighted/unweighted graph. Diagonal elements contain vertices
         weight.
+
     max_dimension : int, optional (default: 2)
         Maximum dimension.
+
     min_dimension : int, optional (default: 0)
         Minimal dimension.
+
     directed : bool, optional (default:``True``)
         If true, computes the directed flag complex. Otherwise it
         computes the undirected flag complex.
+
     coeff : int, optional (default: 2)
         Compute homology with coefficients in the prime field
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
         :math:`p` equals `coeff`.
+
     approximation : int, optional (default: -1)
         Skip all cells creating columns in the reduction matrix with more than
         n entries. Use this for hard problems, a good value is often 100000.
@@ -41,7 +46,7 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
     Returns
     -------
     out: dict of list of ``max_dimension`` elements
-        A dictionnary holding all of the results of the flagser
+        A dictionary holding all of the results of the flagser
     computation as follows:
     {
      'dgms': list of ``max_dimension`` ndarrays of shape (n_pairs, 2)

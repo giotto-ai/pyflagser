@@ -12,10 +12,12 @@ def loadflag(fname, fmt=None, dtype=None):
     ----------
     fname : file, str, or pathlib.Path
         Filename of extension``.flag``.
+
     fmt : {"dense", "dia", "csr", "csc", "lil", ...}, optional
         Matrix format of the result.  By default (fmt=None) an
         appropriate sparse matrix format is returned.  This choice is
         subject to change.
+
     dtype : data-type, optional (default: ``np.float``)
         Data-type of the resulting array.
 
@@ -48,6 +50,7 @@ def saveflag(fname, flag_matrix):
     ----------
     flag_matrix : numpy 2d array or scipy sparse matrix
         Adjacency matrix for the flag complex contained in ``fname``.
+
     fname : file, str, or pathlib.Path
         Filename of extension``.flag``.
     """
