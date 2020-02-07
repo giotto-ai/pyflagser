@@ -13,7 +13,7 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
 
     Important: the input graphs cannot contain self-loops, i.e. edges
     that start and end in the same vertex, therefore diagonal elements
-    of the flag matrix store vertices weight.
+    of the flag matrix store vertex weights.
 
     Parameters
     ----------
