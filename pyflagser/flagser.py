@@ -5,11 +5,10 @@ import numpy as np
 from flagser_pybind import compute_homology
 
 
-def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
+def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
             coeff=2, approximation=-1):
-    """Compute persistent homology for directed flag complexes from
-    the flag matrix of a directed/undirected weighted/unweighted
-    graph.
+    """Compute persistent homology of a directed/undirected
+    weighted/unweighted flag complexes.
 
     Important: the input graphs cannot contain self-loops, i.e. edges
     that start and end in the same vertex, therefore diagonal elements
@@ -17,64 +16,78 @@ def flagser(flag_matrix, max_dimension=2, min_dimension=0, directed=True,
 
     Parameters
     ----------
-    flag_matrix : ndarray or scipy.sparse matrix
+    flag_matrix : ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected
-        weighted/unweighted graph. Diagonal elements contain vertices
-        weight.
+        weighted/unweighted graph. Diagonal elements are vertex
+        weights.
 
-    max_dimension : int, optional (default: 2)
-        Maximum dimension.
-
-    min_dimension : int, optional (default: 0)
+    min_dimension : int, optional, default: ``0``
         Minimal dimension.
 
-    directed : bool, optional (default:``True``)
+    max_dimension : int, optional, default: ``np.inf``
+        Maximum dimension.
+
+    directed : bool, optional, default: ``True``
         If true, computes the directed flag complex. Otherwise it
         computes the undirected flag complex.
 
-    coeff : int, optional (default: 2)
+    coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
         :math:`p` equals `coeff`.
 
-    approximation : int, optional (default: -1)
+    approximation : int, optional, default: ``-1``
         Skip all cells creating columns in the reduction matrix with more than
-        n entries. Use this for hard problems, a good value is often 100000.
+        n entries. Use this for hard problems, a good value is often `100,000`.
         Increase for higher precision, decrease for faster computation.
-        A negative value computes highest possible precision
+        A negative value computes highest possible precision.
 
     Returns
     -------
     out: dict of list of ``max_dimension`` elements
         A dictionary holding all of the results of the flagser
-    computation as follows:
-    {
-     'dgms': list of ``max_dimension`` ndarrays of shape (n_pairs, 2)
-        A list of persistence diagrams, one for each dimension less
-        than maxdim. Each diagram is an ndarray of size (n_pairs, 2)
-        with the first column representing the birth time and the
-        second column representing the death time of each pair.
-     'cell_count': list of ``max_dimension`` ints
-        Cell count per dimension
-     'betti': list of ``max_dimension`` ints
-        Betti number per dimension.
-     'euler': int
-        Euler characteristic.
-    }
+        computation as follows:
+        {
+         'dgms': list of ``max_dimension - min_dimension`` ndarrays of
+            shape (n_pairs, 2)
+            A list of persistence diagrams, one for each dimension less
+            than maxdim. Each diagram is an ndarray of size (n_pairs, 2)
+            with the first column representing the birth time and the
+            second column representing the death time of each pair.
+         'cell_count': list of ``max_dimension - min_dimension`` ints
+            Cell count per dimension
+         'betti': list of ``max_dimension - min_dimension`` ints
+            Betti number per dimension.
+         'euler': int
+            Euler characteristic.
+        }
+
     """
     vertices = np.asarray(flag_matrix.diagonal()).copy()
-    edges = flag_matrix.tolil()
-    edges.setdiag(0)
 
     if not approximation:
         approximation = -1
 
-    if edges.dtype == bool:
-        edges = np.hstack([sp.find(edges)]).T[:, :2]
-    else:
-        edges = np.hstack([sp.find(edges)]).T
+    edges = sp.coo_matrix(flag_matrix, copy=True)
+    edges.setdiag(np.nan)
 
-    homology = compute_homology(vertices, edges, max_dimension, min_dimension,
+    mask_out_of_diag = np.logical_not(np.isnan(edges.data))
+
+    if edges.dtype == bool:
+        edges = np.vstack([edges.row[mask_out_of_diag],
+                           edges.col[mask_out_of_diag]]).T[:, :2]
+    else:
+        edges = np.vstack([edges.row[mask_out_of_diag],
+                           edges.col[mask_out_of_diag],
+                           edges.data[mask_out_of_diag]]).T
+        print(edges.shape)
+
+    if max_dimension == np.inf:
+        _max_dimension = -1
+    else:
+        _max_dimension = max_dimension
+
+    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation)
     # Creating dictionary of returns values
     ret = {}
