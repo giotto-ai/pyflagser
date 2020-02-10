@@ -23,7 +23,7 @@ except FileNotFoundError:
     # Download from remote bucket
     temp_dir = mkdtemp()
     bucket_url = 'https://storage.googleapis.com/l2f-open-models/giotto-tda' \
-                 '/flagser/test'
+                 '/flagser/test/'
     flag_files_list = bucket_url + 'flag_files_list.txt'
     with urlopen(flag_files_list) as f:
         flag_file_names = f.read().decode('utf8').splitlines()

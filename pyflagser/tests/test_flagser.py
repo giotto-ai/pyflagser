@@ -1,18 +1,15 @@
 """Testing for the python bindings of the C++ flagser library."""
 
 import os
+import shutil
+from tempfile import mkdtemp
+from urllib.request import urlopen
 
 import pytest
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
 
-flag_files = []
-
-dirname = os.path.join(os.path.dirname(__file__), "../../flagser/test")
-for file in os.listdir(dirname):
-    if file.endswith(".flag"):
-        flag_files.append(os.path.join(dirname, file))
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -34,6 +31,27 @@ betti = {
     'd10.flag': [1, 0, 0, 0, 0, 0, 0, 0, 0, 1334961],
 }
 
+try:
+    dirname = os.path.join(os.path.dirname(__file__), "../../flagser/test")
+    list_dir = os.listdir(dirname)
+    flag_files = [os.path.join(dirname, fname)
+                  for fname in os.listdir(dirname)
+                  if fname.endswith(".flag")]
+    download_files = False
+except FileNotFoundError:
+    # Download from remote bucket
+    temp_dir = mkdtemp()
+    bucket_url = 'https://storage.googleapis.com/l2f-open-models/giotto-tda' \
+                 '/flagser/test/'
+    flag_files = []
+    for fname in betti.keys():
+        url = bucket_url + fname
+        fpath = os.path.join(temp_dir, fname)
+        with urlopen(url) as response, open(temp_dir, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        flag_files.append(fpath)
+    download_files = True
+
 
 @pytest.mark.parametrize("flag_file, betti",
                          [(flag_file, betti[os.path.split(flag_file)[1]])
@@ -44,3 +62,6 @@ def test_flagser(flag_file, betti):
 
     ret = flagser(flag_matrix)
     assert_almost_equal(ret['betti'], betti)
+
+if download_files:
+    shutil.rmtree(temp_dir)
