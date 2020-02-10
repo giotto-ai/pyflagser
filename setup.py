@@ -27,7 +27,7 @@ LONG_DESCRIPTION_TYPE = 'text/x-rst'
 MAINTAINER = 'Guillaume Tauzin'
 MAINTAINER_EMAIL = 'maintainers@giotto.ai'
 URL = 'https://github.com/giotto-ai/pyflagser'
-LICENSE = 'AGPLv3'
+LICENSE = 'GNU AGPLv3'
 DOWNLOAD_URL = 'https://github.com/giotto-ai/pyflagser/tarball/v0.1.0'
 VERSION = __version__ # noqa
 CLASSIFIERS = ['Intended Audience :: Science/Research',
@@ -41,9 +41,9 @@ CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Operating System :: POSIX',
                'Operating System :: Unix',
                'Operating System :: MacOS',
-               'Programming Language :: Python :: 3.5',
                'Programming Language :: Python :: 3.6',
-               'Programming Language :: Python :: 3.7']
+               'Programming Language :: Python :: 3.7',
+               'Programming Language :: Python :: 3.8']
 KEYWORDS = 'topological data analysis, persistent ' + \
     'homology, directed flags complex, persistence diagrams'
 INSTALL_REQUIRES = requirements
