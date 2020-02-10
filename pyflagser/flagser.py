@@ -1,7 +1,7 @@
 """Implementation of the python API for the flagser C++ library."""
 
-import scipy.sparse as sp
 import numpy as np
+import scipy.sparse as sp
 from flagser_pybind import compute_homology
 
 
@@ -17,9 +17,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     Parameters
     ----------
     flag_matrix : ndarray or scipy.sparse matrix, required
-        Matrix representation of a directed/undirected
-        weighted/unweighted graph. Diagonal elements are vertex
-        weights.
+        Matrix representation of a directed/undirected weighted/unweighted
+        graph. Diagonal elements are vertex weights.
 
     min_dimension : int, optional, default: ``0``
         Minimal dimension.
@@ -28,8 +27,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         Maximum dimension.
 
     directed : bool, optional, default: ``True``
-        If true, computes the directed flag complex. Otherwise it
-        computes the undirected flag complex.
+        If true, computes the directed flag complex. Otherwise, it computes
+        the undirected flag complex.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
@@ -38,28 +37,32 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
 
     approximation : int, optional, default: ``-1``
         Skip all cells creating columns in the reduction matrix with more than
-        n entries. Use this for hard problems, a good value is often `100,000`.
-        Increase for higher precision, decrease for faster computation.
-        A negative value computes highest possible precision.
+        this number of entries. Use this for hard problems; a good value is
+        often ``100,000``. Increase for higher precision, decrease for faster
+        computation. A negative value computes highest possible precision.
 
     Returns
     -------
-    out: dict of list of ``max_dimension`` elements
-        A dictionary holding all of the results of the flagser
-        computation as follows:
+    out: dict of list
+        A dictionary holding the results of the flagser computation. Each
+        value is a list of length `max_dimension` - `min_dimension`. The
+        structure of `out` is as follows:
         {
-         'dgms': list of ``max_dimension - min_dimension`` ndarrays of
-            shape (n_pairs, 2)
-            A list of persistence diagrams, one for each dimension less
-            than maxdim. Each diagram is an ndarray of size (n_pairs, 2)
-            with the first column representing the birth time and the
-            second column representing the death time of each pair.
-         'cell_count': list of ``max_dimension - min_dimension`` ints
-            Cell count per dimension
-         'betti': list of ``max_dimension - min_dimension`` ints
-            Betti number per dimension.
-         'euler': int
-            Euler characteristic.
+         'dgms': list of ndarray of shape ``(n_pairs, 2)``
+            A list of persistence diagrams, one for each dimension greater
+            than or equal than `min_dimension` and less than `max_dimension`.
+            Each diagram is an ndarray of size (n_pairs, 2) with the first
+            column representing the birth time and the second column
+            representing the death time of each pair.
+         'cell_count': list of int
+            Cell count per dimension greater than or equal than
+            `min_dimension` and less than `max_dimension`.
+         'betti': list of int
+            Betti number per dimension greater than or equal than
+            `min_dimension` and less than `max_dimension`.
+         'euler': list of int
+            Euler characteristic per dimension greater than or equal than
+            `min_dimension` and less than `max_dimension`.
         }
 
     """
@@ -89,8 +92,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
 
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation)
-    # Creating dictionary of returns values
-    ret = {}
+    # Creating dictionary of return values
+    ret = dict()
     ret['dgms'] = homology[0].get_persistence_diagram()
     ret['cell_count'] = homology[0].get_cell_count()
     ret['betti'] = homology[0].get_betti_numbers()
