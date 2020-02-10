@@ -63,5 +63,6 @@ def test_flagser(flag_file, betti):
     ret = flagser(flag_matrix)
     assert_almost_equal(ret['betti'], betti)
 
+
 if download_files:
     shutil.rmtree(temp_dir)
