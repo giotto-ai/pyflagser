@@ -1,7 +1,8 @@
 """Testing for the python bindings of the C++ flagser library."""
 
-import pytest
 import os
+
+import pytest
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
