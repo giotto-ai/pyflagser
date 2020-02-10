@@ -47,7 +47,7 @@ except FileNotFoundError:
     for fname in betti.keys():
         url = bucket_url + fname
         fpath = os.path.join(temp_dir, fname)
-        with urlopen(url) as response, open(temp_dir, 'wb') as out_file:
+        with urlopen(url) as response, open(fpath, 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
         flag_files.append(fpath)
     download_files = True
