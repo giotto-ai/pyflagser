@@ -1,9 +1,9 @@
 """Testing for the python bindings of the C++ flagser library."""
 
 import os
-import shutil
+from shutil import rmtree
 from tempfile import mkdtemp
-from urllib.request import urlopen
+from urllib.request import urlopen, urlretrieve
 
 import numpy as np
 import pytest
@@ -31,8 +31,7 @@ except FileNotFoundError:
         for fname in flag_file_names:
             url = bucket_url + fname
             fpath = os.path.join(temp_dir, fname)
-            with urlopen(url) as response, open(fpath, 'wb') as out_file:
-                shutil.copyfile(response, out_file)
+            urlretrieve(url, fpath)
             flag_files.append(fpath)
     download_files = True
 
@@ -52,4 +51,4 @@ def test_flagio(flag_file):
 
 
 if download_files:
-    shutil.rmtree(temp_dir)
+    rmtree(temp_dir)

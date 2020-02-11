@@ -1,15 +1,14 @@
 """Testing for the python bindings of the C++ flagser library."""
 
 import os
-import shutil
+from shutil import rmtree
 from tempfile import mkdtemp
-from urllib.request import urlopen
+from urllib.request import urlretrieve
 
 import pytest
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
-
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -47,8 +46,7 @@ except FileNotFoundError:
     for fname in betti.keys():
         url = bucket_url + fname
         fpath = os.path.join(temp_dir, fname)
-        with urlopen(url) as response, open(fpath, 'wb') as out_file:
-            shutil.copyfile(response, out_file)
+        urlretrieve(url, fpath)
         flag_files.append(fpath)
     download_files = True
 
@@ -65,4 +63,4 @@ def test_flagser(flag_file, betti):
 
 
 if download_files:
-    shutil.rmtree(temp_dir)
+    rmtree(temp_dir)
