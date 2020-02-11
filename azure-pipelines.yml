@@ -170,7 +170,7 @@ jobs:
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -268,7 +268,7 @@ jobs:
   - script: |
       mkdir tmp_test_cov
       cd tmp_test_cov
-      sudo pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -378,7 +378,7 @@ jobs:
   - bash: |
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
