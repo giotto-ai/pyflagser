@@ -268,7 +268,7 @@ jobs:
   - script: |
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      sudo pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
