@@ -2,13 +2,11 @@
 
 import os
 
-import pytest
-from .fetch_flag_files import fetch_flag_files
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
 
-betti_exp = {
+betti = {
     'a.flag': [1, 2, 0],
     'b.flag': [1, 0, 0],
     'c.flag': [1, 5],
@@ -29,15 +27,8 @@ betti_exp = {
 }
 
 
-def test_super(webdl):
-    flag_files = fetch_flag_files(webdl)
-
-    @pytest.mark.parametrize(
-        'flag_file, betti',
-        [(flag_file, betti_exp[os.path.split(flag_file)[1]])
-         for flag_file in flag_files
-         if os.path.split(flag_file)[1] in betti_exp.keys()])
-    def test_flagser(flag_file, betti):
-        flag_matrix = loadflag(flag_file)
-        ret = flagser(flag_matrix)
-        assert_almost_equal(ret['betti'], betti_exp)
+def test_flagser(flag_file):
+    betti_exp = betti[os.path.split(flag_file)[1]]
+    flag_matrix = loadflag(flag_file)
+    betti_res = flagser(flag_matrix)['betti']
+    assert_almost_equal(betti_res, betti_exp)
