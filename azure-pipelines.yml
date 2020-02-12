@@ -160,7 +160,7 @@ jobs:
 
   - script: |
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
-      rm -rf pyflagser
+      sudo rm -rf pyflagser
       rm setup.cfg
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
@@ -323,7 +323,7 @@ jobs:
     displayName: 'Install the wheels'
 
   - script: |
-      rmdir /s pyflagser
+      rmdir /s /Q pyflagser
       del setup.cfg
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
