@@ -29,7 +29,7 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      sudo pytest --cov pyflagser --cov-report xml
+      pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
@@ -160,9 +160,11 @@ jobs:
 
   - script: |
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
-      sudo rm -rf pyflagser
+      rm -rf pyflagser
       rm setup.cfg
-      sudo python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
+      mkdir tmp_test_cov
+      cd tmp_test_cov
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -236,6 +238,8 @@ jobs:
   - script: |
       rm -rf pyflagser
       rm setup.cfg
+      mkdir tmp_test_cov
+      cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
@@ -325,6 +329,8 @@ jobs:
   - script: |
       rmdir /s /Q pyflagser
       del setup.cfg
+      mkdir tmp_test_cov
+      cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
