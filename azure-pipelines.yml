@@ -236,7 +236,7 @@ jobs:
     displayName: 'Install the wheels'
 
   - script: |
-      rm -rf pyflagser
+      sudo rm -rf pyflagser
       rm setup.cfg
       mkdir tmp_test_cov
       cd tmp_test_cov
