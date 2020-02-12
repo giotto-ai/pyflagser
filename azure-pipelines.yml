@@ -142,14 +142,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
 
-  - bash: |
-      sed -i "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      sed -i "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
-
   - task: Bash@3
     inputs:
       filePath: .azure-ci/build_manylinux2010.sh
@@ -186,13 +178,6 @@ jobs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
 
-  - bash: |
-      pip install twine
-      for f in dist/*linux* ; do sudo mv "$f" "${f/linux/manylinux2010}"; done
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'
-
 
 - job: 'macOS1014'
   condition: eq(variables['build_check'], 'true')
@@ -212,16 +197,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
 
-  - bash: |
-      sed -i.bak "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      rm setup.py.bak
-      sed -i.bak "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-      rm pyflagser/_version.py.bak
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
-
   - script: |
       brew update
       brew install gcc
@@ -239,15 +214,8 @@ jobs:
 
   - script: |
       pip uninstall -y pyflagser
-    condition: eq(variables['nightly_check'], 'false')
     failOnStderr: true
     displayName: 'Uninstall pyflagser dev'
-
-  - script: |
-      pip uninstall -y pyflagser-nightly
-    condition: eq(variables['nightly_check'], 'true')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser-nightly dev'
 
   - script: |
       pytest --cov pyflagser --cov-report xml
@@ -300,12 +268,6 @@ jobs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
 
-  - bash: |
-      pip install twine
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'
-
 
 - job: 'win2016'
   condition: eq(variables['build_check'], 'true')
@@ -328,14 +290,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
 
-  - bash: |
-      sed -i "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      sed -i "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
-
   - script: |
       python -m pip install --upgrade pip setuptools
     failOnStderr: true
@@ -348,15 +302,8 @@ jobs:
 
   - script: |
       pip uninstall -y pyflagser
-    condition: eq(variables['nightly_check'], 'false')
     failOnStderr: true
     displayName: 'Uninstall pyflagser dev'
-
-  - script: |
-      pip uninstall -y pyflagser-nightly
-    condition: eq(variables['nightly_check'], 'true')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser-nightly dev'
 
   - script: |
       pytest --cov pyflagser --cov-report xml
@@ -393,10 +340,3 @@ jobs:
     inputs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
-
-  - bash: |
-      pip install twine
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'
