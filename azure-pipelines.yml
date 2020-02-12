@@ -322,7 +322,7 @@ jobs:
     failOnStderr: true
     displayName: 'Install the wheels'
 
-  - bash: |
+  - script: |
       rmdir /s pyflagser
       del setup.cfg
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
