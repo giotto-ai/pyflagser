@@ -168,9 +168,9 @@ jobs:
 
   - script: |
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
-      mkdir tmp_test_cov
-      cd tmp_test_cov
-      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      rm -rf pyflagser
+      rm setup.cfg
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -266,9 +266,9 @@ jobs:
     displayName: 'Install the wheels'
 
   - script: |
-      mkdir tmp_test_cov
-      cd tmp_test_cov
-      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      rm -rf pyflagser
+      rm setup.cfg
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -376,9 +376,9 @@ jobs:
     displayName: 'Install the wheels'
 
   - bash: |
-      mkdir tmp_test_cov
-      cd tmp_test_cov
-      pytest --pyargs pyflagser --webdl --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      rmdir /s pyflagser
+      del setup.cfg
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
