@@ -2,19 +2,19 @@
 
 set -x
 
-# Upgrade pip and setuptools
+# Upgrade pip and setuptools. TODO: Monitor status of pip versions
 PYTHON_PATH=$(eval find "/opt/python/*${python_ver}*" -print)
 export PATH=${PYTHON_PATH}/bin:${PATH}
 pip install --upgrade pip==19.3.1 setuptools
 
-# Install cmake
+# Install CMake
 pip install cmake
 
-# Install pyflagser dev
+# Install dev environment
 cd /io
 pip install -e ".[doc, tests]"
 
-# Test de
+# Test dev install with pytest and flake8
 pytest --cov pyflagser --no-cov --no-coverage-upload
 flake8 --exit-zero /io/
 
