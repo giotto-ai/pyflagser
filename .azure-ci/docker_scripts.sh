@@ -15,7 +15,7 @@ cd /io
 pip install -e ".[doc, tests]"
 
 # Test dev install with pytest and flake8
-pytest --cov pyflagser --no-cov --no-coverage-upload
+pytest pyflagser --no-cov --no-coverage-upload
 flake8 --exit-zero /io/
 
 # Uninstal pyflagser dev
