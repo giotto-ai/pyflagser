@@ -47,23 +47,22 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         A dictionary holding the results of the flagser computation. Each
         value is a list of length `max_dimension` - `min_dimension`. The
         structure of `out` is as follows:
-        {
-         'dgms': list of ndarray of shape ``(n_pairs, 2)``
-            A list of persistence diagrams, one for each dimension greater
-            than or equal than `min_dimension` and less than `max_dimension`.
-            Each diagram is an ndarray of size (n_pairs, 2) with the first
-            column representing the birth time and the second column
-            representing the death time of each pair.
-         'cell_count': list of int
-            Cell count per dimension greater than or equal than
-            `min_dimension` and less than `max_dimension`.
-         'betti': list of int
-            Betti number per dimension greater than or equal than
-            `min_dimension` and less than `max_dimension`.
-         'euler': list of int
-            Euler characteristic per dimension greater than or equal than
-            `min_dimension` and less than `max_dimension`.
-        }
+
+        - 'dgms': list of ndarray of shape ``(n_pairs, 2)``
+          A list of persistence diagrams, one for each dimension greater
+          than or equal than `min_dimension` and less than `max_dimension`.
+          Each diagram is an ndarray of size (n_pairs, 2) with the first
+          column representing the birth time and the second column
+          representing the death time of each pair.
+        - 'cell_count': list of int
+          Cell count per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+        - 'betti': list of int
+          Betti number per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+        - 'euler': list of int
+          Euler characteristic per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
 
     """
     vertices = np.asarray(flag_matrix.diagonal()).copy()
