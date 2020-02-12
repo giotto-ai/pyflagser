@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pytest
 import scipy.sparse as sp
-from fetch_flag_files import fetch_flag_files
+from .fetch_flag_files import fetch_flag_files
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, saveflag

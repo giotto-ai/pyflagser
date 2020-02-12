@@ -3,7 +3,7 @@
 import os
 
 import pytest
-from fetch_flag_files import fetch_flag_files
+from .fetch_flag_files import fetch_flag_files
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
