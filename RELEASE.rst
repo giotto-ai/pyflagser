@@ -25,7 +25,7 @@ Thanks to our Contributors
 
 This release contains contributions from many people:
 
-Guillaume Tauzin and Julian Burella Pérez.
+Guillaume Tauzin, Julian Burella Pérez and Umberto Lupo.
 
 We are also grateful to all who filed issues or helped resolve them, asked and
 answered questions, and were part of inspiring discussions.
