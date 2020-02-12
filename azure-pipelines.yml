@@ -213,15 +213,15 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pip uninstall -y pyflagser
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser dev'
-
-  - script: |
       pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
+
+  - script: |
+      pip uninstall -y pyflagser
+    failOnStderr: true
+    displayName: 'Uninstall pyflagser dev'
 
   - script: |
       pip install wheel
@@ -301,15 +301,15 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pip uninstall -y pyflagser
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser dev'
-
-  - script: |
       pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
+
+  - script: |
+      pip uninstall -y pyflagser
+    failOnStderr: true
+    displayName: 'Uninstall pyflagser dev'
 
   - bash: |
       sed -i $'s/\r$//' README.rst
