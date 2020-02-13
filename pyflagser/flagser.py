@@ -21,10 +21,10 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         graph. Diagonal elements are vertex weights.
 
     min_dimension : int, optional, default: ``0``
-        Minimal dimension.
+        Minimum homology dimension.
 
-    max_dimension : int, optional, default: ``np.inf``
-        Maximum dimension.
+    max_dimension : int or np.inf, optional, default: ``np.inf``
+        Maximum homology dimension.
 
     directed : bool, optional, default: ``True``
         If true, computes the directed flag complex. Otherwise, it computes
@@ -43,7 +43,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
 
     Returns
     -------
-    out: dict of list
+    out : dict of list
         A dictionary holding the results of the flagser computation. Each
         value is a list of length `max_dimension` - `min_dimension`. The
         key-value pairs in `out` are as follows:
@@ -92,10 +92,10 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation)
     # Creating dictionary of return values
-    ret = dict()
-    ret['dgms'] = homology[0].get_persistence_diagram()
-    ret['cell_count'] = homology[0].get_cell_count()
-    ret['betti'] = homology[0].get_betti_numbers()
-    ret['euler'] = homology[0].get_euler_characteristic()
+    out = dict()
+    out['dgms'] = homology[0].get_persistence_diagram()
+    out['cell_count'] = homology[0].get_cell_count()
+    out['betti'] = homology[0].get_betti_numbers()
+    out['euler'] = homology[0].get_euler_characteristic()
 
-    return ret
+    return out
