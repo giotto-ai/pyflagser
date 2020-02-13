@@ -8,7 +8,7 @@ Project owner:
 Authors:
 --------
 
-- Please refer to the `authors <https://github.com/giotto-ai/giotto-tda/blob/master/CODE_AUTHORS>`_ file
+- Please refer to the `authors <https://github.com/giotto-ai/pyflagser/blob/master/CODE_AUTHORS>`_ file
 
 Pyflagser Project Team:
 -----------------------
