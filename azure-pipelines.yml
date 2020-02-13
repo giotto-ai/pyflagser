@@ -160,8 +160,6 @@ jobs:
 
   - script: |
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
-      rm -rf pyflagser
-      rm setup.cfg
       mkdir tmp_test_cov
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
@@ -236,8 +234,6 @@ jobs:
     displayName: 'Install the wheels'
 
   - script: |
-      sudo rm -rf pyflagser
-      rm setup.cfg
       mkdir tmp_test_cov
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
@@ -327,8 +323,6 @@ jobs:
     displayName: 'Install the wheels'
 
   - script: |
-      rmdir /s /Q pyflagser
-      del setup.cfg
       mkdir tmp_test_cov
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
