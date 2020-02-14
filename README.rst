@@ -91,12 +91,13 @@ You can check the latest sources with the command::
 To install:
 '''''''''''
 
+From the cloned repository's root directory, run
+
 .. code-block:: bash
 
-   cd pyflagser
    pip install -e .
 
-From there any change in the library files will be immediately available on your machine.
+This way, you can pull the library's latest changes and make them immediately available on your machine.
 
 Testing
 ~~~~~~~
@@ -104,7 +105,7 @@ Testing
 After installation, you can launch the test suite from outside the
 source directory::
 
-    pytest .
+    pytest pyflagser
 
 
 Changelog
