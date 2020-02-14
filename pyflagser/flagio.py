@@ -45,7 +45,7 @@ def loadflag(fname, fmt='csr', dtype=None):
 
 
 def saveflag(fname, flag_matrix):
-    """Save the matrix representation of a filtered flag complex into a 
+    """Save the matrix representation of a filtered flag complex into a
     ``.flag`` file.
 
     Parameters
