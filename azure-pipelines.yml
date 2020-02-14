@@ -7,8 +7,6 @@ jobs:
     vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
-      Python35:
-        python.version: '3.5'
       Python36:
         python.version: '3.6'
       Python37:
@@ -43,8 +41,6 @@ jobs:
     vmImage: 'macOS-10.14'
   strategy:
     matrix:
-      Python35:
-        python.version: '3.5'
       Python36:
         python.version: '3.6'
       Python37:
@@ -85,9 +81,6 @@ jobs:
     vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      Python35:
-        python_ver: '35'
-        python.version: '3.5'
       Python36:
         python_ver: '36'
         python.version: '3.6'
@@ -128,11 +121,6 @@ jobs:
     vmImage: 'ubuntu-16.04'
   strategy:
     matrix:
-      Python35:
-        arch: x86_64
-        plat: manylinux2010_x86_64
-        python_ver: '35'
-        python.version: '3.5'
       Python36:
         arch: x86_64
         plat: manylinux2010_x86_64
@@ -154,14 +142,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
 
-  - bash: |
-      sed -i "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      sed -i "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
-
   - task: Bash@3
     inputs:
       filePath: .azure-ci/build_manylinux2010.sh
@@ -182,7 +162,7 @@ jobs:
       pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -198,13 +178,6 @@ jobs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
 
-  - bash: |
-      pip install twine
-      for f in dist/*linux* ; do sudo mv "$f" "${f/linux/manylinux2010}"; done
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'
-
 
 - job: 'macOS1014'
   condition: eq(variables['build_check'], 'true')
@@ -212,8 +185,6 @@ jobs:
     vmImage: 'macOS-10.14'
   strategy:
     matrix:
-      Python35:
-        python.version: '3.5'
       Python36:
         python.version: '3.6'
       Python37:
@@ -225,16 +196,6 @@ jobs:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(python.version)'
-
-  - bash: |
-      sed -i.bak "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      rm setup.py.bak
-      sed -i.bak "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-      rm pyflagser/_version.py.bak
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
 
   - script: |
       brew update
@@ -252,22 +213,15 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pip uninstall -y pyflagser
-    condition: eq(variables['nightly_check'], 'false')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser dev'
-
-  - script: |
-      pip uninstall -y pyflagser-nightly
-    condition: eq(variables['nightly_check'], 'true')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser-nightly dev'
-
-  - script: |
       pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
+
+  - script: |
+      pip uninstall -y pyflagser
+    failOnStderr: true
+    displayName: 'Uninstall pyflagser dev'
 
   - script: |
       pip install wheel
@@ -282,7 +236,7 @@ jobs:
   - script: |
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -314,12 +268,6 @@ jobs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
 
-  - bash: |
-      pip install twine
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'
-
 
 - job: 'win2016'
   condition: eq(variables['build_check'], 'true')
@@ -327,9 +275,6 @@ jobs:
     vmImage: 'vs2017-win2016'
   strategy:
     matrix:
-      Python35:
-        python_ver: '35'
-        python.version: '3.5'
       Python36:
         python_ver: '36'
         python.version: '3.6'
@@ -345,14 +290,6 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
 
-  - bash: |
-      sed -i "s/'pyflagser'/'pyflagser-nightly'/1" setup.py
-      sed -i "s/__version__.*/__version__ = '$(Build.BuildNumber)'/1" pyflagser/_version.py
-      cat pyflagser/_version.py
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Change name to pyflagser-nightly'
-
   - script: |
       python -m pip install --upgrade pip setuptools
     failOnStderr: true
@@ -364,22 +301,15 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pip uninstall -y pyflagser
-    condition: eq(variables['nightly_check'], 'false')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser dev'
-
-  - script: |
-      pip uninstall -y pyflagser-nightly
-    condition: eq(variables['nightly_check'], 'true')
-    failOnStderr: true
-    displayName: 'Uninstall pyflagser-nightly dev'
-
-  - script: |
       pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
+
+  - script: |
+      pip uninstall -y pyflagser
+    failOnStderr: true
+    displayName: 'Uninstall pyflagser dev'
 
   - bash: |
       sed -i $'s/\r$//' README.rst
@@ -392,10 +322,10 @@ jobs:
     failOnStderr: true
     displayName: 'Install the wheels'
 
-  - bash: |
+  - script: |
       mkdir tmp_test_cov
       cd tmp_test_cov
-      pytest --pyargs pyflagser --ignore-glob='flagser*' --no-cov --no-coverage-upload
+      python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
     displayName: 'Test the wheels with pytest'
 
@@ -410,10 +340,3 @@ jobs:
     inputs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: 'wheel_and_doc'
-
-  - bash: |
-      pip install twine
-      twine upload -u giotto-learn -p $(pypi_psw) --skip-existing dist/*
-    failOnStderr: true
-    condition: eq(variables['nightly_check'], 'true')
-    displayName: 'Upload nightly wheels to PyPI'

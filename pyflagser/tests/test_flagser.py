@@ -1,17 +1,10 @@
 """Testing for the python bindings of the C++ flagser library."""
 
-import pytest
 import os
+
 from numpy.testing import assert_almost_equal
 
 from pyflagser import loadflag, flagser
-
-flag_files = []
-
-dirname = os.path.join(os.path.dirname(__file__), "../../flagser/test")
-for file in os.listdir(dirname):
-    if file.endswith(".flag"):
-        flag_files.append(os.path.join(dirname, file))
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -34,12 +27,8 @@ betti = {
 }
 
 
-@pytest.mark.parametrize("flag_file, betti",
-                         [(flag_file, betti[os.path.split(flag_file)[1]])
-                          for flag_file in flag_files
-                          if os.path.split(flag_file)[1] in betti.keys()])
-def test_flagser(flag_file, betti):
+def test_flagser(flag_file):
+    betti_exp = betti[os.path.split(flag_file)[1]]
     flag_matrix = loadflag(flag_file)
-
-    ret = flagser(flag_matrix)
-    assert_almost_equal(ret['betti'], betti)
+    betti_res = flagser(flag_matrix)['betti']
+    assert_almost_equal(betti_res, betti_exp)

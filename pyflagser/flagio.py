@@ -5,12 +5,13 @@ import scipy.sparse as sp
 
 
 def loadflag(fname, fmt='csr', dtype=None):
-    """Load a flag matrix from a ``.flag`` file.
+    """Load a ``.flag`` file, and return a matrix representation.
 
     Parameters
     ----------
     fname : file, str, or pathlib.Path, required
-        Filename of extension ``.flag``.
+        Filename of extension ``.flag`` containing the information of a flag
+        matrix.
 
     fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, default: 'csr'
         Matrix format of the result. By default, a CSR sparse matrix is
