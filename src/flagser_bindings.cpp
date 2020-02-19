@@ -56,8 +56,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
     named_arguments["--max-dim"] = std::to_string(effective_max_dim).c_str();
     named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
 
-    if (remove(named_arguments["out"]) != 0)
-      perror("Error deleting flagser output file");
+    remove(named_arguments["out"]);
 
     auto graph = filtered_directed_graph_t(vertices, directed);
 
