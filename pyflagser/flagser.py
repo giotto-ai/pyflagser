@@ -82,7 +82,6 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         edges = np.vstack([edges.row[mask_out_of_diag],
                            edges.col[mask_out_of_diag],
                            edges.data[mask_out_of_diag]]).T
-        print(edges.shape)
 
     if max_dimension == np.inf:
         _max_dimension = -1
