@@ -41,6 +41,8 @@ PYBIND11_MODULE(flagser_pybind, m) {
                                bool directed, coefficient_t modulus,
                                signed int approximation,
                                std::string filtration) {
+    // Save std::cout status
+    auto cout_buff = std::cout.rdbuf();
 
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
@@ -117,6 +119,9 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
     if (remove(named_arguments["out"]) != 0)
       perror("Error deleting flagser output file");
+
+    // re enable again cout
+    std::cout.rdbuf(cout_buff);
 
     return ret;
   });
