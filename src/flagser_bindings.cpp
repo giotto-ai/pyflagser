@@ -126,5 +126,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
     return ret;
   });
 
+  m.attr("implemented_filtrations") = custom_filtration_computer;
+
   m.doc() = "Python bindings for flagser";
 }

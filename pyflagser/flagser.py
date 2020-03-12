@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy.sparse as sp
-from flagser_pybind import compute_homology
+from flagser_pybind import compute_homology, implemented_filtrations
 
 
 def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
@@ -98,6 +98,11 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         _max_dimension = -1
     else:
         _max_dimension = max_dimension
+
+    if filtration not in implemented_filtrations:
+        print('unrecognized {}, using max'.format(filtration))
+        print('Available algorithms : {}'.format(implemented_filtrations))
+        filtration = "max"
 
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation, filtration)
