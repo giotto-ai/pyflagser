@@ -63,7 +63,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
     named_arguments["--max-dim"] = std::to_string(effective_max_dim).c_str();
     named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
 
-    // Is filstration supported ?
+    // Is filtration supported ?
     if (std::find(custom_filtration_computer.begin(),
                   custom_filtration_computer.end(),
                   filtration) == custom_filtration_computer.end()) {

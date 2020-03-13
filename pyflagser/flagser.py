@@ -99,7 +99,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         _max_dimension = max_dimension
 
     if filtration not in implemented_filtrations:
-        print('unrecognized {}, using max'.format(filtration))
+        print('Unrecognized {} filtration, using max'.format(filtration))
         print('Available algorithms : {}'.format(implemented_filtrations))
         filtration = "max"
 
