@@ -6,9 +6,10 @@
 #include <iostream>
 
 #include <flagser/include/argparser.h>
+#include <flagser/src/flagser.cpp>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <flagser/src/flagser.cpp>
 
 namespace py = pybind11;
 
@@ -38,23 +39,48 @@ PYBIND11_MODULE(flagser_pybind, m) {
                                std::vector<std::vector<value_t>>& edges,
                                unsigned short min_dim, short max_dim,
                                bool directed, coefficient_t modulus,
-                               signed int approximation) {
+                               signed int approximation,
+                               std::string filtration) {
+    // Save std::cout status
+    auto cout_buff = std::cout.rdbuf();
+
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
     // Approximation should only be a positive value
     // Otherwise it falls back to type::numeric_limits
-    size_t max_entries = approximation >= 0
-                             ? approximation
-                             : std::numeric_limits<size_t>::max();
+    size_t max_entries =
+        approximation >= 0 ? approximation : std::numeric_limits<size_t>::max();
 
     unsigned short effective_max_dim = max_dim;
-    if(max_dim < 0) effective_max_dim = std::numeric_limits<unsigned short>::max();
+    std::string default_filtration = "max";
+
+    if (max_dim < 0)
+      effective_max_dim = std::numeric_limits<unsigned short>::max();
 
     named_arguments_t named_arguments;
     named_arguments["out"] = "output_flagser_file";
     named_arguments["--max-dim"] = std::to_string(effective_max_dim).c_str();
     named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
+
+    // Is filtration supported ?
+    if (std::find(custom_filtration_computer.begin(),
+                  custom_filtration_computer.end(),
+                  filtration) == custom_filtration_computer.end()) {
+      std::cout << filtration << " not found, fallback to "
+                << default_filtration << "\n";
+      filtration = default_filtration;
+
+      std::cout << "Implemented filtrations:\n";
+      for (auto& elem : custom_filtration_computer) {
+        if (elem != custom_filtration_computer.back())
+          std::cout << elem << ", ";
+        else
+          std::cout << elem << "\n";
+      }
+    }
+
+    named_arguments["--filtration"] = filtration.c_str();
 
     remove(named_arguments["out"]);
 
@@ -94,8 +120,13 @@ PYBIND11_MODULE(flagser_pybind, m) {
     if (remove(named_arguments["out"]) != 0)
       perror("Error deleting flagser output file");
 
+    // re enable again cout
+    std::cout.rdbuf(cout_buff);
+
     return ret;
   });
+
+  m.attr("implemented_filtrations") = custom_filtration_computer;
 
   m.doc() = "Python bindings for flagser";
 }
