@@ -41,7 +41,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         often ``100,000``. Increase for higher precision, decrease for faster
         computation. A negative value computes highest possible precision.
 
-    filtration : string, optional, default: `"max"`
+    filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
         specified, it is assumed that the resulting filtration is consistent,
         meaning that the filtration value of every simplex of dimension at
