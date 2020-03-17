@@ -74,8 +74,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
 
-    Note
-    ----
+    Notes
+    -----
     For more details, please refer to the `flagser documentation \
     <https://github.com/luetge/flagser/blob/master/docs/\
     documentation_flagser.pdf>`_.
