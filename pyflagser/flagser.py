@@ -6,7 +6,7 @@ from flagser_pybind import compute_homology, implemented_filtrations
 
 
 def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
-            coeff=2, approximation=-1, filtration="max"):
+            filtration="max", coeff=2, approximation=-1):
     """Compute persistent homology of a directed/undirected
     weighted/unweighted flag complexes.
 
@@ -30,6 +30,16 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         If true, computes the directed flag complex. Otherwise, it computes
         the undirected flag complex.
 
+    filtration : string, optional, default: ``'max'``
+        Algorithm determining the filtration. Warning: if an edge filtration is
+        specified, it is assumed that the resulting filtration is consistent,
+        meaning that the filtration value of every simplex of dimension at
+        least two should evaluate to a value that is at least the maximal value
+        of the filtration values of its containing edges. For performance
+        reasons, this is not checked automatically.  Possible values are:
+        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
+        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
+
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
@@ -40,16 +50,6 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
         computation. A negative value computes highest possible precision.
-
-    filtration : string, optional, default: ``'max'``
-        Algorithm determining the filtration. Warning: if an edge filtration is
-        specified, it is assumed that the resulting filtration is consistent,
-        meaning that the filtration value of every simplex of dimension at
-        least two should evaluate to a value that is at least the maximal value
-        of the filtration values of its containing edges. For performance
-        reasons, this is not checked automatically.  Possible values are:
-        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
-        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
 
     Returns
     -------
@@ -73,6 +73,12 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         - ``'euler'``: list of int
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
+
+    Note
+    ----
+    For more details, please refer to the `flagser documentation \
+    <https://github.com/luetge/flagser/blob/master/docs/\
+    documentation_flagser.pdf>`_.
 
     """
     vertices = np.asarray(flag_matrix.diagonal()).copy()
