@@ -55,7 +55,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     -------
     out : dict of list
         A dictionary holding the results of the flagser computation. Each
-        value is a list of length `max_dimension` - `min_dimension`. The
+        value is a list of length `max_dimension` - `min_dimension` + 1. The
         key-value pairs in `out` are as follows:
 
         - ``'dgms'``: list of ndarray of shape ``(n_pairs, 2)``
@@ -113,7 +113,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
                                 directed, coeff, approximation, filtration)
     # Creating dictionary of return values
     out = dict()
-    out['dgms'] = homology[0].get_persistence_diagram()
+    out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
+                   for i in range(len(homology[0].get_persistence_diagram()))]
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
     out['euler'] = homology[0].get_euler_characteristic()
