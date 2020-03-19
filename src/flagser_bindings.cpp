@@ -80,7 +80,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
       }
     }
 
-    named_arguments["--filtration"] = filtration.c_str();
+    named_arguments["filtration"] = filtration.c_str();
 
     remove(named_arguments["out"]);
 
