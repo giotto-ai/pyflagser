@@ -43,6 +43,9 @@ PYBIND11_MODULE(flagser_pybind, m) {
                                std::string filtration) {
     // Save std::cout status
     auto cout_buff = std::cout.rdbuf();
+    named_arguments_t named_arguments;
+    std::string str_max;
+    std::string str_min;
 
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
@@ -58,10 +61,12 @@ PYBIND11_MODULE(flagser_pybind, m) {
     if (max_dim < 0)
       effective_max_dim = std::numeric_limits<unsigned short>::max();
 
-    named_arguments_t named_arguments;
+    str_max = std::to_string(effective_max_dim);
+    str_min = std::to_string(min_dim);
+
     named_arguments["out"] = "output_flagser_file";
-    named_arguments["--max-dim"] = std::to_string(effective_max_dim).c_str();
-    named_arguments["--min-dim"] = std::to_string(min_dim).c_str();
+    named_arguments["max-dim"] = str_max.c_str();
+    named_arguments["min-dim"] = str_min.c_str();
 
     // Is filtration supported ?
     if (std::find(custom_filtration_computer.begin(),
