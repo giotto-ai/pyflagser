@@ -182,8 +182,8 @@ def are_matrix_equal(m1, m2):
 def test_filtrations(flag_file):
     """
     Testing all filtrations available for dataset d5.flag
-    It was necessary to disable edge filtrations because of assumption that the
-    resulting filtration is consistent.
+    vertex_degree filtrations was disable because it produces a segmentation
+    fault.
     """
     if os.path.split(flag_file)[1] == 'd5.flag':
         flag_matrix = loadflag(flag_file)
