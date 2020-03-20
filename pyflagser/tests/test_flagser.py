@@ -149,6 +149,17 @@ filtrations_results = {
                       [1.29499996, 1.39265192],
                       [1.20000005, 1.81259179]])]
     },
+    'remove_edges':
+    {
+        'dgms': [
+            np.array([[0.44, 1.00999999],
+                      [0.36000001, 1.125],
+                      [0.33000001, 1.14499998],
+                      [0.88999999, 1.17999995],
+                      [0.11,        float('inf')]]),
+            np.array([[1.29499996, 1.34000003],
+                      [1.20000005, 1.65499997]])]
+    },
 }
 
 
@@ -177,7 +188,7 @@ def test_filtrations(flag_file):
     if os.path.split(flag_file)[1] == 'd5.flag':
         flag_matrix = loadflag(flag_file)
         for filtration in implemented_filtrations:
-            if filtration not in ['remove_edges', 'vertex_degree']:
+            if filtration not in ['vertex_degree']:
                 assert filtration in filtrations_results.keys(),\
                     "Test for {} is not implemented, current implemented tests\
                     are {}".format(filtration, filtrations_results.keys())
