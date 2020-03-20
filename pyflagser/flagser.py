@@ -2,11 +2,11 @@
 
 import numpy as np
 import scipy.sparse as sp
-from flagser_pybind import compute_homology
+from flagser_pybind import compute_homology, implemented_filtrations
 
 
 def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
-            coeff=2, approximation=-1):
+            filtration="max", coeff=2, approximation=-1):
     """Compute persistent homology of a directed/undirected
     weighted/unweighted flag complexes.
 
@@ -30,6 +30,16 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         If true, computes the directed flag complex. Otherwise, it computes
         the undirected flag complex.
 
+    filtration : string, optional, default: ``'max'``
+        Algorithm determining the filtration. Warning: if an edge filtration is
+        specified, it is assumed that the resulting filtration is consistent,
+        meaning that the filtration value of every simplex of dimension at
+        least two should evaluate to a value that is at least the maximal value
+        of the filtration values of its containing edges. For performance
+        reasons, this is not checked automatically.  Possible values are:
+        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
+        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
+
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
@@ -45,7 +55,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     -------
     out : dict of list
         A dictionary holding the results of the flagser computation. Each
-        value is a list of length `max_dimension` - `min_dimension`. The
+        value is a list of length `max_dimension` - `min_dimension` + 1. The
         key-value pairs in `out` are as follows:
 
         - ``'dgms'``: list of ndarray of shape ``(n_pairs, 2)``
@@ -63,6 +73,12 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         - ``'euler'``: list of int
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
+
+    Notes
+    -----
+    For more details, please refer to the `flagser documentation \
+    <https://github.com/luetge/flagser/blob/master/docs/\
+    documentation_flagser.pdf>`_.
 
     """
     vertices = np.asarray(flag_matrix.diagonal()).copy()
@@ -82,18 +98,23 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         edges = np.vstack([edges.row[mask_out_of_diag],
                            edges.col[mask_out_of_diag],
                            edges.data[mask_out_of_diag]]).T
-        print(edges.shape)
 
     if max_dimension == np.inf:
         _max_dimension = -1
     else:
         _max_dimension = max_dimension
 
+    if filtration not in implemented_filtrations:
+        print('Unrecognized {} filtration, using max'.format(filtration))
+        print('Available algorithms : {}'.format(implemented_filtrations))
+        filtration = "max"
+
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, approximation)
+                                directed, coeff, approximation, filtration)
     # Creating dictionary of return values
     out = dict()
-    out['dgms'] = homology[0].get_persistence_diagram()
+    out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
+                   for i in range(len(homology[0].get_persistence_diagram()))]
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
     out['euler'] = homology[0].get_euler_characteristic()
