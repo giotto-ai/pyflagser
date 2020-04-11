@@ -160,6 +160,12 @@ filtrations_results = {
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
+    'vertex_degree':
+    {
+        'dgms': [
+            np.array([[-4, float('inf')]]),
+            np.array([])]
+    },
 }
 
 
@@ -182,22 +188,17 @@ def are_matrix_equal(m1, m2):
 def test_filtrations(flag_file):
     """
     Testing all filtrations available for dataset d5.flag
-    vertex_degree filtrations was disable because it produces a segmentation
-    fault.
     """
     if os.path.split(flag_file)[1] == 'd5.flag':
         flag_matrix = loadflag(flag_file)
         for filtration in implemented_filtrations:
-            if filtration not in ['vertex_degree']:
-                assert filtration in filtrations_results.keys(),\
-                    "Test for {} is not implemented, current implemented tests\
-                    are {}".format(filtration, filtrations_results.keys())
-                res = flagser(flag_matrix, max_dimension=1, directed=False,
-                              filtration=filtration)
-                for filt, tests in filtrations_results.items():
-                    if filtration == filt:
-                        tmp = np.array(res['dgms']).tolist()
-                        tmp2 = np.array(tests['dgms']).tolist()
-                        assert are_matrix_equal(tmp, tmp2), \
-                            "diagrams {} \n and {} \n are not equal"\
-                            .format(tmp, tmp2)
+            print('testing {} filtration'.format(filtration))
+            res = flagser(flag_matrix, max_dimension=1, directed=False,
+                          filtration=filtration)
+            for filt, tests in filtrations_results.items():
+                if filtration == filt:
+                    tmp = np.array(res['dgms']).tolist()
+                    tmp2 = np.array(tests['dgms']).tolist()
+                    assert are_matrix_equal(tmp, tmp2), \
+                        "diagrams {} \n and {} \n are not equal"\
+                        .format(tmp, tmp2)
