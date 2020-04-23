@@ -86,7 +86,10 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     if not approximation:
         approximation = -1
 
-    flag_matrix.setdiag(np.nan)
+    if type(flag_matrix) is np.ndarray:
+        np.fill_diagonal(flag_matrix, np.nan)
+    else:
+        flag_matrix.setdiag(np.nan)
 
     mask_out_of_diag = np.logical_not(np.isnan(flag_matrix.data))
 
@@ -98,7 +101,10 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
                            flag_matrix.col[mask_out_of_diag],
                            flag_matrix.data[mask_out_of_diag]]).T
 
-    flag_matrix.setdiag(vertices)
+    if type(flag_matrix) is np.ndarray:
+        np.fill_diagonal(flag_matrix, vertices)
+    else:
+        flag_matrix.setdiag(vertices)
 
     if max_dimension == np.inf:
         _max_dimension = -1
