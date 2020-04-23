@@ -86,18 +86,19 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     if not approximation:
         approximation = -1
 
-    edges = sp.coo_matrix(flag_matrix, copy=True)
-    edges.setdiag(np.nan)
+    flag_matrix.setdiag(np.nan)
 
-    mask_out_of_diag = np.logical_not(np.isnan(edges.data))
+    mask_out_of_diag = np.logical_not(np.isnan(flag_matrix.data))
 
-    if edges.dtype == bool:
-        edges = np.vstack([edges.row[mask_out_of_diag],
-                           edges.col[mask_out_of_diag]]).T[:, :2]
+    if flag_matrix.dtype == bool:
+        edges = np.vstack([flag_matrix.row[mask_out_of_diag],
+                           flag_matrix.col[mask_out_of_diag]]).T[:, :2]
     else:
-        edges = np.vstack([edges.row[mask_out_of_diag],
-                           edges.col[mask_out_of_diag],
-                           edges.data[mask_out_of_diag]]).T
+        edges = np.vstack([flag_matrix.row[mask_out_of_diag],
+                           flag_matrix.col[mask_out_of_diag],
+                           flag_matrix.data[mask_out_of_diag]]).T
+
+    flag_matrix.setdiag(vertices)
 
     if max_dimension == np.inf:
         _max_dimension = -1
@@ -109,8 +110,11 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         print('Available algorithms : {}'.format(implemented_filtrations))
         filtration = "max"
 
+    print(vertices)
+    print(edges)
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation, filtration)
+
     # Creating dictionary of return values
     out = dict()
     out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
@@ -118,5 +122,5 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
     out['euler'] = homology[0].get_euler_characteristic()
-
+    print(out)
     return out
