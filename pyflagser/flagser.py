@@ -88,18 +88,23 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
 
     if type(flag_matrix) is np.ndarray:
         np.fill_diagonal(flag_matrix, np.nan)
+        row = np.indices(flag_matrix.shape)[0].flat
+        column  = np.indices(flag_matrix.shape)[1].flat
+        data = flag_matrix.flat
     else:
         flag_matrix.setdiag(np.nan)
+        row, column = flag_matrix.row, flag_matrix.col
+        data = flag_matrix.data
 
-    mask_out_of_diag = np.logical_not(np.isnan(flag_matrix.data))
+    mask_out_of_diag = np.logical_not(np.isnan(data))
 
     if flag_matrix.dtype == bool:
-        edges = np.vstack([flag_matrix.row[mask_out_of_diag],
-                           flag_matrix.col[mask_out_of_diag]]).T[:, :2]
+        edges = np.vstack([rows[mask_out_of_diag],
+                           columns[mask_out_of_diag]]).T[:, :2]
     else:
-        edges = np.vstack([flag_matrix.row[mask_out_of_diag],
-                           flag_matrix.col[mask_out_of_diag],
-                           flag_matrix.data[mask_out_of_diag]]).T
+        edges = np.vstack([row[mask_out_of_diag],
+                           column[mask_out_of_diag],
+                           data[mask_out_of_diag]]).T
 
     if type(flag_matrix) is np.ndarray:
         np.fill_diagonal(flag_matrix, vertices)
