@@ -110,8 +110,6 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         print('Available algorithms : {}'.format(implemented_filtrations))
         filtration = "max"
 
-    print(vertices)
-    print(edges)
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation, filtration)
 
@@ -122,5 +120,5 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
     out['euler'] = homology[0].get_euler_characteristic()
-    print(out)
+
     return out
