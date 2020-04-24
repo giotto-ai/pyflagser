@@ -99,8 +99,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     mask_out_of_diag = np.logical_not(np.isnan(data))
 
     if flag_matrix.dtype == bool:
-        edges = np.vstack([rows[mask_out_of_diag],
-                           columns[mask_out_of_diag]]).T[:, :2]
+        edges = np.vstack([row[mask_out_of_diag],
+                           column[mask_out_of_diag]]).T[:, :2]
     else:
         edges = np.vstack([row[mask_out_of_diag],
                            column[mask_out_of_diag],
