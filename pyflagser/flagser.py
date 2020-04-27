@@ -18,7 +18,14 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     ----------
     flag_matrix : ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights.
+        graph. Diagonal elements are vertex weights. The way zero values are
+        handled depends on the format of the matrix. If the matrix is a dense
+        `np.ndarray`, all zeros are explicitly accounted for and denote
+        zero-weight edges, i.e., and edge appeaing at filtration value zero.
+        If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
+        and off-diagonal zeros assigned directly are treated explicitly. Off-
+        diagonal zeros that have not been assigned directly are treated
+        implicittly, i.e., corresponds to an abscence of edge.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension.
@@ -81,6 +88,8 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     documentation_flagser.pdf>`_.
 
     """
+    print(flag_matrix)
+    print(flag_matrix.nonzero())
     vertices = np.asarray(flag_matrix.diagonal()).copy()
 
     if not approximation:
@@ -93,18 +102,18 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         data = flag_matrix.flat
     else:
         flag_matrix.setdiag(np.nan)
-        row, column = flag_matrix.nonzero()
+        row, column = flag_matrix.tocoo().row, flag_matrix.tocoo().col
         data = flag_matrix.data
 
-    mask_out_of_diag = np.logical_not(np.isnan(data))
+    mask_off_diag = np.logical_not(np.isnan(data))
 
     if flag_matrix.dtype == bool:
-        edges = np.vstack([row[mask_out_of_diag],
-                           column[mask_out_of_diag]]).T[:, :2]
+        edges = np.vstack([row[mask_off_diag],
+                           column[mask_off_diag]]).T[:, :2]
     else:
-        edges = np.vstack([row[mask_out_of_diag],
-                           column[mask_out_of_diag],
-                           data[mask_out_of_diag]]).T
+        edges = np.vstack([row[mask_off_diag],
+                           column[mask_off_diag],
+                           data[mask_off_diag]]).T
 
     if type(flag_matrix) is np.ndarray:
         np.fill_diagonal(flag_matrix, vertices)
