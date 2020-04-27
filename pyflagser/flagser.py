@@ -93,7 +93,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         data = flag_matrix.flat
     else:
         flag_matrix.setdiag(np.nan)
-        row, column = flag_matrix.row, flag_matrix.col
+        row, column = flag_matrix.nonzero()
         data = flag_matrix.data
 
     mask_out_of_diag = np.logical_not(np.isnan(data))

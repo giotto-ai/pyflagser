@@ -185,7 +185,7 @@ def test_betti(flag_file):
 def test_filtrations_d5(flag_file, filtration):
     """Testing all filtrations available for dataset d5.flag,
     see conftest.py"""
-    flag_matrix = loadflag(flag_file)
+    flag_matrix = loadflag(flag_file, fmt='coo')
     res = flagser(flag_matrix, max_dimension=1, directed=False,
                   filtration=filtration)
     for filt, tests in filtrations_results.items():
