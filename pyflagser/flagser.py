@@ -87,8 +87,6 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     documentation_flagser.pdf>`_.
 
     """
-    print(flag_matrix)
-    print(flag_matrix.nonzero())
     vertices = np.asarray(flag_matrix.diagonal()).copy()
 
     if not approximation:
