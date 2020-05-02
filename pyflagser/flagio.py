@@ -25,7 +25,14 @@ def loadflag(fname, fmt='csr', dtype=None):
     -------
     flag_matrix : matrix of format `fmt`
         Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights.
+        graph. Diagonal elements are vertex weights. The way zero values are
+        handled depends on the format of the matrix. If the matrix is a dense
+        `np.ndarray`, all zeros are explicitly accounted for and denote
+        zero-weight edges, i.e., edges appeaing at filtration value zero.
+        If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
+        and off-diagonal zeros assigned directly are treated explicitly. Off-
+        diagonal zeros that have not been assigned directly are treated
+        implicitly, i.e., corresponds to an abscence of edge.
 
     """
     with open(fname, 'r') as f:
@@ -55,7 +62,14 @@ def saveflag(fname, flag_matrix):
 
     flag_matrix : 2d ndarray or scipy sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights.
+        graph. Diagonal elements are vertex weights. The way zero values are
+        handled depends on the format of the matrix. If the matrix is a dense
+        `np.ndarray`, all zeros are explicitly accounted for and denote
+        zero-weight edges, i.e., edges appeaing at filtration value zero.
+        If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
+        and off-diagonal zeros assigned directly are treated explicitly. Off-
+        diagonal zeros that have not been assigned directly are treated
+        implicitly, i.e., corresponds to an abscence of edge.
 
     """
     with open(fname, 'w') as f:

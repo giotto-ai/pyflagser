@@ -1,7 +1,6 @@
 """Implementation of the python API for the flagser C++ library."""
 
 import numpy as np
-import scipy.sparse as sp
 from flagser_pybind import compute_homology, implemented_filtrations
 
 
@@ -18,7 +17,14 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     ----------
     flag_matrix : ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights.
+        graph. Diagonal elements are vertex weights. The way zero values are
+        handled depends on the format of the matrix. If the matrix is a dense
+        `np.ndarray`, all zeros are explicitly accounted for and denote
+        zero-weight edges, i.e., edges appeaing at filtration value zero.
+        If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
+        and off-diagonal zeros assigned directly are treated explicitly. Off-
+        diagonal zeros that have not been assigned directly are treated
+        implicitly, i.e., corresponds to an abscence of edge.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension.
@@ -86,18 +92,30 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     if not approximation:
         approximation = -1
 
-    edges = sp.coo_matrix(flag_matrix, copy=True)
-    edges.setdiag(np.nan)
-
-    mask_out_of_diag = np.logical_not(np.isnan(edges.data))
-
-    if edges.dtype == bool:
-        edges = np.vstack([edges.row[mask_out_of_diag],
-                           edges.col[mask_out_of_diag]]).T[:, :2]
+    if type(flag_matrix) is np.ndarray:
+        np.fill_diagonal(flag_matrix, np.nan)
+        row = np.indices(flag_matrix.shape)[0].flat
+        column = np.indices(flag_matrix.shape)[1].flat
+        data = flag_matrix.flat
     else:
-        edges = np.vstack([edges.row[mask_out_of_diag],
-                           edges.col[mask_out_of_diag],
-                           edges.data[mask_out_of_diag]]).T
+        flag_matrix.setdiag(np.nan)
+        row, column = flag_matrix.tocoo().row, flag_matrix.tocoo().col
+        data = flag_matrix.data
+
+    mask_off_diag = np.logical_not(np.isnan(data))
+
+    if flag_matrix.dtype == bool:
+        edges = np.vstack([row[mask_off_diag],
+                           column[mask_off_diag]]).T[:, :2]
+    else:
+        edges = np.vstack([row[mask_off_diag],
+                           column[mask_off_diag],
+                           data[mask_off_diag]]).T
+
+    if type(flag_matrix) is np.ndarray:
+        np.fill_diagonal(flag_matrix, vertices)
+    else:
+        flag_matrix.setdiag(vertices)
 
     if max_dimension == np.inf:
         _max_dimension = -1
@@ -111,6 +129,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
 
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, approximation, filtration)
+
     # Creating dictionary of return values
     out = dict()
     out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
