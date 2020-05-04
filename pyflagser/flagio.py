@@ -26,10 +26,10 @@ def loadflag(fname, fmt='csr', dtype=None):
     flag_matrix : matrix of format `fmt`
         Matrix representation of a directed/undirected weighted/unweighted
         graph. Diagonal elements are vertex weights. The way zero values are
-        handled depends on `fmt`. If `fmt` is `'dense'`, all zeros are
+        handled depends on `fmt`. If `fmt` is ``'dense'``, all zeros are
         explicitly accounted for and denote zero-weight edges, i.e., edges
         appeaing at filtration value zero. Else, if the matrix `fmt` denotes a
-        `scipy.sparse` matrix format, zeros on the diagonal and off-diagonal
+        ``scipy.sparse`` matrix format, zeros on the diagonal and off-diagonal
         zeros assigned directly are treated explicitly. Off-diagonal zeros that
         have not been assigned directly are treated implicitly, i.e.,
         correspond to an absent edge.
@@ -64,12 +64,12 @@ def saveflag(fname, flag_matrix):
         Matrix representation of a directed/undirected weighted/unweighted
         graph. Diagonal elements are vertex weights. The way zero values are
         handled depends on the format of the matrix. If the matrix is a dense
-        `np.ndarray`, all zeros are explicitly accounted for and denote
+        ``np.ndarray``, all zeros are explicitly accounted for and denote
         zero-weight edges, i.e., edges appearing at filtration value zero.
-        If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
-        and off-diagonal zeros assigned directly are treated explicitly. Off-
-        diagonal zeros that have not been assigned directly are treated
-        implicitly, i.e., correspond to an absent of edge.
+        If the matrix is a sparse ``scipy.sparse`` matrix, zeros on the
+        diagonal and off-diagonal zeros assigned directly are treated
+        explicitly. Off-diagonal zeros that have not been assigned directly
+        are treated implicitly, i.e., correspond to an absent edge.
 
     """
     with open(fname, 'w') as f:
