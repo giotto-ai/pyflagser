@@ -32,7 +32,7 @@ def loadflag(fname, fmt='csr', dtype=None):
         `scipy.sparse` matrix format, zeros on the diagonal and off-diagonal
         zeros assigned directly are treated explicitly. Off-diagonal zeros that
         have not been assigned directly are treated implicitly, i.e.,
-        correspond to an abscent edge.
+        correspond to an absent edge.
 
     """
     with open(fname, 'r') as f:
@@ -69,7 +69,7 @@ def saveflag(fname, flag_matrix):
         If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
         and off-diagonal zeros assigned directly are treated explicitly. Off-
         diagonal zeros that have not been assigned directly are treated
-        implicitly, i.e., correspond to an abscent of edge.
+        implicitly, i.e., correspond to an absent of edge.
 
     """
     with open(fname, 'w') as f:
