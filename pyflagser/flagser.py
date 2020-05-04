@@ -20,11 +20,11 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         graph. Diagonal elements are vertex weights. The way zero values are
         handled depends on the format of the matrix. If the matrix is a dense
         `np.ndarray`, all zeros are explicitly accounted for and denote
-        zero-weight edges, i.e., edges appeaing at filtration value zero.
+        zero-weight edges, i.e., edges appearing at filtration value zero.
         If the matrix is a sparse `scipy.sparse` matrix, zeros on the diagonal
         and off-diagonal zeros assigned directly are treated explicitly. Off-
         diagonal zeros that have not been assigned directly are treated
-        implicitly, i.e., corresponds to an abscence of edge.
+        implicitly, i.e., correspond to an abscent of edge.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension.
@@ -92,7 +92,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     if not approximation:
         approximation = -1
 
-    if type(flag_matrix) is np.ndarray:
+    if isinstance(flag_matrix, np.ndarray):
         row = np.indices(flag_matrix.shape)[0].flat
         column = np.indices(flag_matrix.shape)[1].flat
         data = flag_matrix.flat
