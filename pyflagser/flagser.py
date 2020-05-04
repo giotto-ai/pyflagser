@@ -93,29 +93,25 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         approximation = -1
 
     if type(flag_matrix) is np.ndarray:
-        np.fill_diagonal(flag_matrix, np.nan)
         row = np.indices(flag_matrix.shape)[0].flat
         column = np.indices(flag_matrix.shape)[1].flat
         data = flag_matrix.flat
+        mask_off_diag = np.logical_not(np.eye(vertices.shape[0],
+                                              dtype=bool).flat)
+
     else:
-        flag_matrix.setdiag(np.nan)
         row, column = flag_matrix.tocoo().row, flag_matrix.tocoo().col
-        data = flag_matrix.data
+        data = flag_matrix.tocoo().data
+        mask_off_diag = np.ones(row.shape[0], dtype=np.bool)
+        mask_off_diag[np.arange(row.shape[0])[row == column]] = False
 
-    mask_off_diag = np.logical_not(np.isnan(data))
-
-    if flag_matrix.dtype == bool:
-        edges = np.vstack([row[mask_off_diag],
-                           column[mask_off_diag]]).T[:, :2]
-    else:
+    if flag_matrix.dtype is not bool:
         edges = np.vstack([row[mask_off_diag],
                            column[mask_off_diag],
                            data[mask_off_diag]]).T
-
-    if type(flag_matrix) is np.ndarray:
-        np.fill_diagonal(flag_matrix, vertices)
     else:
-        flag_matrix.setdiag(vertices)
+        edges = np.vstack([row[mask_off_diag],
+                           column[mask_off_diag]]).T[:, :2]
 
     if max_dimension == np.inf:
         _max_dimension = -1
