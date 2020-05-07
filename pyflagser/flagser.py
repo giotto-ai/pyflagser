@@ -1,13 +1,14 @@
 """Implementation of the python API for the flagser C++ library."""
 
 import numpy as np
+from warnings import warn
+
 from flagser_pybind import compute_homology, implemented_filtrations
 
 
-def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
-            filtration="max", coeff=2, approximation=-1):
-    """Compute persistent homology of a directed/undirected
-    weighted/unweighted flag complexes.
+def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
+                   filtration="max", coeff=2, approximation=None):
+    """Compute homology of a directed/undirected unweighted flag complex.
 
     Important: the input graphs cannot contain self-loops, i.e. edges
     that start and end in the same vertex, therefore diagonal elements
@@ -16,15 +17,12 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     Parameters
     ----------
     flag_matrix : ndarray or scipy.sparse matrix, required
-        Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights. The way zero values are
-        handled depends on the format of the matrix. If the matrix is a dense
-        ``np.ndarray``, all zeros are explicitly accounted for and denote
-        zero-weight edges, i.e., edges appearing at filtration value zero.
-        If the matrix is a sparse ``scipy.sparse`` matrix, zeros on the
-        diagonal and off-diagonal zeros assigned directly are treated
-        explicitly. Off-diagonal zeros that have not been assigned directly are
-        treated implicitly, i.e., correspond to an absent edge.
+        Matrix representation of a directed/undirected unweighted graph. It is
+        understood as a boolean matrix. Diagonal elements are vertex weights
+        with non-``0`` or ``True`` values corresponding to ``True`` values and
+        ``0`` or ``False`` values corresponding to ``False`` values.
+        Off-diagonal, ``0`` or ``False`` values denote edge absence while
+        non-``0`` or ``True`` values denote edges presence.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension.
@@ -51,18 +49,18 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
         :math:`p` equals `coeff`.
 
-    approximation : int, optional, default: ``-1``
+    approximation : int or None, optional, default: ``None``
         Skip all cells creating columns in the reduction matrix with more than
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
-        computation. A negative value computes highest possible precision.
+        computation. A negative value computes highest possible precision. If
+        ``None``, no approximation is used.
 
     Returns
     -------
     out : dict of list
-        A dictionary holding the results of the flagser computation. Each
-        value is a list of length `max_dimension` - `min_dimension` + 1. The
-        key-value pairs in `out` are as follows:
+        A dictionary holding the results of the flagser computation. Its
+        key-value pairs are as follows:
 
         - ``'dgms'``: list of ndarray of shape ``(n_pairs, 2)``
           A list of persistence diagrams, one for each dimension greater
@@ -76,7 +74,7 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
         - ``'betti'``: list of int
           Betti number per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
-        - ``'euler'``: list of int
+        - ``'euler'``: int
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
 
@@ -87,48 +85,221 @@ def flagser(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
     documentation_flagser.pdf>`_.
 
     """
-    vertices = np.asarray(flag_matrix.diagonal()).copy()
+    # Handle default parameters
+    if max_dimension == np.inf:
+        _max_dimension = -1
+    else:
+        _max_dimension = max_dimension
 
-    if not approximation:
-        approximation = -1
+    if approximation is None:
+        _approximation = -1
+    else:
+        _approximation = approximation
 
+    if filtration not in implemented_filtrations:
+        raise ValueError("Filtration not recongnized. Available filtrations are ",
+                         implemented_filtrations)
+
+    # Extract vertices weights
+    vertices = np.asarray(flag_matrix.diagonal(), dtype=np.bool).copy()
+
+    # Extract edges indices and weights
     if isinstance(flag_matrix, np.ndarray):
-        row = np.indices(flag_matrix.shape)[0].flat
-        column = np.indices(flag_matrix.shape)[1].flat
-        data = flag_matrix.flat
-        mask_off_diag = np.logical_not(np.eye(vertices.shape[0],
-                                              dtype=bool).flat)
+        row, column = np.indices(flag_matrix.shape)
+        row, column = row.flat, column.flat
+
+        # Off-diagonal mask
+        mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
+
+        # Data mask
+        mask = np.logical_and(mask, flag_matrix.flat != 0)
 
     else:
-        row, column = flag_matrix.tocoo().row, flag_matrix.tocoo().col
-        data = flag_matrix.tocoo().data
-        mask_off_diag = np.ones(row.shape[0], dtype=np.bool)
-        mask_off_diag[np.arange(row.shape[0])[row == column]] = False
+        # Convert to COO format to extract row and column arrays
+        fmt = flag_matrix.getformat()
+        flag_matrix = flag_matrix.tocoo()
+        row, column = flag_matrix.row, flag_matrix.col
+        data = np.asarray(flag_matrix.data, dtype=np.bool)
+        flag_matrix = flag_matrix.asformat(fmt)
 
-    if flag_matrix.dtype is not bool:
-        edges = np.vstack([row[mask_off_diag],
-                           column[mask_off_diag],
-                           data[mask_off_diag]]).T
+        # Off-diagonal mask
+        mask = np.ones(row.shape[0], dtype=np.bool)
+        mask[np.arange(row.shape[0])[row == column]] = False
+
+        # Data mask
+        mask = np.logical_and(mask, data)
+
+    edges = np.vstack([row[mask], column[mask]]).T[:, :2]
+
+    # Call flagser binding
+    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
+                                directed, coeff, _approximation, filtration)
+
+    # Creating dictionary of return values
+    out = dict()
+    out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
+                   for i in range(len(homology[0].get_persistence_diagram()))]
+    out['cell_count'] = homology[0].get_cell_count()
+    out['betti'] = homology[0].get_betti_numbers()
+    out['euler'] = homology[0].get_euler_characteristic()
+
+    return out
+
+
+def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
+                        max_dimension=np.inf, directed=True, filtration="max",
+                        coeff=2, approximation=None):
+    """Compute persistent homology of a directed/undirected
+    weighted/unweighted flag complexes.
+
+    Important: the input graphs cannot contain self-loops, i.e. edges
+    that start and end in the same vertex, therefore diagonal elements
+    of the flag matrix store vertex weights.
+
+    Parameters
+    ----------
+    flag_matrix : ndarray or scipy.sparse matrix, required
+        Matrix representation of a directed/undirected weighted/unweighted
+        graph. Diagonal elements are vertex weights. The way zero values are
+        handled depends on the format of the matrix. If the matrix is a dense
+        ``np.ndarray``, zero values denote zero-weighted edges. If the matrix
+        is a sparse ``scipy.sparse`` matrix, explicitely stored off-diagonal
+        zeros  and all diagonal zeros denote zero-weighted edges. Off-diagonal
+        values that have not been explicitely stored are treated by
+        ``scipy.sparse`` as zeros but will be understood as infinitely-valued
+        edges, i.e., edges absent from the filtration.
+
+    max_edge_length : int or float or ``None``, optional, default: ``None``
+        Maximum edge length to be considered in the filtration. All edge
+        weights greater than that value will be considered as
+        infinitely-valued, i.e., absent from the filtration. Additionally,
+        it sets the maximum death values of diagram points. If ``None``, it is
+        set to the maximum value allowed by the `flag_matrix` dtype.
+
+    min_dimension : int, optional, default: ``0``
+        Minimum homology dimension.
+
+    max_dimension : int or np.inf, optional, default: ``np.inf``
+        Maximum homology dimension.
+
+    directed : bool, optional, default: ``True``
+        If true, computes the directed flag complex. Otherwise, it computes
+        the undirected flag complex.
+
+    filtration : string, optional, default: ``'max'``
+        Algorithm determining the filtration. Warning: if an edge filtration is
+        specified, it is assumed that the resulting filtration is consistent,
+        meaning that the filtration value of every simplex of dimension at
+        least two should evaluate to a value that is at least the maximal value
+        of the filtration values of its containing edges. For performance
+        reasons, this is not checked automatically.  Possible values are:
+        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
+        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
+
+    coeff : int, optional, default: ``2``
+        Compute homology with coefficients in the prime field
+        :math:`\\mathbb{F}_p = \\{ 0, \\ldots, p - 1 \\}` where
+        :math:`p` equals `coeff`.
+
+    approximation : int or None, optional, default: ``None``
+        Skip all cells creating columns in the reduction matrix with more than
+        this number of entries. Use this for hard problems; a good value is
+        often ``100,000``. Increase for higher precision, decrease for faster
+        computation. A negative value computes highest possible precision. If
+        ``None``, no approximation is used.
+
+    Returns
+    -------
+    out : dict of list
+        A dictionary holding the results of the flagser computation. Its
+        key-value pairs are as follows:
+
+        - ``'dgms'``: list of ndarray of shape ``(n_pairs, 2)``
+          A list of persistence diagrams, one for each dimension greater
+          than or equal than `min_dimension` and less than `max_dimension`.
+          Each diagram is an ndarray of size (n_pairs, 2) with the first
+          column representing the birth time and the second column
+          representing the death time of each pair.
+        - ``'cell_count'``: list of int
+          Cell count per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+        - ``'betti'``: list of int
+          Betti number per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+        - ``'euler'``: int
+          Euler characteristic per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+
+    Notes
+    -----
+    For more details, please refer to the `flagser documentation \
+    <https://github.com/luetge/flagser/blob/master/docs/\
+    documentation_flagser.pdf>`_.
+
+    """
+    # Handle default parameters
+    if max_edge_length is None:
+        # Get the maximum value depending on flag_matrix.dtype
+        if np.issubdtype(flag_matrix.dtype, np.integer):
+            _max_edge_length = np.iinfo(dtype).max
+        elif np.issubdtype(flag_matrix.dtype, np.integer):
+            _max_edge_length = np.inf
+        else:
+            _max_edge_length = None
     else:
-        edges = np.vstack([row[mask_off_diag],
-                           column[mask_off_diag]]).T[:, :2]
+        _max_edge_length = max_edge_length
 
     if max_dimension == np.inf:
         _max_dimension = -1
     else:
         _max_dimension = max_dimension
 
+    if approximation is None:
+        _approximation = -1
+    else:
+        _approximation = approximation
+
     if filtration not in implemented_filtrations:
-        print('Unrecognized {} filtration, using max'.format(filtration))
-        print('Available algorithms : {}'.format(implemented_filtrations))
-        filtration = "max"
+        raise ValueError("Filtration not recongnized. Available filtrations are ",
+                         implemented_filtrations)
 
+    # Extract vertices weights
+    vertices = np.asarray(flag_matrix.diagonal()).copy()
+
+    # Extract edges indices and weights
+    if isinstance(flag_matrix, np.ndarray):
+        row, column = np.indices(flag_matrix.shape)
+        row, column = row.flat, column.flat
+        data = flag_matrix.flat
+
+        # Off-diagonal mask
+        mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
+    else:
+        # Convert to COO format to extract row column, and data arrays
+        fmt = flag_matrix.getformat()
+        flag_matrix = flag_matrix.tocoo()
+        row, column = flag_matrix.row, flag_matrix.col
+        data = flag_matrix.data
+        flag_matrix = flag_matrix.asformat(fmt)
+
+        # Off-diagonal mask
+        mask = np.ones(row.shape[0], dtype=np.bool)
+        mask[np.arange(row.shape[0])[row == column]] = False
+
+    # Infinite weights mask
+    if _max_edge_length is not None:
+        mask = np.logical_and(mask, data <= _max_edge_length)
+
+    edges = np.vstack([row[mask], column[mask], data[mask]]).T
+
+    # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, approximation, filtration)
+                                directed, coeff, _approximation, filtration)
 
-    # Creating dictionary of return values
+    # Create dictionary of return values
     out = dict()
-    out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
+    out['dgms'] = [np.nan_to_num(homology[0].get_persistence_diagram()[i],
+                                 posinf=_max_edge_length)
                    for i in range(len(homology[0].get_persistence_diagram()))]
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
