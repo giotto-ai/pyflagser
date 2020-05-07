@@ -5,7 +5,8 @@ import numpy as np
 
 from numpy.testing import assert_almost_equal
 
-from pyflagser import loadflag, flagser_static, flagser_persistence
+from pyflagser import load_static_flag, load_persistence_flag, \
+    flagser_static, flagser_persistence
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -177,15 +178,15 @@ def are_matrices_equal(m1, m2):
 
 def test_betti(flag_file):
     betti_exp = betti[os.path.split(flag_file)[1]]
-    flag_matrix = loadflag(flag_file, fmt='coo')
-    betti_res = flagser_persistence(flag_matrix)["betti"]
+    flag_matrix = load_static_flag(flag_file, fmt='coo')
+    betti_res = flagser_static(flag_matrix)["betti"]
     assert_almost_equal(betti_res, betti_exp)
 
 
 def test_filtrations_d5(flag_file, filtration):
     """Testing all filtrations available for dataset d5.flag,
     see conftest.py"""
-    flag_matrix = loadflag(flag_file, fmt='coo')
+    flag_matrix = load_persistence_flag(flag_file, fmt='coo')
     res = flagser_persistence(flag_matrix, max_dimension=1, directed=False,
                               filtration=filtration)
     for filt, tests in filtrations_results.items():
