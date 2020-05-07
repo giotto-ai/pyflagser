@@ -1,13 +1,14 @@
 """Implementation of the python API for the flagser C++ library."""
 
 import numpy as np
-from warnings import warn
 
+from ._utils import _extract_static_weights, _extract_persistence_weights
 from flagser_pybind import compute_homology, implemented_filtrations
 
 
-def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=True,
-                   filtration="max", coeff=2, approximation=None):
+def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
+                   directed=True, filtration="max", coeff=2,
+                   approximation=None):
     """Compute homology of a directed/undirected unweighted flag complex.
 
     Important: the input graphs cannot contain self-loops, i.e. edges
@@ -16,7 +17,7 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=
 
     Parameters
     ----------
-    flag_matrix : ndarray or scipy.sparse matrix, required
+    flag_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Diagonal elements are vertex weights
         with non-``0`` or ``True`` values corresponding to ``True`` values and
@@ -97,39 +98,11 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf, directed=
         _approximation = approximation
 
     if filtration not in implemented_filtrations:
-        raise ValueError("Filtration not recongnized. Available filtrations are ",
-                         implemented_filtrations)
+        raise ValueError("Filtration not recongnized. Available filtrations "
+                         "are ", implemented_filtrations)
 
-    # Extract vertices weights
-    vertices = np.asarray(flag_matrix.diagonal(), dtype=np.bool).copy()
-
-    # Extract edges indices and weights
-    if isinstance(flag_matrix, np.ndarray):
-        row, column = np.indices(flag_matrix.shape)
-        row, column = row.flat, column.flat
-
-        # Off-diagonal mask
-        mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
-
-        # Data mask
-        mask = np.logical_and(mask, flag_matrix.flat != 0)
-
-    else:
-        # Convert to COO format to extract row and column arrays
-        fmt = flag_matrix.getformat()
-        flag_matrix = flag_matrix.tocoo()
-        row, column = flag_matrix.row, flag_matrix.col
-        data = np.asarray(flag_matrix.data, dtype=np.bool)
-        flag_matrix = flag_matrix.asformat(fmt)
-
-        # Off-diagonal mask
-        mask = np.ones(row.shape[0], dtype=np.bool)
-        mask[np.arange(row.shape[0])[row == column]] = False
-
-        # Data mask
-        mask = np.logical_and(mask, data)
-
-    edges = np.vstack([row[mask], column[mask]]).T[:, :2]
+    # Extract vertices and edges weights
+    vertices, edges = _extract_static_weights(flag_matrix)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
@@ -158,7 +131,7 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
 
     Parameters
     ----------
-    flag_matrix : ndarray or scipy.sparse matrix, required
+    flag_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
         graph. Diagonal elements are vertex weights. The way zero values are
         handled depends on the format of the matrix. If the matrix is a dense
@@ -241,8 +214,8 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
     if max_edge_length is None:
         # Get the maximum value depending on flag_matrix.dtype
         if np.issubdtype(flag_matrix.dtype, np.integer):
-            _max_edge_length = np.iinfo(dtype).max
-        elif np.issubdtype(flag_matrix.dtype, np.integer):
+            _max_edge_length = np.iinfo(flag_matrix.dtype).max
+        elif np.issubdtype(flag_matrix.dtype, np.float):
             _max_edge_length = np.inf
         else:
             _max_edge_length = None
@@ -260,37 +233,12 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
         _approximation = approximation
 
     if filtration not in implemented_filtrations:
-        raise ValueError("Filtration not recongnized. Available filtrations are ",
-                         implemented_filtrations)
+        raise ValueError("Filtration not recongnized. Available filtrations "
+                         "are ", implemented_filtrations)
 
-    # Extract vertices weights
-    vertices = np.asarray(flag_matrix.diagonal()).copy()
-
-    # Extract edges indices and weights
-    if isinstance(flag_matrix, np.ndarray):
-        row, column = np.indices(flag_matrix.shape)
-        row, column = row.flat, column.flat
-        data = flag_matrix.flat
-
-        # Off-diagonal mask
-        mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
-    else:
-        # Convert to COO format to extract row column, and data arrays
-        fmt = flag_matrix.getformat()
-        flag_matrix = flag_matrix.tocoo()
-        row, column = flag_matrix.row, flag_matrix.col
-        data = flag_matrix.data
-        flag_matrix = flag_matrix.asformat(fmt)
-
-        # Off-diagonal mask
-        mask = np.ones(row.shape[0], dtype=np.bool)
-        mask[np.arange(row.shape[0])[row == column]] = False
-
-    # Infinite weights mask
-    if _max_edge_length is not None:
-        mask = np.logical_and(mask, data <= _max_edge_length)
-
-    edges = np.vstack([row[mask], column[mask], data[mask]]).T
+    # Extract vertices and edges weights
+    vertices, edges = _extract_persistence_weights(flag_matrix,
+                                                   _max_edge_length)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
