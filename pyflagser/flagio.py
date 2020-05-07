@@ -1,5 +1,6 @@
 """Implementation of input/output functions for .flag files"""
 
+import warnings
 import numpy as np
 import scipy.sparse as sp
 
@@ -41,12 +42,15 @@ def loadflag(fname, fmt='csr', dtype=None):
         vertices = list(map(float, line.split(' ')))
         flag_matrix = sp.csr_matrix((len(vertices), len(vertices)),
                                     dtype=dtype)
-        flag_matrix.setdiag(vertices)
+        # Silence sparse warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
+            flag_matrix.setdiag(vertices)
 
-        for line in f.readlines()[1:]:
-            edge = line.strip().split(' ')
-            flag_matrix[int(float(edge[0])), int(float(edge[1]))] = \
-                float(edge[2])
+            for line in f.readlines()[1:]:
+                edge = line.strip().split(' ')
+                flag_matrix[int(float(edge[0])), int(float(edge[1]))] = \
+                    float(edge[2])
 
     return flag_matrix.asformat(fmt)
 
