@@ -182,16 +182,16 @@ def test_betti(flag_file):
     assert_almost_equal(betti_res, betti_exp)
 
 
-# def test_filtrations_d5(flag_file, filtration):
-#     """Testing all filtrations available for dataset d5.flag,
-#     see conftest.py"""
-#     flag_matrix = loadflag(flag_file, fmt='coo')
-#     res = flagser_persistence(flag_matrix, max_dimension=1, directed=False,
-#                               filtration=filtration)
-#     for filt, tests in filtrations_results.items():
-#         if filtration == filt:
-#             tmp = np.array(res["dgms"]).tolist()
-#             tmp2 = np.array(tests["dgms"]).tolist()
-#             assert are_matrices_equal(tmp, tmp2), \
-#                 "Diagrams {} \n and {} \n are not equal"\
-#                 .format(tmp, tmp2)
+def test_filtrations_d5(flag_file, filtration):
+    """Testing all filtrations available for dataset d5.flag,
+    see conftest.py"""
+    flag_matrix = loadflag(flag_file, fmt='coo')
+    res = flagser_persistence(flag_matrix, max_dimension=1, directed=False,
+                              filtration=filtration)
+    for filt, tests in filtrations_results.items():
+        if filtration == filt:
+            tmp = np.array(res["dgms"]).tolist()
+            tmp2 = np.array(tests["dgms"]).tolist()
+            assert are_matrices_equal(tmp, tmp2), \
+                "Diagrams {} \n and {} \n are not equal"\
+                .format(tmp, tmp2)
