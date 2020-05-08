@@ -40,7 +40,6 @@ def load_static_flag(fname, fmt='csr', dtype=np.bool):
         # Silence sparse warnings
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
-            flag_matrix.setdiag(vertices)
 
             for line in f.readlines()[1:]:
                 edge = line.strip().split(' ')
@@ -125,7 +124,6 @@ def load_persistence_flag(fname, fmt='csr', dtype=np.float,
 
             for line in f.readlines()[1:]:
                 edge = line.strip().split(' ')
-                print(edge)
                 flag_matrix[int(float(edge[0])), int(float(edge[1]))] = \
                     float(edge[2])
 
