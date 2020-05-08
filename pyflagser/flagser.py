@@ -103,6 +103,7 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
 
     # Extract vertices and edges weights
     vertices, edges = _extract_static_weights(flag_matrix)
+    edges = np.hstack([edges, np.ones(edges[:, [0]].shape, dtype=np.int)])
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
@@ -115,7 +116,6 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
     out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
     out['euler'] = homology[0].get_euler_characteristic()
-
     return out
 
 
