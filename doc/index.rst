@@ -20,7 +20,10 @@ Welcome to pyflagser's API reference!
    :toctree: generated/
    :template: function.rst
 
-   loadflag
-   saveflag
+   load_static_flag
+   load_persistence_flag
+   save_static_flag
+   save_persistence_flag
 
-   flagser
+   flagser_static
+   flagser_persistence
