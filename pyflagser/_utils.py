@@ -5,7 +5,7 @@ import numpy as np
 
 def _extract_static_weights(flag_matrix):
     # Extract vertices weights
-    vertices = np.asarray(flag_matrix.diagonal(), dtype=np.bool)
+    vertices = np.zeros(flag_matrix.diagonal().shape, dtype=np.bool)
 
     # Extract edges indices and weights
     if isinstance(flag_matrix, np.ndarray):
