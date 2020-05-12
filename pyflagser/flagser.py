@@ -193,7 +193,7 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         # Get the maximum value depending on adjacency_matrix.dtype
         if np.issubdtype(adjacency_matrix.dtype, np.integer):
             _max_edge_length = np.iinfo(adjacency_matrix.dtype).max
-        elif np.issubdtype(adjacency_matrix.dtype, np.float):
+        elif np.issubdtype(adjacency_matrix.dtype, np.float_):
             _max_edge_length = np.inf
         else:
             _max_edge_length = None
