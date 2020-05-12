@@ -2,48 +2,32 @@
 
 import numpy as np
 
-from ._utils import _extract_static_weights, _extract_persistence_weights
+from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 from flagser_pybind import compute_homology, implemented_filtrations
 
 
-def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
-                   directed=True, filtration="max", coeff=2,
-                   approximation=None):
+def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
+                       directed=True, coeff=2, approximation=None):
     """Compute homology of a directed/undirected unweighted flag complex.
-
-    Important: the input graphs cannot contain self-loops, i.e. edges
-    that start and end in the same vertex, therefore diagonal elements
-    of the flag matrix store vertex weights.
 
     Parameters
     ----------
-    flag_matrix : 2d ndarray or scipy.sparse matrix, required
-        Matrix representation of a directed/undirected unweighted graph. It is
-        understood as a boolean matrix. Diagonal elements are vertex weights
-        with non-``0`` or ``True`` values corresponding to ``True`` values and
-        ``0`` or ``False`` values corresponding to ``False`` values.
-        Off-diagonal, ``0`` or ``False`` values denote edge absence while
-        non-``0`` or ``True`` values denote edges presence.
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
+        Adjacency matrix of a directed/undirected unweighted graph. It is
+        understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
+        denote edges absence while non-``0`` or ``True`` values denote edges
+        presence. Diagonal values are ignored.
 
     min_dimension : int, optional, default: ``0``
-        Minimum homology dimension.
+        Minimum homology dimension to compute.
 
     max_dimension : int or np.inf, optional, default: ``np.inf``
-        Maximum homology dimension.
+        Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If true, computes the directed flag complex. Otherwise, it computes
-        the undirected flag complex.
-
-    filtration : string, optional, default: ``'max'``
-        Algorithm determining the filtration. Warning: if an edge filtration is
-        specified, it is assumed that the resulting filtration is consistent,
-        meaning that the filtration value of every simplex of dimension at
-        least two should evaluate to a value that is at least the maximal value
-        of the filtration values of its containing edges. For performance
-        reasons, this is not checked automatically.  Possible values are:
-        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
-        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
+        If true, computes homology for the directed flad complex determined by
+        `adjacency_matrix`. Otherwise, computes homology for the undirected
+        flag complex.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
@@ -54,14 +38,13 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
         Skip all cells creating columns in the reduction matrix with more than
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
-        computation. A negative value computes highest possible precision. If
-        ``None``, no approximation is used.
+        computation. If ``None``, no approximation is made and all cells are
+        used.
 
     Returns
     -------
     out : dict of list
-        A dictionary holding the results of the flagser computation. Its
-        key-value pairs are as follows:
+        A dictionary with the following key-value pairs:
 
         - ``'cell_count'``: list of int
           Cell count per dimension greater than or equal than
@@ -75,6 +58,10 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
 
     Notes
     -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix will be ignored.
+
     For more details, please refer to the `flagser documentation \
     <https://github.com/luetge/flagser/blob/master/docs/\
     documentation_flagser.pdf>`_.
@@ -91,17 +78,15 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
     else:
         _approximation = approximation
 
-    if filtration not in implemented_filtrations:
-        raise ValueError("Filtration not recongnized. Available filtrations "
-                         "are ", implemented_filtrations)
+    # All edge filtrations are equivalent in the static case
+    _filtration = 'max'
 
-    # Extract vertices and edges weights
-    vertices, edges = _extract_static_weights(flag_matrix)
-    edges = np.hstack([edges, np.ones(edges[:, [0]].shape, dtype=np.int)])
+    # Extract vertices and edges
+    vertices, edges = _extract_unweighted_graph(adjacency_matrix)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, filtration)
+                                directed, coeff, _approximation, _filtration)
 
     # Creating dictionary of return values
     out = dict()
@@ -111,19 +96,15 @@ def flagser_static(flag_matrix, min_dimension=0, max_dimension=np.inf,
     return out
 
 
-def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
-                        max_dimension=np.inf, directed=True, filtration="max",
-                        coeff=2, approximation=None):
+def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
+                     max_dimension=np.inf, directed=True, filtration="max",
+                     coeff=2, approximation=None):
     """Compute persistent homology of a directed/undirected
     weighted/unweighted flag complexes.
 
-    Important: the input graphs cannot contain self-loops, i.e. edges
-    that start and end in the same vertex, therefore diagonal elements
-    of the flag matrix store vertex weights.
-
     Parameters
     ----------
-    flag_matrix : 2d ndarray or scipy.sparse matrix, required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
         graph. Diagonal elements are vertex weights. The way zero values are
         handled depends on the format of the matrix. If the matrix is a dense
@@ -139,17 +120,18 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
         weights greater than that value will be considered as
         infinitely-valued, i.e., absent from the filtration. Additionally,
         it sets the maximum death values of diagram points. If ``None``, it is
-        set to the maximum value allowed by the `flag_matrix` dtype.
+        set to the maximum value allowed by the `adjacency_matrix` dtype.
 
     min_dimension : int, optional, default: ``0``
-        Minimum homology dimension.
+        Minimum homology dimension to compute.
 
     max_dimension : int or np.inf, optional, default: ``np.inf``
-        Maximum homology dimension.
+        Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If true, computes the directed flag complex. Otherwise, it computes
-        the undirected flag complex.
+        If true, computes homology for the directed flad complex determined by
+        `adjacency_matrix`. Otherwise, computes homology for the undirected
+        flag complex.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -170,14 +152,13 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
         Skip all cells creating columns in the reduction matrix with more than
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
-        computation. A negative value computes highest possible precision. If
-        ``None``, no approximation is used.
+        computation. If ``None``, no approximation is made and all cells are
+        used.
 
     Returns
     -------
     out : dict of list
-        A dictionary holding the results of the flagser computation. Its
-        key-value pairs are as follows:
+        A dictionary with the following key-value pairs:
 
         - ``'dgms'``: list of ndarray of shape ``(n_pairs, 2)``
           A list of persistence diagrams, one for each dimension greater
@@ -189,14 +170,19 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
           Cell count per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'betti'``: list of int
-          Betti number per dimension greater than or equal than
-          `min_dimension` and less than `max_dimension`.
+          Betti number at filtration value `max_edge_length` per dimension
+          greater than or equal than `min_dimension` and less than
+          `max_dimension`.
         - ``'euler'``: int
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
 
     Notes
     -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix stores vertex weights.
+
     For more details, please refer to the `flagser documentation \
     <https://github.com/luetge/flagser/blob/master/docs/\
     documentation_flagser.pdf>`_.
@@ -204,10 +190,10 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
     """
     # Handle default parameters
     if max_edge_length is None:
-        # Get the maximum value depending on flag_matrix.dtype
-        if np.issubdtype(flag_matrix.dtype, np.integer):
-            _max_edge_length = np.iinfo(flag_matrix.dtype).max
-        elif np.issubdtype(flag_matrix.dtype, np.float):
+        # Get the maximum value depending on adjacency_matrix.dtype
+        if np.issubdtype(adjacency_matrix.dtype, np.integer):
+            _max_edge_length = np.iinfo(adjacency_matrix.dtype).max
+        elif np.issubdtype(adjacency_matrix.dtype, np.float):
             _max_edge_length = np.inf
         else:
             _max_edge_length = None
@@ -225,12 +211,12 @@ def flagser_persistence(flag_matrix, max_edge_length=None, min_dimension=0,
         _approximation = approximation
 
     if filtration not in implemented_filtrations:
-        raise ValueError("Filtration not recongnized. Available filtrations "
+        raise ValueError("Filtration not recognized. Available filtrations "
                          "are ", implemented_filtrations)
 
     # Extract vertices and edges weights
-    vertices, edges = _extract_persistence_weights(flag_matrix,
-                                                   _max_edge_length)
+    vertices, edges = _extract_weighted_graph(adjacency_matrix,
+                                              _max_edge_length)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,

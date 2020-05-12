@@ -3,28 +3,26 @@
 import numpy as np
 
 
-def _extract_static_weights(flag_matrix):
-    # Extract vertices weights
-    vertices = np.zeros(flag_matrix.diagonal().shape, dtype=np.bool)
+def _extract_unweighted_graph(adjacency_matrix):
+    # Extract vertices and give them weight one
+    vertices = np.ones(adjacency_matrix.shape[0], dtype=np.float)
 
-    # Extract edges indices and weights
-    if isinstance(flag_matrix, np.ndarray):
-        row, column = np.indices(flag_matrix.shape)
-        row, column = row.flat, column.flat
-
+    # Extract edges indices
+    if isinstance(adjacency_matrix, np.ndarray):
         # Off-diagonal mask
-        mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
+        mask = np.logical_not(np.eye(adjacency_matrix.shape[0], dtype=bool))
 
         # Data mask
-        mask = np.logical_and(mask, flag_matrix.flat != 0)
+        mask = np.logical_and(adjacency_matrix, mask)
 
+        edges = np.argwhere(mask)
     else:
         # Convert to COO format to extract row and column arrays
-        fmt = flag_matrix.getformat()
-        flag_matrix = flag_matrix.tocoo()
-        row, column = flag_matrix.row, flag_matrix.col
-        data = np.asarray(flag_matrix.data, dtype=np.bool)
-        flag_matrix = flag_matrix.asformat(fmt)
+        fmt = adjacency_matrix.getformat()
+        adjacency_matrix = adjacency_matrix.tocoo()
+        row, column = adjacency_matrix.row, adjacency_matrix.col
+        data = np.asarray(adjacency_matrix.data, dtype=np.bool)
+        adjacency_matrix = adjacency_matrix.asformat(fmt)
 
         # Off-diagonal mask
         mask = np.ones(row.shape[0], dtype=np.bool)
@@ -33,29 +31,33 @@ def _extract_static_weights(flag_matrix):
         # Data mask
         mask = np.logical_and(mask, data)
 
-    edges = np.vstack([row[mask], column[mask]]).T[:, :2]
+        edges = np.vstack([row[mask], column[mask]]).T[:, :2]
+
+    # Assign weight one
+    edges = np.hstack([edges, np.ones(edges[:, [0]].shape, dtype=np.int)])
+
     return vertices, edges
 
 
-def _extract_persistence_weights(flag_matrix, max_edge_length):
+def _extract_weighted_graph(adjacency_matrix, max_edge_length):
     # Extract vertices weights
-    vertices = np.asarray(flag_matrix.diagonal())
+    vertices = np.asarray(adjacency_matrix.diagonal())
 
     # Extract edges indices and weights
-    if isinstance(flag_matrix, np.ndarray):
-        row, column = np.indices(flag_matrix.shape)
+    if isinstance(adjacency_matrix, np.ndarray):
+        row, column = np.indices(adjacency_matrix.shape)
         row, column = row.flat, column.flat
-        data = flag_matrix.flat
+        data = adjacency_matrix.flat
 
         # Off-diagonal mask
         mask = np.logical_not(np.eye(vertices.shape[0], dtype=bool).flat)
     else:
         # Convert to COO format to extract row column, and data arrays
-        fmt = flag_matrix.getformat()
-        flag_matrix = flag_matrix.tocoo()
-        row, column = flag_matrix.row, flag_matrix.col
-        data = flag_matrix.data
-        flag_matrix = flag_matrix.asformat(fmt)
+        fmt = adjacency_matrix.getformat()
+        adjacency_matrix = adjacency_matrix.tocoo()
+        row, column = adjacency_matrix.row, adjacency_matrix.col
+        data = adjacency_matrix.data
+        adjacency_matrix = adjacency_matrix.asformat(fmt)
 
         # Off-diagonal mask
         mask = np.ones(row.shape[0], dtype=np.bool)

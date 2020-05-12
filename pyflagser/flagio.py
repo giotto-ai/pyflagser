@@ -4,11 +4,12 @@ import warnings
 import numpy as np
 import scipy.sparse as sp
 
-from ._utils import _extract_static_weights, _extract_persistence_weights
+from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 
 
-def load_static_flag(fname, fmt='csr', dtype=np.bool):
-    """Load a ``.flag`` file, and return a connectivity or an adjacency matrix.
+def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
+    """Load a ``.flag`` file and return the adjacency matrix of
+    directed/undirected unweighted graph it contains.
 
     Parameters
     ----------
@@ -26,31 +27,44 @@ def load_static_flag(fname, fmt='csr', dtype=np.bool):
 
     Returns
     -------
-    flag_matrix : matrix of format `fmt`
-        Connectivity matrix of a directed/undirected weighted/unweighted graph.
-        Diagonal elements are vertex weights.
+    adjacency_matrix : matrix of format `fmt`
+        Adjacency matrix of a directed/undirected unweighted graph. It is
+        understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
+        denote edges absence while non-``0`` or ``True`` values denote edges
+        presence. Diagonal values are ignored.
+
+    Notes
+    -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix will be ignored.
+
+    For more details about ``.flag`` files, please refer to the
+    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
+    docs/documentation_flagser.pdf>`_.
 
     """
     with open(fname, 'r') as f:
         next(f)
         line = f.readline().strip()
         vertices = list(map(dtype, line.split(' ')))
-        flag_matrix = sp.csr_matrix((len(vertices), len(vertices)),
-                                    dtype=dtype)
+        adjacency_matrix = sp.csr_matrix((len(vertices), len(vertices)),
+                                         dtype=dtype)
         # Silence sparse warnings
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
 
             for line in f.readlines()[1:]:
                 edge = line.strip().split(' ')
-                flag_matrix[int(float(edge[0])), int(float(edge[1]))] = 1
+                print(edge)
+                adjacency_matrix[int(float(edge[0])), int(float(edge[1]))] = 1
 
-    return flag_matrix.asformat(fmt)
+    return adjacency_matrix.asformat(fmt)
 
 
-def load_persistence_flag(fname, fmt='csr', dtype=np.float,
-                          infinity_value=None):
-    """Load a ``.flag`` file, and return a connectivity or an adjacency matrix.
+def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
+    """Load a ``.flag`` file and return the adjacency matrix of
+    directed/undirected weighted graph it contains.
 
     Parameters
     ----------
@@ -73,22 +87,32 @@ def load_persistence_flag(fname, fmt='csr', dtype=np.float,
 
     Returns
     -------
-    flag_matrix : matrix of format `fmt`
-        Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights.
+    adjacency_matrix : matrix of format `fmt`
+        Matrix representation of a directed/undirected weighted graph. Diagonal
+        elements are vertex weights.
+
+    Notes
+    -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix stores vertex weights.
+
+    For more details about ``.flag`` files, please refer to the
+    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
+    docs/documentation_flagser.pdf>`_.
 
     """
     # Warn if dtype is bool
     if np.issubdtype(dtype, np.bool_):
         warnings.warn("dtype is a bool type, you may want to use "
-                      " the load_static_flag function instead.")
+                      " the load_unweighted_flag function instead.")
 
     # Handle default parameter
     if infinity_value is None:
         if fmt != 'dense':
             _infinity_value = None
         else:
-            # Get the maximum value depending on flag_matrix.dtype
+            # Get the maximum value depending on adjacency_matrix.dtype
             if np.issubdtype(dtype, np.integer):
                 _infinity_value = np.iinfo(dtype).max
             elif np.issubdtype(dtype, np.float_):
@@ -109,56 +133,30 @@ def load_persistence_flag(fname, fmt='csr', dtype=np.float,
         vertices = np.array(line.split(' '), dtype=dtype)
 
         if fmt == 'dense':
-            flag_matrix = np.asarray(
+            adjacency_matrix = np.asarray(
                 _infinity_value
                 * np.ones((len(vertices), len(vertices))), dtype=dtype)
-            flag_matrix[np.eye(flag_matrix.shape, dtype=np.bool)] = vertices
+            adjacency_matrix[np.eye(adjacency_matrix.shape, dtype=np.bool)] = \
+                vertices
         else:
-            flag_matrix = sp.csr_matrix((len(vertices), len(vertices)),
-                                        dtype=dtype)
+            adjacency_matrix = sp.csr_matrix((len(vertices), len(vertices)),
+                                             dtype=dtype)
 
         # Silence sparse warnings
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
-            flag_matrix.setdiag(vertices)
+            adjacency_matrix.setdiag(vertices)
 
             for line in f.readlines()[1:]:
                 edge = line.strip().split(' ')
-                flag_matrix[int(float(edge[0])), int(float(edge[1]))] = \
+                adjacency_matrix[int(float(edge[0])), int(float(edge[1]))] = \
                     float(edge[2])
 
-    return flag_matrix.asformat(fmt)
+    return adjacency_matrix.asformat(fmt)
 
 
-def save_static_flag(fname, flag_matrix):
-    """Save a directed/undirected graph connectivity matrix into a ``.flag``
-    file.
-
-    Parameters
-    ----------
-    fname : file, str, or pathlib.Path, required
-        Filename of extension ``.flag``.
-
-    flag_matrix : 2d ndarray or scipy sparse matrix, required
-        Matrix representation of a directed/undirected unweighted graph. It is
-        understood as a boolean matrix. Diagonal elements are vertex weights
-        with non-``0`` or ``True`` values corresponding to ``True`` values and
-        ``0`` or ``False`` values corresponding to ``False`` values.
-        Off-diagonal, ``0`` or ``False`` values denote edge absence while
-        non-``0`` or ``True`` values denote edges presence.
-
-    """
-    # Extract vertices and edges weights
-    vertices, edges = _extract_static_weights(flag_matrix)
-
-    with open(fname, 'w') as f:
-        np.savetxt(f, vertices, delimiter=' ', comments='', header='dim 0',
-                   fmt='%.18e')
-        np.savetxt(f, edges, comments='', header='dim 1', fmt='%i %i')
-
-
-def save_persistence_flag(fname, flag_matrix, max_edge_length=None):
-    """Save a directed/undirected weighted/unweighted graph adjacency matrix
+def save_unweighted_flag(fname, adjacency_matrix):
+    """Save the adjacency matrix of a directed/undirected unweighted graph
     into a ``.flag`` file.
 
     Parameters
@@ -166,7 +164,43 @@ def save_persistence_flag(fname, flag_matrix, max_edge_length=None):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    flag_matrix : 2d ndarray or scipy sparse matrix, required
+    adjacency_matrix : 2d ndarray or scipy sparse matrix, required
+        Adjacency matrix of a directed/undirected unweighted graph. It is
+        understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
+        denote edges absence while non-``0`` or ``True`` values denote edges
+        presence. Diagonal values are ignored.
+
+    Notes
+    -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix will be ignored.
+
+    For more details about ``.flag`` files, please refer to the
+    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
+    docs/documentation_flagser.pdf>`_.
+
+    """
+    # Extract vertices and edges
+    vertices, edges = _extract_unweighted_graph(adjacency_matrix)
+    print(edges)
+
+    with open(fname, 'w') as f:
+        np.savetxt(f, vertices, delimiter=' ', comments='', header='dim 0',
+                   fmt='%.18e')
+        np.savetxt(f, edges, comments='', header='dim 1', fmt='%i %i')
+
+
+def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
+    """Save the adjacency matrix of a directed/undirected weighted graph into
+    a ``.flag`` file.
+
+    Parameters
+    ----------
+    fname : file, str, or pathlib.Path, required
+        Filename of extension ``.flag``.
+
+    adjacency_matrix : 2d ndarray or scipy sparse matrix, required
         Matrix representation of a directed/undirected weighted/unweighted
         graph. Diagonal elements are vertex weights. The way zero values are
         handled depends on the format of the matrix. If the matrix is a dense
@@ -182,13 +216,23 @@ def save_persistence_flag(fname, flag_matrix, max_edge_length=None):
         weights greater than that value will be considered as
         infinitely-valued, i.e., absent from the filtration.
 
+    Notes
+    -----
+    The input graphs cannot contain self-loops, i.e. edges that start and end
+    in the same vertex, therefore diagonal elements of the input adjancency
+    matrix stores vertex weights.
+
+    For more details about ``.flag`` files, please refer to the
+    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
+    docs/documentation_flagser.pdf>`_.
+
     """
     # Handle default parameter
     if max_edge_length is None:
-        # Get the maximum value depending on flag_matrix.dtype
-        if np.issubdtype(flag_matrix.dtype, np.integer):
-            _max_edge_length = np.iinfo(flag_matrix.dtype).max
-        elif np.issubdtype(flag_matrix.dtype, np.float_):
+        # Get the maximum value depending on adjacency_matrix.dtype
+        if np.issubdtype(adjacency_matrix.dtype, np.integer):
+            _max_edge_length = np.iinfo(adjacency_matrix.dtype).max
+        elif np.issubdtype(adjacency_matrix.dtype, np.float_):
             _max_edge_length = np.inf
         else:
             _max_edge_length = None
@@ -196,8 +240,8 @@ def save_persistence_flag(fname, flag_matrix, max_edge_length=None):
         _max_edge_length = max_edge_length
 
     # Extract vertices and edges weights
-    vertices, edges = _extract_persistence_weights(flag_matrix,
-                                                   _max_edge_length)
+    vertices, edges = _extract_weighted_graph(adjacency_matrix,
+                                              _max_edge_length)
 
     with open(fname, 'w') as f:
         np.savetxt(f, vertices.reshape((1, -1)), delimiter=' ', comments='',

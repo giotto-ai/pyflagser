@@ -1,10 +1,10 @@
 from ._version import __version__
 
-from .flagio import load_static_flag, load_persistence_flag, \
-    save_static_flag, save_persistence_flag
-from .flagser import flagser_static, flagser_persistence
+from .flagio import load_unweighted_flag, load_weighted_flag, \
+    save_unweighted_flag, save_weighted_flag
+from .flagser import flagser_unweighted, flagser_weighted
 
-__all__ = ['load_static_flag', 'load_persistence_flag',
-           'save_static_flag', 'save_persistence_flag',
-           'flagser_static', 'flagser_persistence',
+__all__ = ['load_unweighted_flag', 'load_weighted_flag',
+           'save_unweighted_flag', 'save_weighted_flag',
+           'flagser_unweighted', 'flagser_weighted',
            '__version__']
