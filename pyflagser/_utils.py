@@ -17,22 +17,6 @@ def _extract_unweighted_graph(adjacency_matrix):
 
         edges = np.argwhere(mask)
     else:
-        # Convert to COO format to extract row and column arrays
-        # fmt = adjacency_matrix.getformat()
-        # adjacency_matrix = adjacency_matrix.tocoo()
-        # row, column = adjacency_matrix.row, adjacency_matrix.col
-        # data = np.asarray(adjacency_matrix.data, dtype=np.bool)
-        # adjacency_matrix = adjacency_matrix.asformat(fmt)
-
-        # # Off-diagonal mask
-        # mask = np.ones(row.shape[0], dtype=np.bool)
-        # mask[np.arange(row.shape[0])[row == column]] = False
-
-        # # Data mask
-        # mask = np.logical_and(mask, data)
-
-        # edges = np.vstack([row[mask], column[mask]]).T[:, :2]
-
         # Data mask
         mask = np.stack(np.nonzero(adjacency_matrix)).T
 
