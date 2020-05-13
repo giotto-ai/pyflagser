@@ -28,9 +28,10 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes homology for the directed flad complex determined by
-        `adjacency_matrix`. If ``False``, computes homology for the undirected
-        flag complex.
+        If ``True``, computes homology for the directed flad complex determined
+        by `adjacency_matrix`. If ``False``, computes homology for the
+        undirected flag complex obtained by considering all edges as
+        undirected.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
@@ -140,9 +141,10 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes homology for the directed flad complex determined by
-        `adjacency_matrix`. If ``False``, computes persistent homology for the
-        undirected flag complex.
+        If ``True``, computes persistent homology for the directed flad complex
+        determined by `adjacency_matrix`. If ``False``, computes persistent
+        homology for the undirected flag complex obtained by considering all
+        edges as undirected.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
