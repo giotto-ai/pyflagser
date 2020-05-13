@@ -10,13 +10,16 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
                        directed=True, coeff=2, approximation=None):
     """Compute homology of a directed/undirected unweighted flag complex.
 
+    From an `adjacency_matrix` construct all cells forming its associated flag
+    complex and compute its homology.
+
     Parameters
     ----------
     adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote edges absence while non-``0`` or ``True`` values denote edges
-        presence. Diagonal values are ignored.
+        denote abstent edges while non-``0`` or ``True`` values denote edges
+        which are present. Diagonal values are ignored.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension to compute.
@@ -25,8 +28,8 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If true, computes homology for the directed flad complex determined by
-        `adjacency_matrix`. Otherwise, computes homology for the undirected
+        If ``True``, computes homology for the directed flad complex determined by
+        `adjacency_matrix`. If ``False``, computes homology for the undirected
         flag complex.
 
     coeff : int, optional, default: ``2``
@@ -39,7 +42,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
         computation. If ``None``, no approximation is made and all cells are
-        used.
+        used. For more details, please refer to [1]_.
 
     Returns
     -------
@@ -62,9 +65,13 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
-    For more details, please refer to the `flagser documentation \
-    <https://github.com/luetge/flagser/blob/master/docs/\
-    documentation_flagser.pdf>`_.
+    References
+    ----------
+    References
+    ----------
+    .. [1] D. Luegehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     # Handle default parameters
@@ -102,6 +109,10 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
     """Compute persistent homology of a directed/undirected
     weighted/unweighted flag complexes.
 
+    From an `adjacency_matrix` and a `filtration` construct a filtered
+    flag complex as a sequence of its cells associated to their filtration
+    values and compute its persistent homology.
+
     Parameters
     ----------
     adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
@@ -129,9 +140,9 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If true, computes homology for the directed flad complex determined by
-        `adjacency_matrix`. Otherwise, computes homology for the undirected
-        flag complex.
+        If ``True``, computes homology for the directed flad complex determined by
+        `adjacency_matrix`. If ``False``, computes persistent homology for the
+        undirected flag complex.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -153,7 +164,7 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         this number of entries. Use this for hard problems; a good value is
         often ``100,000``. Increase for higher precision, decrease for faster
         computation. If ``None``, no approximation is made and all cells are
-        used.
+        used. For more details, please refer to [1]_.
 
     Returns
     -------
@@ -183,9 +194,11 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
-    For more details, please refer to the `flagser documentation \
-    <https://github.com/luetge/flagser/blob/master/docs/\
-    documentation_flagser.pdf>`_.
+    References
+    ----------
+    .. [1] D. Luegehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     # Handle default parameters

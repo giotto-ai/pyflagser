@@ -30,8 +30,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
     adjacency_matrix : matrix of format `fmt`
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote edges absence while non-``0`` or ``True`` values denote edges
-        presence. Diagonal values are ignored.
+        denote abstent edges while non-``0`` or ``True`` values denote edges
+        which are present. Diagonal values are ignored.
 
     Notes
     -----
@@ -39,6 +39,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
+    References
+    ----------
     For more details about ``.flag`` files, please refer to the
     `flagser documentation <https://github.com/luetge/flagser/blob/master/\
     docs/documentation_flagser.pdf>`_.
@@ -97,6 +99,8 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
+    References
+    ----------
     For more details about ``.flag`` files, please refer to the
     `flagser documentation <https://github.com/luetge/flagser/blob/master/\
     docs/documentation_flagser.pdf>`_.
@@ -167,8 +171,8 @@ def save_unweighted_flag(fname, adjacency_matrix):
     adjacency_matrix : 2d ndarray or scipy sparse matrix, required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote edges absence while non-``0`` or ``True`` values denote edges
-        presence. Diagonal values are ignored.
+        denote abstent edges while non-``0`` or ``True`` values denote edges
+        which are present. Diagonal values are ignored.
 
     Notes
     -----
@@ -176,6 +180,8 @@ def save_unweighted_flag(fname, adjacency_matrix):
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
+    References
+    ----------
     For more details about ``.flag`` files, please refer to the
     `flagser documentation <https://github.com/luetge/flagser/blob/master/\
     docs/documentation_flagser.pdf>`_.
@@ -222,6 +228,8 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
+    References
+    ----------
     For more details about ``.flag`` files, please refer to the
     `flagser documentation <https://github.com/luetge/flagser/blob/master/\
     docs/documentation_flagser.pdf>`_.
