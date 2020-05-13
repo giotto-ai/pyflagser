@@ -31,7 +31,8 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         If ``True``, computes homology for the directed flad complex determined
         by `adjacency_matrix`. If ``False``, computes homology for the
         undirected flag complex obtained by considering all edges as
-        undirected.
+        undirected, and it is therefore sufficient (but not necessary)
+        to pass an upper-triangular matrix.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
@@ -50,11 +51,11 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     out : dict of list
         A dictionary with the following key-value pairs:
 
-        - ``'cell_count'``: list of int
-          Cell count per dimension greater than or equal than
-          `min_dimension` and less than `max_dimension`.
         - ``'betti'``: list of int
           Betti number per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
+        - ``'cell_count'``: list of int
+          Cell count per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic per dimension greater than or equal than
@@ -144,7 +145,8 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         If ``True``, computes persistent homology for the directed flad complex
         determined by `adjacency_matrix`. If ``False``, computes persistent
         homology for the undirected flag complex obtained by considering all
-        edges as undirected.
+        edges as undirected, and it is therefore sufficient (but not necessary)
+        to pass an upper-triangular matrix.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -179,13 +181,13 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
           Each diagram is an ndarray of size (n_pairs, 2) with the first
           column representing the birth time and the second column
           representing the death time of each pair.
-        - ``'cell_count'``: list of int
-          Cell count per dimension greater than or equal than
-          `min_dimension` and less than `max_dimension`.
         - ``'betti'``: list of int
           Betti number at filtration value `max_edge_length` per dimension
           greater than or equal than `min_dimension` and less than
           `max_dimension`.
+        - ``'cell_count'``: list of int
+          Cell count per dimension greater than or equal than
+          `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
