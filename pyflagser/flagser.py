@@ -70,7 +70,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     ----------
     References
     ----------
-    .. [1] D. Luegehetmann, "Documentation of the C++ flagser library";
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
            `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
            documentation_flagser.pdf>`_.
 
@@ -198,7 +198,7 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
 
     References
     ----------
-    .. [1] D. Luegehetmann, "Documentation of the C++ flagser library";
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
            `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
            documentation_flagser.pdf>`_.
 
