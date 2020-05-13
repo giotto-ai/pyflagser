@@ -59,7 +59,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
     For more details, please refer to the `flagser documentation \
@@ -180,7 +180,7 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
     For more details, please refer to the `flagser documentation \

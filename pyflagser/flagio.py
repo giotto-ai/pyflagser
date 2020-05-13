@@ -36,7 +36,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
     For more details about ``.flag`` files, please refer to the
@@ -94,7 +94,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
     For more details about ``.flag`` files, please refer to the
@@ -173,7 +173,7 @@ def save_unweighted_flag(fname, adjacency_matrix):
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
     For more details about ``.flag`` files, please refer to the
@@ -219,7 +219,7 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
     Notes
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
-    in the same vertex, therefore diagonal elements of the input adjancency
+    in the same vertex, therefore diagonal elements of the input adjacency
     matrix stores vertex weights.
 
     For more details about ``.flag`` files, please refer to the
