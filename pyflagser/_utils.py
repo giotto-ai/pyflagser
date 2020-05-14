@@ -3,6 +3,7 @@
 import numpy as np
 import warnings
 
+
 def _extract_unweighted_graph(adjacency_matrix):
     # Warn if the matrix is not squared
     if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
