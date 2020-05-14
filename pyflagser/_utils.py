@@ -1,4 +1,4 @@
-"""Utility functions for the adjancency matrix."""
+"""Utility functions for adjacency matrices."""
 
 import numpy as np
 import warnings
@@ -7,7 +7,7 @@ import warnings
 def _extract_unweighted_graph(adjacency_matrix):
     # Warn if the matrix is not squared
     if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
-        warnings.warn("adjancency_matrix should be a square matrix.")
+        warnings.warn("adjacency_matrix should be a square matrix.")
 
     # Extract vertices and give them weight one
     vertices = np.ones(adjacency_matrix.shape[0], dtype=np.float)
@@ -37,7 +37,7 @@ def _extract_unweighted_graph(adjacency_matrix):
 def _extract_weighted_graph(adjacency_matrix, max_edge_weight):
     # Warn if the matrix is not squared
     if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
-        warnings.warn("adjancency_matrix should be a square matrix.")
+        warnings.warn("adjacency_matrix should be a square matrix.")
 
     # Extract vertices weights
     vertices = np.asarray(adjacency_matrix.diagonal())
