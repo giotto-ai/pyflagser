@@ -1,9 +1,13 @@
-"""Utility functions for flag matrices"""
+"""Utility functions for the adjancency matrix."""
 
 import numpy as np
-
+import warnings
 
 def _extract_unweighted_graph(adjacency_matrix):
+    # Warn if the matrix is not squared
+    if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
+        warnings.warn("adjancency_matrix should be a square matrix.")
+
     # Extract vertices and give them weight one
     vertices = np.ones(adjacency_matrix.shape[0], dtype=np.float)
 
@@ -29,7 +33,11 @@ def _extract_unweighted_graph(adjacency_matrix):
     return vertices, edges
 
 
-def _extract_weighted_graph(adjacency_matrix, max_edge_length):
+def _extract_weighted_graph(adjacency_matrix, max_edge_weight):
+    # Warn if the matrix is not squared
+    if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
+        warnings.warn("adjancency_matrix should be a square matrix.")
+
     # Extract vertices weights
     vertices = np.asarray(adjacency_matrix.diagonal())
 
@@ -54,8 +62,8 @@ def _extract_weighted_graph(adjacency_matrix, max_edge_length):
         mask[np.arange(row.shape[0])[row == column]] = False
 
     # Infinite weights mask
-    if max_edge_length is not None:
-        mask = np.logical_and(mask, data <= max_edge_length)
+    if max_edge_weight is not None:
+        mask = np.logical_and(mask, data <= max_edge_weight)
 
     edges = np.vstack([row[mask], column[mask], data[mask]]).T
 
