@@ -27,7 +27,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
     Returns
     -------
-    adjacency_matrix : matrix of format `fmt`
+    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format
+        `fmt`
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
         denote abstent edges while non-``0`` or ``True`` values denote edges
@@ -41,9 +42,9 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
     References
     ----------
-    For more details about ``.flag`` files, please refer to the
-    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
-    docs/documentation_flagser.pdf>`_.
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     with open(fname, 'r') as f:
@@ -89,7 +90,8 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
 
     Returns
     -------
-    adjacency_matrix : matrix of format `fmt`
+    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format
+        `fmt`
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights.
 
@@ -101,9 +103,9 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
 
     References
     ----------
-    For more details about ``.flag`` files, please refer to the
-    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
-    docs/documentation_flagser.pdf>`_.
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     # Warn if dtype is bool
@@ -168,7 +170,8 @@ def save_unweighted_flag(fname, adjacency_matrix):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy sparse matrix, required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+        (n_vertices, n_vertices), required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
         denote abstent edges while non-``0`` or ``True`` values denote edges
@@ -182,9 +185,9 @@ def save_unweighted_flag(fname, adjacency_matrix):
 
     References
     ----------
-    For more details about ``.flag`` files, please refer to the
-    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
-    docs/documentation_flagser.pdf>`_.
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     # Extract vertices and edges
@@ -197,7 +200,7 @@ def save_unweighted_flag(fname, adjacency_matrix):
         np.savetxt(f, edges, comments='', header='dim 1', fmt='%i %i')
 
 
-def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
+def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     """Save the adjacency matrix of a directed/undirected weighted graph into
     a ``.flag`` file.
 
@@ -206,19 +209,20 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy sparse matrix, required
-        Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights. The way zero values are
-        handled depends on the format of the matrix. If the matrix is a dense
-        ``np.ndarray``, zero values denote zero-weighted edges. If the matrix
-        is a sparse ``scipy.sparse`` matrix, explicitely stored off-diagonal
-        zeros  and all diagonal zeros denote zero-weighted edges. Off-diagonal
-        values that have not been explicitely stored are treated by
-        ``scipy.sparse`` as zeros but will be understood as infinitely-valued
-        edges, i.e., edges absent from the filtration.
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+        (n_vertices, n_vertices), required
+        Matrix representation of a directed/undirected weighted graph. Diagonal
+        elements are vertex weights. The way zero values are handled depends on
+        the format of the matrix. If the matrix is a dense ``numpy.ndarray``,
+        zero values denote zero-weighted edges. If the matrix is a sparse
+        ``scipy.sparse`` matrix, explicitly stored off-diagonal zeros and all
+        diagonal zeros denote zero-weighted edges. Off-diagonal values that
+        have not been explicitely stored are treated by ``scipy.sparse`` as
+        zeros but will be understood as infinitely-valued edges, i.e., edges
+        absent from the filtration.
 
-    max_edge_length : int or float or ``None``, optional, default: ``None``
-        Maximum edge length to be considered in the filtration. All edge
+    max_edge_weight : int or float or ``None``, optional, default: ``None``
+        Maximum edge weight to be considered in the filtration. All edge
         weights greater than that value will be considered as
         infinitely-valued, i.e., absent from the filtration.
 
@@ -230,26 +234,26 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_length=None):
 
     References
     ----------
-    For more details about ``.flag`` files, please refer to the
-    `flagser documentation <https://github.com/luetge/flagser/blob/master/\
-    docs/documentation_flagser.pdf>`_.
+    .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
+           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
+           documentation_flagser.pdf>`_.
 
     """
     # Handle default parameter
-    if max_edge_length is None:
+    if max_edge_weight is None:
         # Get the maximum value depending on adjacency_matrix.dtype
         if np.issubdtype(adjacency_matrix.dtype, np.integer):
-            _max_edge_length = np.iinfo(adjacency_matrix.dtype).max
+            _max_edge_weight = np.iinfo(adjacency_matrix.dtype).max
         elif np.issubdtype(adjacency_matrix.dtype, np.float_):
-            _max_edge_length = np.inf
+            _max_edge_weight = np.inf
         else:
-            _max_edge_length = None
+            _max_edge_weight = None
     else:
-        _max_edge_length = max_edge_length
+        _max_edge_weight = max_edge_weight
 
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
-                                              _max_edge_length)
+                                              _max_edge_weight)
 
     with open(fname, 'w') as f:
         np.savetxt(f, vertices.reshape((1, -1)), delimiter=' ', comments='',

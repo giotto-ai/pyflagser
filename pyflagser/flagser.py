@@ -8,14 +8,15 @@ from flagser_pybind import compute_homology, implemented_filtrations
 
 def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
                        directed=True, coeff=2, approximation=None):
-    """Compute homology of a directed/undirected unweighted flag complex.
+    """Compute homology of a directed/undirected flag complex.
 
-    From an `adjacency_matrix` construct all cells forming its associated flag
+    From an adjacency_matrix construct all cells forming its associated flag
     complex and compute its homology.
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+        (n_vertices, n_vertices), required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
         denote abstent edges while non-``0`` or ``True`` values denote edges
@@ -55,11 +56,10 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
           Betti number per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count per dimension greater than or equal than
+          Cell count (number of simplices) per dimension greater than or equal
           `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
-          Euler characteristic per dimension greater than or equal than
-          `min_dimension` and less than `max_dimension`.
+          Euler characteristic.
 
     Notes
     -----
@@ -67,8 +67,6 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     in the same vertex, therefore diagonal elements of the input adjacency
     matrix will be ignored.
 
-    References
-    ----------
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
@@ -99,40 +97,40 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
 
     # Creating dictionary of return values
     out = dict()
-    out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
+    out['cell_count'] = homology[0].get_cell_count()
     out['euler'] = homology[0].get_euler_characteristic()
     return out
 
 
-def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
+def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
                      max_dimension=np.inf, directed=True, filtration="max",
                      coeff=2, approximation=None):
-    """Compute persistent homology of a directed/undirected
-    weighted/unweighted flag complexes.
+    """Compute persistent homology of a directed/undirected filtered flag
+    complex.
 
-    From an `adjacency_matrix` and a `filtration` construct a filtered
+    From an adjacency_matrix and a filtration algorithm construct a filtered
     flag complex as a sequence of its cells associated to their filtration
     values and compute its persistent homology.
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
-        Matrix representation of a directed/undirected weighted/unweighted
-        graph. Diagonal elements are vertex weights. The way zero values are
-        handled depends on the format of the matrix. If the matrix is a dense
-        ``np.ndarray``, zero values denote zero-weighted edges. If the matrix
-        is a sparse ``scipy.sparse`` matrix, explicitely stored off-diagonal
-        zeros  and all diagonal zeros denote zero-weighted edges. Off-diagonal
-        values that have not been explicitely stored are treated by
-        ``scipy.sparse`` as zeros but will be understood as infinitely-valued
-        edges, i.e., edges absent from the filtration.
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+        (n_vertices, n_vertices), required
+        Matrix representation of a directed/undirected weighted graph. Diagonal
+        elements are vertex weights. The way zero values are handled depends on
+        the format of the matrix. If the matrix is a dense ``numpy.ndarray``,
+        zero values denote zero-weighted edges. If the matrix is a sparse
+        ``scipy.sparse`` matrix, explicitly stored off-diagonal zeros and all
+        diagonal zeros denote zero-weighted edges. Off-diagonal values that
+        have not been explicitely stored are treated by ``scipy.sparse`` as
+        zeros but will be understood as infinitely-valued edges, i.e., edges
+        absent from the filtration.
 
-    max_edge_length : int or float or ``None``, optional, default: ``None``
-        Maximum edge length to be considered in the filtration. All edge
+    max_edge_weight : int or float or ``None``, optional, default: ``None``
+        Maximum edge weight to be considered in the filtration. All edge
         weights greater than that value will be considered as
-        infinitely-valued, i.e., absent from the filtration. Additionally,
-        it sets the maximum death values of diagram points. If ``None``, it is
+        infinitely-valued, i.e., absent from the filtration. If ``None``, it is
         set to the maximum value allowed by the `adjacency_matrix` dtype.
 
     min_dimension : int, optional, default: ``0``
@@ -142,11 +140,14 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes persistent homology for the directed flad complex
-        determined by `adjacency_matrix`. If ``False``, computes persistent
-        homology for the undirected flag complex obtained by considering all
-        edges as undirected, and it is therefore sufficient (but not necessary)
-        to pass an upper-triangular matrix.
+        If ``True``, computes persistent homology for the directed filtered
+        flag complex determined by `adjacency_matrix`. If False, computes
+        persistent homology for the undirected filtered flag complex obtained
+        by considering all weighted edges as undirected, and it is therefore
+        sufficient (but not necessary) to pass an upper-triangular matrix. When
+        ``False``, if two directed edges corresponding to the same undirected
+        edge are assigned different weights, only the one on the upper
+        triangular part of the adjacency matrix is considered.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -182,15 +183,15 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
           column representing the birth time and the second column
           representing the death time of each pair.
         - ``'betti'``: list of int
-          Betti number at filtration value `max_edge_length` per dimension
+          Betti number at filtration value `max_edge_weight` per dimension
           greater than or equal than `min_dimension` and less than
           `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count per dimension greater than or equal than
+          Cell count (number of simplices) at filtration value
+          `max_edge_weight` per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
-          Euler characteristic per dimension greater than or equal than
-          `min_dimension` and less than `max_dimension`.
+          Euler characteristic at filtration value `max_edge_weight`.
 
     Notes
     -----
@@ -206,16 +207,16 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
 
     """
     # Handle default parameters
-    if max_edge_length is None:
+    if max_edge_weight is None:
         # Get the maximum value depending on adjacency_matrix.dtype
         if np.issubdtype(adjacency_matrix.dtype, np.integer):
-            _max_edge_length = np.iinfo(adjacency_matrix.dtype).max
+            _max_edge_weight = np.iinfo(adjacency_matrix.dtype).max
         elif np.issubdtype(adjacency_matrix.dtype, np.float_):
-            _max_edge_length = np.inf
+            _max_edge_weight = np.inf
         else:
-            _max_edge_length = None
+            _max_edge_weight = None
     else:
-        _max_edge_length = max_edge_length
+        _max_edge_weight = max_edge_weight
 
     if max_dimension == np.inf:
         _max_dimension = -1
@@ -233,7 +234,7 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
 
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
-                                              _max_edge_length)
+                                              _max_edge_weight)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
@@ -241,11 +242,10 @@ def flagser_weighted(adjacency_matrix, max_edge_length=None, min_dimension=0,
 
     # Create dictionary of return values
     out = dict()
-    out['dgms'] = [np.nan_to_num(homology[0].get_persistence_diagram()[i],
-                                 posinf=_max_edge_length)
+    out['dgms'] = [homology[0].get_persistence_diagram()[i],
                    for i in range(len(homology[0].get_persistence_diagram()))]
-    out['cell_count'] = homology[0].get_cell_count()
     out['betti'] = homology[0].get_betti_numbers()
+    out['cell_count'] = homology[0].get_cell_count()
     out['euler'] = homology[0].get_euler_characteristic()
 
     return out
