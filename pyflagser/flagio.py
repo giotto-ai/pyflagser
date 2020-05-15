@@ -221,7 +221,8 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     max_edge_weight : int or float or ``None``, optional, default: ``None``
         Maximum edge weight to be considered in the filtration. All edge
         weights greater than that value will be considered as
-        infinitely-valued, i.e., absent from the filtration.
+        infinitely-valued, i.e., absent from the filtration. If ``None``, all
+        finite edge weights are considered.
 
     Notes
     -----

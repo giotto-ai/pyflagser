@@ -130,8 +130,8 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     max_edge_weight : int or float or ``None``, optional, default: ``None``
         Maximum edge weight to be considered in the filtration. All edge
         weights greater than that value will be considered as
-        infinitely-valued, i.e., absent from the filtration. If ``None``, it is
-        set to the maximum value allowed by the `adjacency_matrix` dtype.
+        infinitely-valued, i.e., absent from the filtration. If ``None``, all
+        finite edge weights are considered.
 
     min_dimension : int, optional, default: ``0``
         Minimum homology dimension to compute.
