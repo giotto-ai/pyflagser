@@ -207,17 +207,6 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     """
     # Handle default parameters
-    if max_edge_weight is None:
-        # Get the maximum value depending on adjacency_matrix.dtype
-        if np.issubdtype(adjacency_matrix.dtype, np.integer):
-            _max_edge_weight = np.iinfo(adjacency_matrix.dtype).max
-        elif np.issubdtype(adjacency_matrix.dtype, np.float_):
-            _max_edge_weight = np.inf
-        else:
-            _max_edge_weight = None
-    else:
-        _max_edge_weight = max_edge_weight
-
     if max_dimension == np.inf:
         _max_dimension = -1
     else:
@@ -234,7 +223,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
-                                              _max_edge_weight)
+                                              max_edge_weight)
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,

@@ -1,4 +1,4 @@
-"""Utility functions for the adjancency matrix."""
+"""Utility functions for adjacency matrices."""
 
 import numpy as np
 import warnings
@@ -62,8 +62,13 @@ def _extract_weighted_graph(adjacency_matrix, max_edge_weight):
         mask = np.ones(row.shape[0], dtype=np.bool)
         mask[np.arange(row.shape[0])[row == column]] = False
 
-    # Infinite weights mask
-    if max_edge_weight is not None:
+    # Mask infinite or thresholded weights
+    if np.issubdtype(adjacency_matrix.dtype, np.float_):
+        if (max_edge_weight is None) or np.isposinf(max_edge_weight):
+            mask = np.logical_and(mask, np.isfinite(data))
+        else:
+            mask = np.logical_and(mask, data <= max_edge_weight)
+    elif max_edge_weight is not None:
         mask = np.logical_and(mask, data <= max_edge_weight)
 
     edges = np.vstack([row[mask], column[mask], data[mask]]).T
