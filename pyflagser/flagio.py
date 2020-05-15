@@ -128,7 +128,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
                 _infinity_value = 0
     else:
         if fmt != 'dense':
-            warnings.warn("infinty_value has been specified with a fmt that "
+            warnings.warn("infinity_value has been specified with a fmt that "
                           "is not 'dense' and will be ignored.")
             _infinity_value = None
         else:
