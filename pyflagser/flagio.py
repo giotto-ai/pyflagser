@@ -28,7 +28,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
     Returns
     -------
-    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format
+    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format \
         `fmt`
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
@@ -44,8 +44,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     with open(fname, 'r') as f:
@@ -91,7 +91,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
 
     Returns
     -------
-    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format
+    adjacency_matrix : matrix of shape (n_vertices, n_vertices) and format \
         `fmt`
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights.
@@ -105,8 +105,8 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     # Warn if dtype is bool
@@ -168,7 +168,7 @@ def save_unweighted_flag(fname, adjacency_matrix):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
         (n_vertices, n_vertices), required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
@@ -184,8 +184,8 @@ def save_unweighted_flag(fname, adjacency_matrix):
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     # Extract vertices and edges
@@ -206,7 +206,7 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
         (n_vertices, n_vertices), required
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights. The way zero values are handled depends on
@@ -233,8 +233,8 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     # Extract vertices and edges weights
