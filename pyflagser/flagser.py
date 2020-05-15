@@ -197,7 +197,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
     in the same vertex, therefore diagonal elements of the input adjacency
-    matrix stores vertex weights.
+    matrix store vertex weights.
 
     References
     ----------

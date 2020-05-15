@@ -8,8 +8,8 @@ from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 
 
 def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
-    """Load a ``.flag`` file and return the adjacency matrix of
-    directed/undirected unweighted graph it contains.
+    """Load a ``.flag`` file and return the adjacency matrix of the
+    directed/undirected unweighted graph it describes.
 
     Parameters
     ----------
@@ -17,7 +17,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
         Filename of extension ``.flag`` containing the information of a flag
         matrix.
 
-    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, default: 'csr'
+    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional,
+        default: ``'csr'``
         Matrix format of the result. By default, a CSR sparse matrix is
         returned. Keep in mind that some matrix formats do not track zero
         values.
@@ -65,8 +66,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
 
 def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
-    """Load a ``.flag`` file and return the adjacency matrix of
-    directed/undirected weighted graph it contains.
+    """Load a ``.flag`` file and return the adjacency matrix of the
+    directed/undirected weighted graph it describes.
 
     Parameters
     ----------
@@ -74,7 +75,8 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
         Filename of extension ``.flag`` containing the information of a flag
         matrix.
 
-    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, default: 'csr'
+    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional,
+        default: ``'csr'``
         Matrix format of the result. By default, a CSR sparse matrix is
         returned. Keep in mind that some matrix formats do not track zero
         values.
@@ -82,7 +84,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     dtype : data-type, optional, default: ``np.float``
         Data-type of the resulting array.
 
-    infinity_value: int or float or None, optional, default: ``None``
+    infinity_value : int or float or None, optional, default: ``None``
         Value to use to denote an absence of edge. It is only useful when `fmt`
         is `'dense'`. If ``None``, it is set to the maximum value allowed by
         `dtype`.
@@ -98,7 +100,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
     in the same vertex, therefore diagonal elements of the input adjacency
-    matrix stores vertex weights.
+    matrix store vertex weights.
 
     References
     ----------
@@ -126,7 +128,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
                 _infinity_value = 0
     else:
         if fmt != 'dense':
-            warnings.warn("infinty_value has been specified with a fmt that "
+            warnings.warn("infinity_value has been specified with a fmt that "
                           "is not 'dense' and will be ignored.")
             _infinity_value = None
         else:
@@ -188,7 +190,6 @@ def save_unweighted_flag(fname, adjacency_matrix):
     """
     # Extract vertices and edges
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
-    print(edges)
 
     with open(fname, 'w') as f:
         np.savetxt(f, vertices, delimiter=' ', comments='', header='dim 0',
@@ -226,7 +227,7 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     -----
     The input graphs cannot contain self-loops, i.e. edges that start and end
     in the same vertex, therefore diagonal elements of the input adjacency
-    matrix stores vertex weights.
+    matrix store vertex weights.
 
     References
     ----------
