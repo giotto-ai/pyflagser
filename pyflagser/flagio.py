@@ -66,8 +66,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
 
 def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
-    """Load a ``.flag`` file and return the adjacency matrix of
-    directed/undirected weighted graph it contains.
+    """Load a ``.flag`` file and return the adjacency matrix of the
+    directed/undirected weighted graph it describes.
 
     Parameters
     ----------
@@ -75,7 +75,8 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
         Filename of extension ``.flag`` containing the information of a flag
         matrix.
 
-    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, default: 'csr'
+    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional,
+        default: ``'csr'``
         Matrix format of the result. By default, a CSR sparse matrix is
         returned. Keep in mind that some matrix formats do not track zero
         values.
@@ -83,7 +84,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
     dtype : data-type, optional, default: ``np.float``
         Data-type of the resulting array.
 
-    infinity_value: int or float or None, optional, default: ``None``
+    infinity_value : int or float or None, optional, default: ``None``
         Value to use to denote an absence of edge. It is only useful when `fmt`
         is `'dense'`. If ``None``, it is set to the maximum value allowed by
         `dtype`.
