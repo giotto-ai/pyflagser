@@ -15,7 +15,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
         (n_vertices, n_vertices), required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
@@ -70,8 +70,8 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     # Handle default parameters
@@ -115,7 +115,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
         (n_vertices, n_vertices), required
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights. The way zero values are handled depends on
@@ -202,8 +202,8 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     References
     ----------
     .. [1] D. Luetgehetmann, "Documentation of the C++ flagser library";
-           `GitHub: <https://github.com/luetge/flagser/blob/master/docs/\
-           documentation_flagser.pdf>`_.
+           `GitHub: luetge/flagser <https://github.com/luetge/flagser/blob/\
+           master/docs/documentation_flagser.pdf>`_.
 
     """
     # Handle default parameters
