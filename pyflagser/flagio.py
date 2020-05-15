@@ -8,8 +8,8 @@ from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 
 
 def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
-    """Load a ``.flag`` file and return the adjacency matrix of
-    directed/undirected unweighted graph it contains.
+    """Load a ``.flag`` file and return the adjacency matrix of the
+    directed/undirected unweighted graph it describes.
 
     Parameters
     ----------
@@ -17,7 +17,8 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
         Filename of extension ``.flag`` containing the information of a flag
         matrix.
 
-    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, default: 'csr'
+    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional,
+        default: ``'csr'``
         Matrix format of the result. By default, a CSR sparse matrix is
         returned. Keep in mind that some matrix formats do not track zero
         values.
@@ -59,7 +60,6 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
             for line in f.readlines()[1:]:
                 edge = line.strip().split(' ')
-                print(edge)
                 adjacency_matrix[int(float(edge[0])), int(float(edge[1]))] = 1
 
     return adjacency_matrix.asformat(fmt)
@@ -192,7 +192,6 @@ def save_unweighted_flag(fname, adjacency_matrix):
     """
     # Extract vertices and edges
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
-    print(edges)
 
     with open(fname, 'w') as f:
         np.savetxt(f, vertices, delimiter=' ', comments='', header='dim 0',
