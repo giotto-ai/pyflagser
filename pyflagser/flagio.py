@@ -1,4 +1,4 @@
-"""Implementation of input/output functions for .flag files"""
+"""Implementation of input/output functions for .flag files."""
 
 import warnings
 import numpy as np
@@ -48,19 +48,18 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
 
     """
     with open(fname, 'r') as f:
-        next(f)
-        line = f.readline().strip()
-        vertices = list(map(dtype, line.split(' ')))
-        adjacency_matrix = sp.csr_matrix((len(vertices), len(vertices)),
-                                         dtype=dtype)
+        next(f)  # Skip 'dim0' header
+        n_vertices = len(f.readline().strip().split(' '))
+        adjacency_matrix = sp.csr_matrix((n_vertices, n_vertices), dtype=dtype)
+
         # Silence sparse warnings
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
 
-            for line in f.readlines()[1:]:
+            next(f)  # Skip 'dim1' header
+            for line in f:
                 edge = line.strip().split(' ')
-                print(edge)
-                adjacency_matrix[int(float(edge[0])), int(float(edge[1]))] = 1
+                adjacency_matrix[int(edge[0]), int(edge[1])] = 1
 
     return adjacency_matrix.asformat(fmt)
 
@@ -134,16 +133,13 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
             _infinity_value = infinity_value
 
     with open(fname, 'r') as f:
-        next(f)
-        line = f.readline().strip()
-        vertices = np.array(line.split(' '), dtype=dtype)
+        next(f)  # Skip 'dim0' header
+        vertices = np.array(f.readline().strip().split(' '), dtype=dtype)
 
         if fmt == 'dense':
-            adjacency_matrix = np.asarray(
-                _infinity_value
-                * np.ones((len(vertices), len(vertices))), dtype=dtype)
-            adjacency_matrix[np.eye(adjacency_matrix.shape, dtype=np.bool)] = \
-                vertices
+            adjacency_matrix = np.full((len(vertices), len(vertices)),
+                                       _infinity_value, dtype=dtype)
+            adjacency_matrix[np.diag_indices(len(vertices))] = vertices
         else:
             adjacency_matrix = sp.csr_matrix((len(vertices), len(vertices)),
                                              dtype=dtype)
@@ -153,10 +149,10 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
             warnings.simplefilter('ignore', sp.SparseEfficiencyWarning)
             adjacency_matrix.setdiag(vertices)
 
-            for line in f.readlines()[1:]:
+            next(f)  # Skip 'dim1' header
+            for line in f:
                 edge = line.strip().split(' ')
-                adjacency_matrix[int(float(edge[0])), int(float(edge[1]))] = \
-                    float(edge[2])
+                adjacency_matrix[int(edge[0]), int(edge[1])] = float(edge[2])
 
     return adjacency_matrix.asformat(fmt)
 
@@ -239,21 +235,9 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
            documentation_flagser.pdf>`_.
 
     """
-    # Handle default parameter
-    if max_edge_weight is None:
-        # Get the maximum value depending on adjacency_matrix.dtype
-        if np.issubdtype(adjacency_matrix.dtype, np.integer):
-            _max_edge_weight = np.iinfo(adjacency_matrix.dtype).max
-        elif np.issubdtype(adjacency_matrix.dtype, np.float_):
-            _max_edge_weight = np.inf
-        else:
-            _max_edge_weight = None
-    else:
-        _max_edge_weight = max_edge_weight
-
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
-                                              _max_edge_weight)
+                                              max_edge_weight)
 
     with open(fname, 'w') as f:
         np.savetxt(f, vertices.reshape((1, -1)), delimiter=' ', comments='',
