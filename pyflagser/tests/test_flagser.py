@@ -5,7 +5,9 @@ import numpy as np
 
 from numpy.testing import assert_almost_equal
 
-from pyflagser import loadflag, flagser
+from pyflagser import load_unweighted_flag, load_weighted_flag, \
+    flagser_unweighted, flagser_weighted
+
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -55,11 +57,11 @@ filtrations_results = {
     'dimension':
     {
         'dgms': [
-            np.array([[0.,  1.],
-                      [0.,  1.],
-                      [0.,  1.],
-                      [0.,  1.],
-                      [0., float('inf')]]),
+            np.array([[0., 1.],
+                      [0., 1.],
+                      [0., 1.],
+                      [0., 1.],
+                      [0., np.inf]]),
             np.array([[1., 2.],
                       [1., 2.],
                       [1., 2.],
@@ -70,7 +72,7 @@ filtrations_results = {
     'zero':
     {
         'dgms': [
-            np.array([[0., float('inf')]])]
+            np.array([[0., np.inf]])]
     },
     'max':
     {
@@ -79,7 +81,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
@@ -90,7 +92,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
@@ -101,7 +103,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.76999998],
                       [1.755, 2.75500011],
                       [1.65499997, 2.65499997],
@@ -116,7 +118,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.04691648],
                       [1.755, 1.99411869],
                       [1.65499997, 1.97242892],
@@ -131,7 +133,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 3.92499995],
                       [1.755, 3.8900001],
                       [1.65499997, 3.84500003],
@@ -146,7 +148,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.54917502],
                       [1.755, 2.52713633],
                       [1.65499997, 2.41156578],
@@ -161,7 +163,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 1.9275918],
                       [1.755, 1.85709834],
                       [1.65499997, 1.7869581],
@@ -176,14 +178,14 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
     'vertex_degree':
     {
         'dgms': [
-            np.array([[-4, float('inf')]]),
+            np.array([[-4, np.inf]]),
             np.array([])]
     },
 }
@@ -199,9 +201,8 @@ def are_matrices_equal(m1, m2):
 
 
 def test_output(flag_file):
-    flag_matrix = loadflag(flag_file, fmt='coo')
-    res = flagser(flag_matrix)
-
+    adjacency_matrix = load_unweighted_flag(flag_file, fmt='coo')
+    res = flagser_unweighted(adjacency_matrix)
     betti_exp = betti[os.path.split(flag_file)[1]]
     betti_res = res["betti"]
     assert_almost_equal(betti_res, betti_exp)
@@ -214,9 +215,9 @@ def test_output(flag_file):
 def test_filtrations_d5(flag_file, filtration):
     """Testing all filtrations available for dataset d5.flag,
     see conftest.py"""
-    flag_matrix = loadflag(flag_file, fmt='coo')
-    res = flagser(flag_matrix, max_dimension=1, directed=False,
-                  filtration=filtration)
+    adjacency_matrix = load_weighted_flag(flag_file, fmt='coo')
+    res = flagser_weighted(adjacency_matrix, max_dimension=1,
+                           directed=False, filtration=filtration)
     for filt, tests in filtrations_results.items():
         if filtration == filt:
             tmp = np.array(res["dgms"]).tolist()
