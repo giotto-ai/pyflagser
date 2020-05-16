@@ -16,49 +16,15 @@ namespace py = pybind11;
 PYBIND11_MODULE(flagser_count_pybind, m) {
   m.def("compute_cell_count", [](std::vector<value_t>& vertices,
                                  std::vector<std::vector<value_t>>& edges,
-                                 unsigned short min_dim, short max_dim,
-                                 bool directed, std::string filtration) {
+                                 bool directed) {
     // Save std::cout status
     auto cout_buff = std::cout.rdbuf();
     named_arguments_t named_arguments;
-    std::string str_max;
-    std::string str_min;
 
     HAS_EDGE_FILTRATION has_edge_filtration =
         HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
-    unsigned short effective_max_dim = max_dim;
-    std::string default_filtration = "max";
-
-    if (max_dim < 0)
-      effective_max_dim = std::numeric_limits<unsigned short>::max();
-
-    str_max = std::to_string(effective_max_dim);
-    str_min = std::to_string(min_dim);
-
     named_arguments["out"] = "output_flagser_file";
-    named_arguments["max-dim"] = str_max.c_str();
-    named_arguments["min-dim"] = str_min.c_str();
-
-    // Is filtration supported ?
-    if (std::find(custom_filtration_computer.begin(),
-                  custom_filtration_computer.end(),
-                  filtration) == custom_filtration_computer.end()) {
-      std::cout << filtration << " not found, fallback to "
-                << default_filtration << "\n";
-      filtration = default_filtration;
-
-      std::cout << "Implemented filtrations:\n";
-      for (auto& elem : custom_filtration_computer) {
-        if (elem != custom_filtration_computer.back())
-          std::cout << elem << ", ";
-        else
-          std::cout << elem << "\n";
-      }
-    }
-
-    named_arguments["filtration"] = filtration.c_str();
-
     remove(named_arguments["out"]);
 
     auto graph = filtered_directed_graph_t(vertices, directed);

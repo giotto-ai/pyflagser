@@ -25,12 +25,6 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
         denote abstent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
-    min_dimension : int, optional, default: ``0``
-        Minimum cell dimension to count.
-
-    max_dimension : int or np.inf, optional, default: ``np.inf``
-        Maximum cell dimension to count.
-
     directed : bool, optional, default: ``True``
         If ``True``, computes homology for the directed flad complex determined
         by `adjacency_matrix`. If ``False``, computes homology for the
@@ -57,23 +51,13 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
            master/docs/documentation_flagser.pdf>`_.
 
     """
-    # Handle default parameters
-    if max_dimension == np.inf:
-        _max_dimension = -1
-    else:
-        _max_dimension = max_dimension
-
-    # All edge filtrations are equivalent in the static case
-    _filtration = 'max'
-
     # Extract vertices and edges
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
 
     # Call flagser_count binding
-    cell_count = compute_cell_count(vertices, edges, min_dimension,
-                                    _max_dimension,  directed, _filtration)
+    cell_count = compute_cell_count(vertices, edges, directed)
 
-    return cell_count[min_dimension:]
+    return cell_count
 
 
 def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
@@ -102,12 +86,6 @@ def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
         infinitely-valued, i.e., absent from the filtration. If ``None``, all
         finite edge weights are considered.
 
-    min_dimension : int, optional, default: ``0``
-        Minimum cell dimension to count.
-
-    max_dimension : int or np.inf, optional, default: ``np.inf``
-        Maximum cell dimension to count.
-
     directed : bool, optional, default: ``True``
         If ``True``, computes persistent homology for the directed filtered
         flag complex determined by `adjacency_matrix`. If False, computes
@@ -118,21 +96,10 @@ def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
         edge are assigned different weights, only the one on the upper
         triangular part of the adjacency matrix is considered.
 
-    filtration : string, optional, default: ``'max'``
-        Algorithm determining the filtration. Warning: if an edge filtration is
-        specified, it is assumed that the resulting filtration is consistent,
-        meaning that the filtration value of every simplex of dimension at
-        least two should evaluate to a value that is at least the maximal value
-        of the filtration values of its containing edges. For performance
-        reasons, this is not checked automatically.  Possible values are:
-        ['dimension', 'zero', 'max', 'max3', 'max_plus_one', 'product', 'sum',
-        'pmean', 'pmoment', 'remove_edges', 'vertex_degree']
-
     Returns
     -------
     out : list of int
-        Cell count (number of simplices) per dimension greater than or equal
-        than `min_dimension` and less than `max_dimension`.
+        Cell count (number of simplices) per dimension.
 
     Notes
     -----
@@ -147,22 +114,11 @@ def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
            master/docs/documentation_flagser.pdf>`_.
 
     """
-    # Handle default parameters
-    if max_dimension == np.inf:
-        _max_dimension = -1
-    else:
-        _max_dimension = max_dimension
-
-    if filtration not in implemented_filtrations:
-        raise ValueError("Filtration not recognized. Available filtrations "
-                         "are ", implemented_filtrations)
-
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
                                               max_edge_length)
 
     # Call flagser_count binding
-    cell_count = compute_cell_count(vertices, edges, min_dimension,
-                                  _max_dimension, directed, filtration)
+    cell_count = compute_cell_count(vertices, edges, directed)
 
-    return cell_count[min_dimension:]
+    return cell_count
