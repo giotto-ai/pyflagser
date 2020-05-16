@@ -5,8 +5,9 @@ import numpy as np
 
 from numpy.testing import assert_almost_equal
 
-from pyflagser import loadflag, flagser
-from flagser_pybind import implemented_filtrations
+from pyflagser import load_unweighted_flag, load_weighted_flag, \
+    flagser_unweighted, flagser_weighted
+
 
 betti = {
     'a.flag': [1, 2, 0],
@@ -28,18 +29,39 @@ betti = {
     'd10.flag': [1, 0, 0, 0, 0, 0, 0, 0, 0, 1334961],
 }
 
-"""
-Filtrations are only tested for d5.flag
-"""
+
+cell_count = {
+    'a.flag': [5, 7, 1],
+    'b.flag': [4, 6, 3],
+    'c.flag': [8, 12],
+    'd.flag': [5, 9, 6],
+    'e.flag': [5, 9, 7, 2],
+    'f.flag': [3, 5, 3],
+    'd2.flag': [2, 2],
+    'd3.flag': [3, 6, 6],
+    'd3-allzero.flag': [3, 6, 6],
+    'double-d3.flag': [4, 10, 12],
+    'double-d3-allzero.flag': [4, 10, 12],
+    'd4.flag': [4, 12, 24, 24],
+    'd4-allzero.flag': [4, 12, 24, 24],
+    'd5.flag': [5, 20, 60, 120, 120],
+    'd7.flag': [7, 42, 210, 840, 2520, 5040, 5040],
+    'medium-test-data.flag': [31346, 68652, 12694, 250],
+    'd10.flag': [10, 90, 720, 5040, 30240, 151200, 604800,
+                 1814400, 3628800, 3628800],
+}
+
+
+# Filtrations are only tested for d5.flag, see conftest.py
 filtrations_results = {
     'dimension':
     {
         'dgms': [
-            np.array([[0.,  1.],
-                      [0.,  1.],
-                      [0.,  1.],
-                      [0.,  1.],
-                      [0., float('inf')]]),
+            np.array([[0., 1.],
+                      [0., 1.],
+                      [0., 1.],
+                      [0., 1.],
+                      [0., np.inf]]),
             np.array([[1., 2.],
                       [1., 2.],
                       [1., 2.],
@@ -50,7 +72,7 @@ filtrations_results = {
     'zero':
     {
         'dgms': [
-            np.array([[0., float('inf')]])]
+            np.array([[0., np.inf]])]
     },
     'max':
     {
@@ -59,7 +81,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
@@ -70,7 +92,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
     },
@@ -81,7 +103,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.76999998],
                       [1.755, 2.75500011],
                       [1.65499997, 2.65499997],
@@ -96,7 +118,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.04691648],
                       [1.755, 1.99411869],
                       [1.65499997, 1.97242892],
@@ -111,7 +133,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 3.92499995],
                       [1.755, 3.8900001],
                       [1.65499997, 3.84500003],
@@ -126,7 +148,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 2.54917502],
                       [1.755, 2.52713633],
                       [1.65499997, 2.41156578],
@@ -141,7 +163,7 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.76999998, 1.9275918],
                       [1.755, 1.85709834],
                       [1.65499997, 1.7869581],
@@ -156,21 +178,20 @@ filtrations_results = {
                       [0.36000001, 1.125],
                       [0.33000001, 1.14499998],
                       [0.88999999, 1.17999995],
-                      [0.11,        float('inf')]]),
+                      [0.11,       np.inf]]),
             np.array([[1.29499996, 1.34000003],
                       [1.20000005, 1.65499997]])]
+    },
+    'vertex_degree':
+    {
+        'dgms': [
+            np.array([[-4, np.inf]]),
+            np.array([])]
     },
 }
 
 
-def test_flagser(flag_file):
-    betti_exp = betti[os.path.split(flag_file)[1]]
-    flag_matrix = loadflag(flag_file)
-    betti_res = flagser(flag_matrix)['betti']
-    assert_almost_equal(betti_res, betti_exp)
-
-
-def are_matrix_equal(m1, m2):
+def are_matrices_equal(m1, m2):
     for i in range(min(len(m1), len(m2))):
         m1f = np.array(m1[i]).flatten()
         m2f = np.array(m2[i]).flatten()
@@ -179,25 +200,28 @@ def are_matrix_equal(m1, m2):
     return True
 
 
-def test_filtrations(flag_file):
-    """
-    Testing all filtrations available for dataset d5.flag
-    vertex_degree filtrations was disable because it produces a segmentation
-    fault.
-    """
-    if os.path.split(flag_file)[1] == 'd5.flag':
-        flag_matrix = loadflag(flag_file)
-        for filtration in implemented_filtrations:
-            if filtration not in ['vertex_degree']:
-                assert filtration in filtrations_results.keys(),\
-                    "Test for {} is not implemented, current implemented tests\
-                    are {}".format(filtration, filtrations_results.keys())
-                res = flagser(flag_matrix, max_dimension=1, directed=False,
-                              filtration=filtration)
-                for filt, tests in filtrations_results.items():
-                    if filtration == filt:
-                        tmp = np.array(res['dgms']).tolist()
-                        tmp2 = np.array(tests['dgms']).tolist()
-                        assert are_matrix_equal(tmp, tmp2), \
-                            "diagrams {} \n and {} \n are not equal"\
-                            .format(tmp, tmp2)
+def test_output(flag_file):
+    adjacency_matrix = load_unweighted_flag(flag_file, fmt='coo')
+    res = flagser_unweighted(adjacency_matrix)
+    betti_exp = betti[os.path.split(flag_file)[1]]
+    betti_res = res["betti"]
+    assert_almost_equal(betti_res, betti_exp)
+
+    cell_count_exp = cell_count[os.path.split(flag_file)[1]]
+    cell_count_res = res["cell_count"]
+    assert_almost_equal(cell_count_res, cell_count_exp)
+
+
+def test_filtrations_d5(flag_file, filtration):
+    """Testing all filtrations available for dataset d5.flag,
+    see conftest.py"""
+    adjacency_matrix = load_weighted_flag(flag_file, fmt='coo')
+    res = flagser_weighted(adjacency_matrix, max_dimension=1,
+                           directed=False, filtration=filtration)
+    for filt, tests in filtrations_results.items():
+        if filtration == filt:
+            tmp = np.array(res["dgms"]).tolist()
+            tmp2 = np.array(tests["dgms"]).tolist()
+            assert are_matrices_equal(tmp, tmp2), \
+                "Diagrams {} \n and {} \n are not equal"\
+                .format(tmp, tmp2)
