@@ -17,7 +17,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
         Filename of extension ``.flag`` containing the information of a flag
         matrix.
 
-    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional,
+    fmt : {'dense', 'dia', 'csr', 'csc', 'lil', ...}, optional, \
         default: ``'csr'``
         Matrix format of the result. By default, a CSR sparse matrix is
         returned. Keep in mind that some matrix formats do not track zero
