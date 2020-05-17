@@ -1,7 +1,3 @@
-// #define WITH_HDF5
-// #define KEEP_FLAG_COMPLEX_IN_MEMORY
-// #define USE_COEFFICIENTS
-// #define MANY_VERTICES
 #include <stdio.h>
 #include <iostream>
 
@@ -14,25 +10,27 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(flagser_count_pybind, m) {
+
+  m.doc() = "Python interface for flagser_count";
+
   m.def("compute_cell_count", [](std::vector<value_t>& vertices,
                                  std::vector<std::vector<value_t>>& edges,
                                  bool directed) {
     // Save std::cout status
     auto cout_buff = std::cout.rdbuf();
+
+    // flagser-count's routine needs to be passed command line arguments
     named_arguments_t named_arguments;
 
-    HAS_EDGE_FILTRATION has_edge_filtration =
-        HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
-
-    named_arguments["out"] = "output_flagser_file";
-    remove(named_arguments["out"]);
-
+    // Building the filtered directed graph
     auto graph = filtered_directed_graph_t(vertices, directed);
 
-    // If we have at least one vertice
+    HAS_EDGE_FILTRATION has_edge_filtration =
+      HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
+
+    // If we have at least one edge
     if (edges.size() && has_edge_filtration == HAS_EDGE_FILTRATION::MAYBE) {
-      // If the edge has three components, then there are also
-      // filtration values, which we assume to come last
+      // If the edge has three components, the last is the filtration value
       has_edge_filtration = edges[0].size() == 2 ? HAS_EDGE_FILTRATION::NO
                                                  : HAS_EDGE_FILTRATION::YES;
     }
@@ -56,18 +54,15 @@ PYBIND11_MODULE(flagser_count_pybind, m) {
       }
     }
 
+    // Disable cout
     std::cout.rdbuf(nullptr);
 
-    auto ret = count_cells(graph, named_arguments);
+    // Running flagser-count's count_cells routine
+    auto output = count_cells(graph, named_arguments);
 
-    if (remove(named_arguments["out"]) != 0)
-      perror("Error deleting flagser output file");
-
-    // re enable again cout
+    // Re-enable again cout
     std::cout.rdbuf(cout_buff);
 
-    return ret;
+    return output;
   });
-
-  m.doc() = "Python bindings for flagser_count";
 }
