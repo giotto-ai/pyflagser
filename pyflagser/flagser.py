@@ -100,8 +100,9 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         _compute_homology = compute_homology_coeff
 
     # Call flagser binding
-    homology = _compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, _filtration)
+    homology = _compute_homology(vertices, edges, min_dimension,
+                                 _max_dimension, directed, coeff,
+                                 _approximation, _filtration)
 
     # Creating dictionary of return values
     out = dict()
@@ -225,7 +226,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     else:
         _approximation = approximation
 
-    if filtration not in implemented_filtrations:
+    if filtration not in AVAILABLE_FILTRATIONS:
         raise ValueError("Filtration not recognized. Available filtrations "
                          "are ", AVAILABLE_FILTRATIONS)
 
