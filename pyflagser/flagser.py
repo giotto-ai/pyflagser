@@ -3,7 +3,9 @@
 import numpy as np
 
 from ._utils import _extract_unweighted_graph, _extract_weighted_graph
-from flagser_pybind import compute_homology, implemented_filtrations
+from .modules.flagser_pybind import compute_homology, AVAILABLE_FILTRATIONS
+from .modules.flagser_coeff_pybind import compute_homology as \
+    compute_homology_coeff
 
 
 def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
@@ -91,8 +93,14 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     # Extract vertices and edges
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
 
+    # Select the homology computer based on coeff
+    if coeff == 2:
+        _compute_homology = compute_homology
+    else:
+        _compute_homology = compute_homology_coeff
+
     # Call flagser binding
-    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
+    homology = _compute_homology(vertices, edges, min_dimension, _max_dimension,
                                 directed, coeff, _approximation, _filtration)
 
     # Creating dictionary of return values
@@ -219,7 +227,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     if filtration not in implemented_filtrations:
         raise ValueError("Filtration not recognized. Available filtrations "
-                         "are ", implemented_filtrations)
+                         "are ", AVAILABLE_FILTRATIONS)
 
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
