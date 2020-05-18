@@ -231,7 +231,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     # Create dictionary of return values
     out = dict()
-    out['dgms'] = [homology[0].get_persistence_diagram()[i]
+    out['dgms'] = [np.asarray(homology[0].get_persistence_diagram()[i])
                    for i in range(len(homology[0].get_persistence_diagram()))]
     out['betti'] = homology[0].get_betti_numbers()
     out['cell_count'] = homology[0].get_cell_count()
