@@ -93,13 +93,13 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, _filtration)
+                                directed, coeff, _approximation, _filtration)[0]
 
     # Creating dictionary of return values
     out = {
-        'betti': homology[0].get_betti_numbers(),
-        'cell_count': homology[0].get_cell_count(),
-        'euler': homology[0].get_euler_characteristic()
+        'betti': homology.get_betti_numbers(),
+        'cell_count': homology.get_cell_count(),
+        'euler': homology.get_euler_characteristic()
     }
     return out
 
@@ -228,13 +228,13 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, filtration)
+                                directed, coeff, _approximation, filtration)[0]
 
     # Create dictionary of return values
     out = {
-        'dgms': [np.asarray(dgm) for dgm in get_persistence_diagram()],
-        'betti': homology[0].get_betti_numbers(),
-        'cell_count': homology[0].get_cell_count(),
-        'euler': homology[0].get_euler_characteristic()
+        'dgms': [np.asarray(dgm) for dgm in homology.get_persistence_diagram()],
+        'betti': homology.get_betti_numbers(),
+        'cell_count': homology.get_cell_count(),
+        'euler': homology.get_euler_characteristic()
     }
     return out
