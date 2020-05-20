@@ -93,7 +93,8 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
 
     # Call flagser binding
     homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, _filtration)[0]
+                                directed, coeff, _approximation,
+                                _filtration)[0]
 
     # Creating dictionary of return values
     out = {
@@ -232,7 +233,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     # Create dictionary of return values
     out = {
-        'dgms': [np.asarray(dgm) for dgm in homology.get_persistence_diagram()],
+        'dgms': [np.asarray(d) for d in homology.get_persistence_diagram()],
         'betti': homology.get_betti_numbers(),
         'cell_count': homology.get_cell_count(),
         'euler': homology.get_euler_characteristic()
