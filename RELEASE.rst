@@ -55,6 +55,7 @@ This is a major release. The whole library has been fully refactored and all fun
   - ``flagser_weighted`` focuses on the computation of persistent homology  and outputs persistence diagrams, Betti numbers, cell counts per dimension, and Euler characteristic. It now takes a ``max_edge_weight`` argument. All edge weights greater than that value will be considered as infinitely-valued, i.e., absent from the filtration.
 
 Additionally,
+
  - The documentation have been strongly improved both in docstrings and in the code.
  - The handling of default parameters has been improved and warnings are now issued.
  - Sparse matrix efficiency warnings have been turned off (``lil_matrix`` cannot be used because it ignores explicitly set 0 values).
@@ -65,6 +66,7 @@ Bug Fixes
 ---------
 
 The following bug fixes were introduced:
+
  - A bug fix from C++ ``flagser`` on ``vertex_degree`` filtration has been propagated to pyflagser.
  - A bug in the C++ ``flagser`` bindings causing persistence diagrams and cell counts to be wrong based on the values of ``min_dimension`` and ``max_dimension`` has been fixed.
  - Tests were updated accordingly and `conftest.py` has been improved.
@@ -75,6 +77,7 @@ Backwards-Incompatible Changes
 ------------------------------
 
 The library has been fully refactored, which means that most changes were backwards-incompatible. In particular:
+
 - All functions have been renamed as they now include an ``unweighted`` and a ``weighted`` version.
 - The ``flag_matrix`` argument have been renamed ``adjacency_matrix``.
 
