@@ -3,24 +3,25 @@ Release 0.3.1
 
 Major Features and Improvements
 -------------------------------
-
+- Clarity of `flagser_unweighted` and `flagser_weighted` was improved.
+- Auditwheel repair is now run in the manylinux jobs.
+- `twine check` is now run as part of the CI.
 
 Bug Fixes
 ---------
 - Fix bug causing `flagser_weighted`'s output persistence diagrams to be a list of list of tuples instead of a list of ``numpy.ndarrays`` of shape (n_points, 2).
 
-Additionally, code clarity was improved.
 
 Backwards-Incompatible Changes
 ------------------------------
-None.
+- Installation from tarballs is no longer supported.
 
 Thanks to our Contributors
 --------------------------
 
 This release contains contributions from many people:
 
-Guillaume Tauzin and Umberto Lupo.
+Umberto Lupo and Guillaume Tauzin.
 
 We are also grateful to all who filed issues or helped resolve them, asked and
 answered questions, and were part of inspiring discussions.
