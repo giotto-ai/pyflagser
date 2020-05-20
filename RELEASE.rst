@@ -1,3 +1,31 @@
+Release 0.3.1
+==============
+
+Major Features and Improvements
+-------------------------------
+
+
+Bug Fixes
+---------
+- Fix bug causing `flagser_weighted`'s output persistence diagrams to be a list of list of tuples instead of a list of ``numpy.ndarrays`` of shape (n_points, 2).
+
+Additionally, code clarity was improved.
+
+Backwards-Incompatible Changes
+------------------------------
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from many people:
+
+Guillaume Tauzin and Umberto Lupo.
+
+We are also grateful to all who filed issues or helped resolve them, asked and
+answered questions, and were part of inspiring discussions.
+
+
 Release 0.3.0
 ==============
 
@@ -10,21 +38,21 @@ This is a major release. The whole library has been fully refactored and all fun
 
   - The `unweighted` functions process unweighted graphs. In the adjacency matrices passed to them, off-diagonal, ``0`` or ``False`` values denote absent edges while non-``0`` or ``True`` values denote edges which are present. Diagonal values are ignored.
   - The `weighted` functions process weighted graphs. In the adjacency matrices passed to them, the way zero values are handled depends on the format of the matrix. If the matrix is a dense ``numpy.ndarray``, zero values denote zero-weighted edges. If the matrix is a sparse ``scipy.sparse`` matrix, explicitly stored off-diagonal zeros and all diagonal zeros denote zero-weighted edges. Off-diagonal values that have not been explicitely stored are treated by ``scipy.sparse`` as zeros but will be understood as infinitely-valued edges, i.e., edges absent from the filtration. Diagonal elements are vertex weights.
-  
+
 - `saveflag` has been split into `save_unweighted_flag` and a `save_weighted_flag`:
 
   - `save_unweighted_flag` focuses on saving adjacency matrices of unweighted graphs into a `.flag` file understandable by C++ `flagser`.
   - `save_weighted_flag` focuses on saving adjacency matrices of weighted graphs into a `.flag` file understandable by C++ `flagser`.  It now takes a `max_edge_weight` argument. All edge weights greater than that value will be considered as infinitely-valued, i.e., absent from the filtration.
-  
+
 - `loadflag` has been split into `load_unweighted_flag` and a `load_weighted_flag`.
 
   - `load_unweighted_flag` focuses on loading `.flag` files as adjacency matrices of unweighted graphs.
   - `load_weighted_flag` focuses on loading `.flag` files as adjacency matrices of weighted graphs. It now take an `infinity_value` parameter which is the value to use to denote an absence of edge. It is only useful when the output adjacency matrix is set to be a ``numpy.ndarray`` by passing `fmt` as ``'dense``. If ``None``, it is set to the maximum value allowed by the passed `dtype`.
-  
+
 - `flagser` has been split into `flagser_unweighted` and a `flagser_weighted`.
 
   - `flagser_unweighted` focuses on the computation of homology and outputs Betti numbers, cell counts per dimension, and Euler characteristic.
-  - `flagser_weighted` focuses on the computation of persistent homology  and outputs persistence diagrams, Betti numbers, cell counts per dimension, and Euler characteristic. It now takes a `max_edge_weight` argument. All edge weights greater than that value will be considered as infinitely-valued, i.e., absent from the filtration. 
+  - `flagser_weighted` focuses on the computation of persistent homology  and outputs persistence diagrams, Betti numbers, cell counts per dimension, and Euler characteristic. It now takes a `max_edge_weight` argument. All edge weights greater than that value will be considered as infinitely-valued, i.e., absent from the filtration.
 
 Additionally,
  - The documentation have been strongly improved both in docstrings and in the code.
@@ -47,7 +75,7 @@ Backwards-Incompatible Changes
 ------------------------------
 
 The library has been fully refactored, which means that most changes were backwards-incompatible. In particular:
-- All functions have been renamed as they now include an `unweighted` and a `weighted` version. 
+- All functions have been renamed as they now include an `unweighted` and a `weighted` version.
 - The `flag_matrix` argument have been renamed `adjacency_matrix`.
 
 Please check the documentation for more information.
