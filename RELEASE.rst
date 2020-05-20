@@ -111,8 +111,8 @@ Bug Fixes
 
 Hotfix addressing multiples issues where forwarding arguments to C++ ``flagser``:
 
- - ``filtration`` was not correctly forwarded and it always fallback to zero filtration.
- - ``max-dim`` and ``min-dim`` were always equal to 0.
+- ``filtration`` was not correctly forwarded and it always fallback to zero filtration.
+- ``max-dim`` and ``min-dim`` were always equal to 0.
 
 ``CMakeLists`` updated to disable AVX instructions. This addresses incompatibilities observed with specific hardware setups.
 
