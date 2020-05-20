@@ -56,22 +56,26 @@ This is a major release. The whole library has been fully refactored and all fun
 
 Additionally,
 
- - The documentation have been strongly improved both in docstrings and in the code.
- - The handling of default parameters has been improved and warnings are now issued.
- - Sparse matrix efficiency warnings have been turned off (``lil_matrix`` cannot be used because it ignores explicitly set 0 values).
- - Core functions to transform an adjacency matrix into the data structures understood by C++ ``flagser`` have been moved to the new ``_utils.py``.
- - Tests have been extended according to cover the new functionalities.
+- The documentation have been strongly improved both in docstrings and in the code.
+- The handling of default parameters has been improved and warnings are now issued.
+- Sparse matrix efficiency warnings have been turned off (``lil_matrix`` cannot be used because it ignores explicitly set 0 values).
+- Core functions to transform an adjacency matrix into the data structures understood by C++ ``flagser`` have been moved to the new ``_utils.py``.
+- Tests have been extended according to cover the new functionalities.
 
 Bug Fixes
 ---------
 
 The following bug fixes were introduced:
 
- - A bug fix from C++ ``flagser`` on ``vertex_degree`` filtration has been propagated to pyflagser.
- - A bug in the C++ ``flagser`` bindings causing persistence diagrams and cell counts to be wrong based on the values of ``min_dimension`` and ``max_dimension`` has been fixed.
- - Tests were updated accordingly and `conftest.py` has been improved.
- - Bugs in the ``pyflagser`` ``flagser`` functions causing incompatibilities with sparse matrix and non-float datatype have been fixed.
- - ``CMakeLists`` has been updated to use C++14. This addresses problem when compiling on MacOS.
+- A bug fix from C++ ``flagser`` on ``vertex_degree`` filtration has been propagated to pyflagser.
+ 
+- A bug in the C++ ``flagser`` bindings causing persistence diagrams and cell counts to be wrong based on the values of ``min_dimension`` and ``max_dimension`` has been fixed.
+ 
+- Tests were updated accordingly and `conftest.py` has been improved.
+ 
+- Bugs in the ``pyflagser`` ``flagser`` functions causing incompatibilities with sparse matrix and non-float datatype have been fixed.
+ 
+- ``CMakeLists`` has been updated to use C++14. This addresses problem when compiling on MacOS.
 
 Backwards-Incompatible Changes
 ------------------------------
