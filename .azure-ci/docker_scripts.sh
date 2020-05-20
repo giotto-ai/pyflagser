@@ -22,5 +22,10 @@ flake8 --exit-zero /io/
 pip uninstall -y pyflagser
 
 # Build wheels
-pip install wheel
-python setup.py sdist bdist_wheel
+pip install wheel==0.34.1 auditwheel==3.1.0
+python setup.py bdist_wheel
+
+# Repair wheels with auditwheel
+auditwheel repair dist/*whl -w dist/
+# remove wheels that are not manylinux2010
+rm -rf dist/*-linux*.whl

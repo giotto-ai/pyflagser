@@ -213,9 +213,15 @@ jobs:
 
   - script: |
       pip install wheel
-      python setup.py sdist bdist_wheel
+      python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
+
+  - script: |
+      set -e
+      pip install twine
+      twine check dist/*
+    displayName: 'Check distribution with twine'
 
   - script: pip install dist/*.whl
     failOnStderr: true
@@ -302,7 +308,7 @@ jobs:
   - bash: |
       sed -i $'s/\r$//' README.rst
       pip install wheel
-      python setup.py sdist bdist_wheel
+      python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
 
