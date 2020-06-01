@@ -102,7 +102,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     # Call flagser binding
     homology = _compute_homology(vertices, edges, min_dimension,
                                  _max_dimension, directed, coeff,
-                                 _approximation, _filtration)
+                                 _approximation, _filtration)[0]
 
     # Creating dictionary of return values
     out = {
