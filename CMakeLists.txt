@@ -7,14 +7,11 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
 
 set(BINDINGS_DIR "src")
 
-find_package(Threads REQUIRED)
-
 # flagser
 pybind11_add_module(flagser_pybind "${BINDINGS_DIR}/flagser_bindings.cpp")
 
 target_compile_definitions(flagser_pybind PRIVATE RETRIEVE_PERSISTENCE=1)
 target_include_directories(flagser_pybind PRIVATE .)
-target_link_libraries(flagser_pybind PRIVATE pthread)
 
 if(MSVC)
     target_compile_options(flagser_pybind PUBLIC $<$<CONFIG:RELEASE>: /Wall /O2>)
@@ -29,7 +26,6 @@ pybind11_add_module(flagser_coeff_pybind "${BINDINGS_DIR}/flagser_bindings.cpp")
 
 target_compile_definitions(flagser_coeff_pybind PRIVATE RETRIEVE_PERSISTENCE=1 USE_COEFFICIENTS=1)
 target_include_directories(flagser_coeff_pybind PRIVATE .)
-target_link_libraries(flagser_coeff_pybind PRIVATE pthread)
 
 if(MSVC)
     target_compile_options(flagser_coeff_pybind PUBLIC $<$<CONFIG:RELEASE>: /Wall /O2>)
@@ -44,7 +40,6 @@ endif()
 pybind11_add_module(flagser_count_pybind "${BINDINGS_DIR}/flagser_count_bindings.cpp")
 
 target_include_directories(flagser_count_pybind PRIVATE .)
-target_link_libraries(flagser_count_pybind PRIVATE pthread)
 
 if(MSVC)
     target_compile_options(flagser_count_pybind PUBLIC $<$<CONFIG:RELEASE>: /Wall /O2>)
