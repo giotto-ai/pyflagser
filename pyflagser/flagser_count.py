@@ -12,7 +12,7 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
     """Compute the cell count per dimension of a directed/undirected unweighted
     flag complex.
 
-    From an adjacency_matrix construct all cells forming its associated flag
+    From an adjacency matrix construct all cells forming its associated flag
     complex and compute their number per dimension.
 
     Parameters
@@ -59,15 +59,14 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
     return cell_count
 
 
-def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
-                           min_dimension=0, max_dimension=np.inf,
-                           directed=True, filtration="max"):
+def flagser_count_weighted(adjacency_matrix, max_edge_weight=None,
+                           directed=True):
     """Compute the cell count per dimension of a directed/undirected
-    filtered flag complexes.
+    filtered flag complex.
 
-    From an adjacency_matrix construct a filtered flag complex as a sequence of
+    From an adjacency matrix construct a filtered flag complex as a sequence of
     its cells associated to their filtration values and compute the number of
-    cells per dimension.
+    cells per dimension at the end of the filtration.
 
     Parameters
     ----------
@@ -119,7 +118,7 @@ def flagser_count_weighted(adjacency_matrix, max_edge_length=None,
     """
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
-                                              max_edge_length)
+                                              max_edge_weight)
 
     # Call flagser_count binding
     cell_count = compute_cell_count(vertices, edges, directed)
