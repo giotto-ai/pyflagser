@@ -34,8 +34,8 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
     Returns
     -------
     out : list of int
-        Cell count (number of simplices) per dimension greater than or equal
-        than `min_dimension` and less than `max_dimension`.
+        Cell counts (number of simplices), per dimension greater than or equal
+        to `min_dimension` and less than `max_dimension`.
 
     Notes
     -----
@@ -101,7 +101,7 @@ def flagser_count_weighted(adjacency_matrix, max_edge_weight=None,
     Returns
     -------
     out : list of int
-        Cell count (number of simplices) at filtration value `max_edge_weight`
+        Cell counts (number of simplices) at filtration value `max_edge_weight`,
         per dimension.
 
     Notes
