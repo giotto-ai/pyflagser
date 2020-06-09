@@ -31,18 +31,11 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes persistent homology for the directed filtered
-        flag complex determined by `adjacency_matrix`. If ``False``, computes
-        persistent homology for the undirected filtered flag complex obtained
-        by considering all weighted edges as undirected, and if two directed
-        edges corresponding to the same undirected edge are assigned different
-        weights, only the one on the upper triangular part of the adjacency
-        matrix is considered. Therefore:
-
-        - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
-          (dense or sparse) upper-triangular matrices;
-        - if `max_edge_weight` is finite, it is recommended to pass either a
-          symmetric dense matrix, or a sparse upper-triangular matrix.
+        If ``True``, computes homology for the directed flad complex determined
+        by `adjacency_matrix`. If ``False``, computes homology for the
+        undirected flag complex obtained by considering all edges as
+        undirected, and it is therefore sufficient (but not necessary)
+        to pass an upper-triangular matrix.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
@@ -158,13 +151,17 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     directed : bool, optional, default: ``True``
         If ``True``, computes persistent homology for the directed filtered
-        flag complex determined by `adjacency_matrix`. If False, computes
+        flag complex determined by `adjacency_matrix`. If ``False``, computes
         persistent homology for the undirected filtered flag complex obtained
-        by considering all weighted edges as undirected, and it is therefore
-        sufficient (but not necessary) to pass an upper-triangular matrix. When
-        ``False``, if two directed edges corresponding to the same undirected
-        edge are assigned different weights, only the one on the upper
-        triangular part of the adjacency matrix is considered.
+        by considering all weighted edges as undirected, and if two directed
+        edges corresponding to the same undirected edge are assigned different
+        weights, only the one on the upper triangular part of the adjacency
+        matrix is considered. Therefore:
+
+        - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
+          (dense or sparse) upper-triangular matrices;
+        - if `max_edge_weight` is finite, it is recommended to pass either a
+          symmetric dense matrix, or a sparse upper-triangular matrix.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -242,9 +239,16 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
                                               max_edge_weight)
 
+    # Select the homology computer based on coeff
+    if coeff == 2:
+        _compute_homology = compute_homology
+    else:
+        _compute_homology = compute_homology_coeff
+
     # Call flagser binding
-    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, filtration)[0]
+    homology = _compute_homology(vertices, edges, min_dimension,
+                                 _max_dimension, directed, coeff,
+                                 _approximation, filtration)[0]
 
     # Create dictionary of return values
     out = {
