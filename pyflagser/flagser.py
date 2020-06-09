@@ -58,8 +58,8 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
           Betti numbers, per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell counts (number of simplices), per dimension greater than or equal
-          to `min_dimension` and less than `max_dimension`.
+          Cell counts (number of simplices), per dimension greater than or
+          equal to `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic.
 
