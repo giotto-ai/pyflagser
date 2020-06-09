@@ -90,13 +90,17 @@ def flagser_count_weighted(adjacency_matrix, max_edge_weight=None,
 
     directed : bool, optional, default: ``True``
         If ``True``, computes persistent homology for the directed filtered
-        flag complex determined by `adjacency_matrix`. If False, computes
+        flag complex determined by `adjacency_matrix`. If ``False``, computes
         persistent homology for the undirected filtered flag complex obtained
-        by considering all weighted edges as undirected, and it is therefore
-        sufficient (but not necessary) to pass an upper-triangular matrix. When
-        ``False``, if two directed edges corresponding to the same undirected
-        edge are assigned different weights, only the one on the upper
-        triangular part of the adjacency matrix is considered.
+        by considering all weighted edges as undirected, and if two directed
+        edges corresponding to the same undirected edge are assigned different
+        weights, only the one on the upper triangular part of the adjacency
+        matrix is considered. Therefore:
+
+        - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
+          (dense or sparse) upper-triangular matrices;
+        - if `max_edge_weight` is finite, it is recommended to pass either a
+          symmetric dense matrix, or a sparse upper-triangular matrix.
 
     Returns
     -------

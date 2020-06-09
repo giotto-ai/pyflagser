@@ -31,11 +31,18 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes homology for the directed flad complex determined
-        by `adjacency_matrix`. If ``False``, computes homology for the
-        undirected flag complex obtained by considering all edges as
-        undirected, and it is therefore sufficient (but not necessary)
-        to pass an upper-triangular matrix.
+        If ``True``, computes persistent homology for the directed filtered
+        flag complex determined by `adjacency_matrix`. If ``False``, computes
+        persistent homology for the undirected filtered flag complex obtained
+        by considering all weighted edges as undirected, and if two directed
+        edges corresponding to the same undirected edge are assigned different
+        weights, only the one on the upper triangular part of the adjacency
+        matrix is considered. Therefore:
+
+        - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
+          (dense or sparse) upper-triangular matrices;
+        - if `max_edge_weight` is finite, it is recommended to pass either a
+          symmetric dense matrix, or a sparse upper-triangular matrix.
 
     coeff : int, optional, default: ``2``
         Compute homology with coefficients in the prime field
