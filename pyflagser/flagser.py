@@ -55,11 +55,11 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         A dictionary with the following key-value pairs:
 
         - ``'betti'``: list of int
-          Betti number per dimension greater than or equal than
+          Betti numbers, per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count (number of simplices) per dimension greater than or equal
-          `min_dimension` and less than `max_dimension`.
+          Cell counts (number of simplices), per dimension greater than or equal
+          to `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic.
 
@@ -193,12 +193,12 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
           column representing the birth time and the second column
           representing the death time of each pair.
         - ``'betti'``: list of int
-          Betti number at filtration value `max_edge_weight` per dimension
-          greater than or equal than `min_dimension` and less than
+          Betti numbers at filtration value `max_edge_weight`, per dimension
+          greater than or equal to `min_dimension` and less than
           `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count (number of simplices) at filtration value
-          `max_edge_weight` per dimension greater than or equal than
+          Cell counts (number of simplices) at filtration value
+          `max_edge_weight`, per dimension greater than or equal to
           `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic at filtration value `max_edge_weight`.
