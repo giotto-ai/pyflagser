@@ -2,7 +2,7 @@ import os
 from tempfile import mkdtemp
 from urllib.request import urlopen, urlretrieve
 
-from flagser_pybind import implemented_filtrations
+from ..modules.flagser_pybind import AVAILABLE_FILTRATIONS
 
 files_with_filtration_results = ["d5.flag"]
 
@@ -54,7 +54,7 @@ def pytest_generate_tests(metafunc):
         webdl = metafunc.config.option.webdl
         FlagFiles.paths = fetch_flag_files(webdl)
     if "filtration" in metafunc.fixturenames:
-        metafunc.parametrize("filtration", implemented_filtrations)
+        metafunc.parametrize("filtration", AVAILABLE_FILTRATIONS)
         paths = [
             path for path in FlagFiles.paths
             if os.path.split(path)[1] in files_with_filtration_results

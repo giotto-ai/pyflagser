@@ -1,7 +1,3 @@
-// #define WITH_HDF5
-// #define KEEP_FLAG_COMPLEX_IN_MEMORY
-// #define USE_COEFFICIENTS
-// #define MANY_VERTICES
 #include <stdio.h>
 #include <iostream>
 
@@ -13,27 +9,38 @@
 
 namespace py = pybind11;
 
+
+#ifdef USE_COEFFICIENTS
+PYBIND11_MODULE(flagser_coeff_pybind, m) {
+#else
 PYBIND11_MODULE(flagser_pybind, m) {
-  using persistence_computer_inst =
-      persistence_computer_t<directed_flag_complex_compute_t>;
-  py::class_<persistence_computer_inst>(m, "persistence_computer_t")
+#endif
+
+  m.doc() = "Python interface for flagser";
+
+  m.attr("AVAILABLE_FILTRATIONS") = custom_filtration_computer;
+
+  using PersistenceComputer =
+    persistence_computer_t<directed_flag_complex_compute_t>;
+
+  py::class_<PersistenceComputer>(m, "PersistenceComputer", py::module_local())
       .def("get_euler_characteristic",
-           &persistence_computer_inst::get_euler_characteristic)
+           &PersistenceComputer::get_euler_characteristic)
       .def("get_betti_numbers",
-           py::overload_cast<>(&persistence_computer_inst::get_betti_numbers))
+           py::overload_cast<>(&PersistenceComputer::get_betti_numbers))
       .def("get_betti_numbers",
            py::overload_cast<size_t>(
-               &persistence_computer_inst::get_betti_numbers))
+               &PersistenceComputer::get_betti_numbers))
       .def("get_cell_count",
-           py::overload_cast<>(&persistence_computer_inst::get_cell_count))
+           py::overload_cast<>(&PersistenceComputer::get_cell_count))
       .def("get_cell_count", py::overload_cast<size_t>(
-                                 &persistence_computer_inst::get_cell_count))
+                                 &PersistenceComputer::get_cell_count))
       .def("get_persistence_diagram",
            py::overload_cast<>(
-               &persistence_computer_inst::get_persistence_diagram))
+               &PersistenceComputer::get_persistence_diagram))
       .def("get_persistence_diagram",
            py::overload_cast<size_t>(
-               &persistence_computer_inst::get_persistence_diagram));
+               &PersistenceComputer::get_persistence_diagram));
 
   m.def("compute_homology", [](std::vector<value_t>& vertices,
                                std::vector<std::vector<value_t>>& edges,
@@ -43,58 +50,40 @@ PYBIND11_MODULE(flagser_pybind, m) {
                                std::string filtration) {
     // Save std::cout status
     auto cout_buff = std::cout.rdbuf();
+
+    // flagser's routine needs to be passed command line arguments
     named_arguments_t named_arguments;
-    std::string str_max;
-    std::string str_min;
 
-    HAS_EDGE_FILTRATION has_edge_filtration =
-        HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
-
-    // Approximation should only be a positive value
-    // Otherwise it falls back to type::numeric_limits
-    size_t max_entries =
-        approximation >= 0 ? approximation : std::numeric_limits<size_t>::max();
-
-    unsigned short effective_max_dim = max_dim;
-    std::string default_filtration = "max";
-
-    if (max_dim < 0)
-      effective_max_dim = std::numeric_limits<unsigned short>::max();
-
-    str_max = std::to_string(effective_max_dim);
-    str_min = std::to_string(min_dim);
-
-    named_arguments["out"] = "output_flagser_file";
-    named_arguments["max-dim"] = str_max.c_str();
+    // Passing minimum dimension as a command line argument
+    std::string str_min = std::to_string(min_dim);
     named_arguments["min-dim"] = str_min.c_str();
 
-    // Is filtration supported ?
-    if (std::find(custom_filtration_computer.begin(),
-                  custom_filtration_computer.end(),
-                  filtration) == custom_filtration_computer.end()) {
-      std::cout << filtration << " not found, fallback to "
-                << default_filtration << "\n";
-      filtration = default_filtration;
-
-      std::cout << "Implemented filtrations:\n";
-      for (auto& elem : custom_filtration_computer) {
-        if (elem != custom_filtration_computer.back())
-          std::cout << elem << ", ";
-        else
-          std::cout << elem << "\n";
-      }
+    // Passing maximum dimension as a command line argument
+    unsigned short effective_max_dim = max_dim;
+    if (max_dim < 0) {
+      effective_max_dim = std::numeric_limits<unsigned short>::max();
     }
+    std::string str_max = std::to_string(effective_max_dim);
+    named_arguments["max-dim"] = str_max.c_str();
 
+    // Passing filtration as a command line argument
     named_arguments["filtration"] = filtration.c_str();
 
+    // Output file is not used but set to an arbitrary file
+    named_arguments["out"] = "output_flagser_file";
+
+    // Remove output file if already present
     remove(named_arguments["out"]);
 
+    // Building the filtered directed graph
     auto graph = filtered_directed_graph_t(vertices, directed);
 
-    // If we have at least one vertice
+    HAS_EDGE_FILTRATION has_edge_filtration =
+      HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
+
+    // If we have at least one edge
     if (edges.size() && has_edge_filtration == HAS_EDGE_FILTRATION::MAYBE) {
-      // If the edge has three components, then there are also
-      // filtration values, which we assume to come last
+      // If the edge has three components, the last is the filtration value
       has_edge_filtration = edges[0].size() == 2 ? HAS_EDGE_FILTRATION::NO
                                                  : HAS_EDGE_FILTRATION::YES;
     }
@@ -118,20 +107,24 @@ PYBIND11_MODULE(flagser_pybind, m) {
       }
     }
 
+    // If approximation is negative it falls back to type::numeric_limits
+    size_t max_entries =
+        approximation >= 0 ? approximation : std::numeric_limits<size_t>::max();
+
+    // Disable cout
     std::cout.rdbuf(nullptr);
 
-    auto ret = compute_homology(graph, named_arguments, max_entries, modulus);
+    // Running flagser's compute_homology routine
+    auto subgraph_persistence_computer =
+      compute_homology(graph, named_arguments, max_entries, modulus);
 
+    // Re-enable again cout
+    std::cout.rdbuf(cout_buff);
+
+    // Remove generate output file
     if (remove(named_arguments["out"]) != 0)
       perror("Error deleting flagser output file");
 
-    // re enable again cout
-    std::cout.rdbuf(cout_buff);
-
-    return ret;
+    return subgraph_persistence_computer;
   });
-
-  m.attr("implemented_filtrations") = custom_filtration_computer;
-
-  m.doc() = "Python bindings for flagser";
 }

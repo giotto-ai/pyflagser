@@ -3,7 +3,9 @@
 import numpy as np
 
 from ._utils import _extract_unweighted_graph, _extract_weighted_graph
-from flagser_pybind import compute_homology, implemented_filtrations
+from .modules.flagser_pybind import compute_homology, AVAILABLE_FILTRATIONS
+from .modules.flagser_coeff_pybind import compute_homology as \
+    compute_homology_coeff
 
 
 def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
@@ -53,11 +55,11 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         A dictionary with the following key-value pairs:
 
         - ``'betti'``: list of int
-          Betti number per dimension greater than or equal than
+          Betti numbers, per dimension greater than or equal than
           `min_dimension` and less than `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count (number of simplices) per dimension greater than or equal
-          `min_dimension` and less than `max_dimension`.
+          Cell counts (number of simplices), per dimension greater than or
+          equal to `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic.
 
@@ -91,10 +93,16 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
     # Extract vertices and edges
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
 
+    # Select the homology computer based on coeff
+    if coeff == 2:
+        _compute_homology = compute_homology
+    else:
+        _compute_homology = compute_homology_coeff
+
     # Call flagser binding
-    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation,
-                                _filtration)[0]
+    homology = _compute_homology(vertices, edges, min_dimension,
+                                 _max_dimension, directed, coeff,
+                                 _approximation, _filtration)[0]
 
     # Creating dictionary of return values
     out = {
@@ -143,13 +151,18 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     directed : bool, optional, default: ``True``
         If ``True``, computes persistent homology for the directed filtered
-        flag complex determined by `adjacency_matrix`. If False, computes
+        flag complex determined by `adjacency_matrix`. If ``False``, computes
         persistent homology for the undirected filtered flag complex obtained
-        by considering all weighted edges as undirected, and it is therefore
-        sufficient (but not necessary) to pass an upper-triangular matrix. When
-        ``False``, if two directed edges corresponding to the same undirected
-        edge are assigned different weights, only the one on the upper
-        triangular part of the adjacency matrix is considered.
+        by considering all weighted edges as undirected, and if two directed
+        edges corresponding to the same undirected edge are explicitly assigned
+        different weights and neither exceeds `max_edge_weight`, only the one
+        in the upper triangular part of the adjacency matrix is considered.
+        Therefore:
+
+        - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
+          (dense or sparse) upper-triangular matrix;
+        - if `max_edge_weight` is finite, it is recommended to pass either a
+          symmetric dense matrix, or a sparse upper-triangular matrix.
 
     filtration : string, optional, default: ``'max'``
         Algorithm determining the filtration. Warning: if an edge filtration is
@@ -185,12 +198,12 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
           column representing the birth time and the second column
           representing the death time of each pair.
         - ``'betti'``: list of int
-          Betti number at filtration value `max_edge_weight` per dimension
-          greater than or equal than `min_dimension` and less than
+          Betti numbers at filtration value `max_edge_weight`, per dimension
+          greater than or equal to `min_dimension` and less than
           `max_dimension`.
         - ``'cell_count'``: list of int
-          Cell count (number of simplices) at filtration value
-          `max_edge_weight` per dimension greater than or equal than
+          Cell counts (number of simplices) at filtration value
+          `max_edge_weight`, per dimension greater than or equal to
           `min_dimension` and less than `max_dimension`.
         - ``'euler'``: int
           Euler characteristic at filtration value `max_edge_weight`.
@@ -219,21 +232,29 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
     else:
         _approximation = approximation
 
-    if filtration not in implemented_filtrations:
+    if filtration not in AVAILABLE_FILTRATIONS:
         raise ValueError("Filtration not recognized. Available filtrations "
-                         "are ", implemented_filtrations)
+                         "are ", AVAILABLE_FILTRATIONS)
 
     # Extract vertices and edges weights
     vertices, edges = _extract_weighted_graph(adjacency_matrix,
                                               max_edge_weight)
 
+    # Select the homology computer based on coeff
+    if coeff == 2:
+        _compute_homology = compute_homology
+    else:
+        _compute_homology = compute_homology_coeff
+
     # Call flagser binding
-    homology = compute_homology(vertices, edges, min_dimension, _max_dimension,
-                                directed, coeff, _approximation, filtration)[0]
+    homology = _compute_homology(vertices, edges, min_dimension,
+                                 _max_dimension, directed, coeff,
+                                 _approximation, filtration)[0]
 
     # Create dictionary of return values
     out = {
-        'dgms': [np.asarray(d) for d in homology.get_persistence_diagram()],
+        'dgms': [np.asarray(d).reshape((-1, 2))
+                 for d in homology.get_persistence_diagram()],
         'betti': homology.get_betti_numbers(),
         'cell_count': homology.get_cell_count(),
         'euler': homology.get_euler_characteristic()
