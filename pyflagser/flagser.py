@@ -154,12 +154,13 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
         flag complex determined by `adjacency_matrix`. If ``False``, computes
         persistent homology for the undirected filtered flag complex obtained
         by considering all weighted edges as undirected, and if two directed
-        edges corresponding to the same undirected edge are assigned different
-        weights, only the one on the upper triangular part of the adjacency
-        matrix is considered. Therefore:
+        edges corresponding to the same undirected edge are explicitly assigned
+        different weights and neither exceeds `max_edge_weight`, only the one
+        in the upper triangular part of the adjacency matrix is considered.
+        Therefore:
 
         - if `max_edge_weight` is ``numpy.inf``, it is sufficient to pass a
-          (dense or sparse) upper-triangular matrices;
+          (dense or sparse) upper-triangular matrix;
         - if `max_edge_weight` is finite, it is recommended to pass either a
           symmetric dense matrix, or a sparse upper-triangular matrix.
 
