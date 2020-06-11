@@ -58,11 +58,11 @@ PYBIND11_MODULE(flagser_count_pybind, m) {
     std::cout.rdbuf(nullptr);
 
     // Running flagser-count's count_cells routine
-    auto output = count_cells(graph, named_arguments);
+    auto cell_count = count_cells(graph, named_arguments);
 
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
 
-    return output;
+    return cell_count;
   });
 }

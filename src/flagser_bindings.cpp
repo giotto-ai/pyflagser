@@ -115,7 +115,8 @@ PYBIND11_MODULE(flagser_pybind, m) {
     std::cout.rdbuf(nullptr);
 
     // Running flagser's compute_homology routine
-    auto output = compute_homology(graph, named_arguments, max_entries, modulus);
+    auto subgraph_persistence_computer =
+      compute_homology(graph, named_arguments, max_entries, modulus);
 
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
@@ -124,6 +125,6 @@ PYBIND11_MODULE(flagser_pybind, m) {
     if (remove(named_arguments["out"]) != 0)
       perror("Error deleting flagser output file");
 
-    return output;
+    return subgraph_persistence_computer;
   });
 }
