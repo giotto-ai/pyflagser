@@ -6,12 +6,12 @@ Major Features and Improvements
 - ``flagser_count_unweighted`` and ``flagser_count_weighted`` were added to provide fast computations of simplex counts per dimension.
 - ``flagser_unweighted`` and ``flagser_weighted``'s performance was improved when ``coeff`` is 2 by using a compiled version of C++ ``flagser`` without the ``USE_COEFFICIENTS`` flag.
 - All C++ library files were moved to ``pyflagser/modules/`` upon compilation.
-- Documentation of ``flagser_unweighted`` and ``flagser_weighted`` was further improved.
+- The documentation of ``flagser_unweighted`` and ``flagser_weighted`` was further improved.
 - Python bindings were made clearer, and documented for future maintenance.
 
 Bug Fixes
 ---------
-- Fix bug causing ``flagser_unweighted`` and ``flagser_weighted``'s output persistence diagrams to be of shape ``(0,)`` instead of ``(0, 2)`` if empty.
+- A bug was fixed which caused ``flagser_unweighted`` and ``flagser_weighted``'s output persistence diagrams to be of shape ``(0,)`` instead of ``(0, 2)`` if empty.
 
 Backwards-Incompatible Changes
 ------------------------------
