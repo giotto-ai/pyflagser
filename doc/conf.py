@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('../'))
 
 project = 'pyflagser'
 copyright = '2020, L2F'
-author = 'Guillaume Tauzin, Julian Buerella Perez'
+author = 'Guillaume Tauzin, Julian Burella Pérez, Umberto Lupo'
 
 # The full version, including alpha/beta/rc tags
 release = __version__
