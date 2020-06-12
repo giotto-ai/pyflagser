@@ -27,3 +27,6 @@ Welcome to pyflagser's API reference!
 
    flagser_unweighted
    flagser_weighted
+
+   flagser_count_unweighted
+   flagser_count_weighted

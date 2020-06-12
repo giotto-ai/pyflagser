@@ -1,3 +1,33 @@
+Release 0.4.0
+==============
+
+Major Features and Improvements
+-------------------------------
+- ``flagser_count_unweighted`` and ``flagser_count_weighted`` were added to provide fast computations of simplex counts per dimension.
+- ``flagser_unweighted`` and ``flagser_weighted``'s performance was improved when ``coeff`` is 2 by using a compiled version of C++ ``flagser`` without the ``USE_COEFFICIENTS`` flag.
+- All C++ library files were moved to ``pyflagser/modules/`` upon compilation.
+- The documentation of ``flagser_unweighted`` and ``flagser_weighted`` was further improved.
+- Python bindings were made clearer, and documented for future maintenance.
+
+Bug Fixes
+---------
+- A bug was fixed which caused ``flagser_unweighted`` and ``flagser_weighted``'s output persistence diagrams to be of shape ``(0,)`` instead of ``(0, 2)`` if empty.
+
+Backwards-Incompatible Changes
+------------------------------
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from many people:
+
+Guillaume Tauzin, Umberto Lupo, and Julian Burella Pérez.
+
+We are also grateful to all who filed issues or helped resolve them, asked and
+answered questions, and were part of inspiring discussions.
+
+
 Release 0.3.1
 ==============
 
@@ -68,13 +98,13 @@ Bug Fixes
 The following bug fixes were introduced:
 
 - A bug fix from C++ ``flagser`` on ``vertex_degree`` filtration has been propagated to pyflagser.
- 
+
 - A bug in the C++ ``flagser`` bindings causing persistence diagrams and cell counts to be wrong based on the values of ``min_dimension`` and ``max_dimension`` has been fixed.
- 
+
 - Tests were updated accordingly and `conftest.py` has been improved.
- 
+
 - Bugs in the ``pyflagser`` ``flagser`` functions causing incompatibilities with sparse matrix and non-float datatype have been fixed.
- 
+
 - ``CMakeLists`` has been updated to use C++14. This addresses problem when compiling on MacOS.
 
 Backwards-Incompatible Changes
