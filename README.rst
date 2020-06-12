@@ -1,5 +1,5 @@
 .. image:: https://raw.githubusercontent.com/giotto-ai/pyflagser/master/doc/images/Giotto_logo_RGB.svg
-   :width: 850
+   :width: 590
 
 |Azure|_ |Azure-cov|_ |Azure-test|_
 
