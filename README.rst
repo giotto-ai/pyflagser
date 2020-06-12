@@ -1,4 +1,4 @@
-.. image:: https://www.giotto.ai/static/vector/logo.svg
+.. image:: https://camo.githubusercontent.com/e4c638ccacacf42e95c18018b4de1b01eb237664/68747470733a2f2f7777772e67696f74746f2e61692f7374617469632f766563746f722f6c6f676f2e737667
    :width: 850
 
 |Azure|_ |Azure-cov|_ |Azure-test|_
