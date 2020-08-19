@@ -22,18 +22,12 @@ pyflagser
 =========
 
 
-pyflagser s a python API for the flagser C++ library by Daniel Lütgehetmann which computes the homology of directed flag complexes. Please check out the original `luetge/flagser <https://github.com/luetge/flagser>`_ GitHub repository for more information.
-
-Website: https://giotto.ai
-
+``pyflagser`` is a python API for the flagser C++ library by Daniel Lütgehetmann which computes the homology of directed flag complexes. Please check out the original `luetge/flagser <https://github.com/luetge/flagser>`_ GitHub repository for more information.
 
 Project genesis
 ---------------
 
-pyflagser is the result of a collaborative effort between `L2F SA
-<https://www.l2f.ch/>`_, the `Laboratory for Topology and Neuroscience
-<https://www.epfl.ch/labs/hessbellwald-lab/>`_ at EPFL, and the `Institute of Reconfigurable & Embedded Digital Systems (REDS)
-<https://heig-vd.ch/en/research/reds>`_ of HEIG-VD.
+``pyflagser`` is the result of a collaborative effort between `L2F SA <https://www.l2f.ch/>`_, the `Laboratory for Topology and Neuroscience <https://www.epfl.ch/labs/hessbellwald-lab/>`_ at EPFL, and the `Institute of Reconfigurable & Embedded Digital Systems (REDS) <https://heig-vd.ch/en/research/reds>`_ of HEIG-VD.
 
 Installation
 ------------
@@ -41,34 +35,28 @@ Installation
 Dependencies
 ~~~~~~~~~~~~
 
-pyflagser requires:
+``pyflagser`` requires:
 
 - Python (>= 3.6)
-- numpy (>= 1.17.0)
-- scipy (>= 0.17.0)
-
-For running the examples jupyter, matplotlib and plotly are required.
+- ``NumPy`` (>= 1.17.0)
+- ``SciPy`` (>= 0.17.0)
 
 User installation
 ~~~~~~~~~~~~~~~~~
 
-If you already have a working installation of numpy and scipy,
-the easiest way to install pyflagser is using ``pip``   ::
+If you already have a working installation of numpy and scipy, the easiest way to install pyflagser is using ``pip``   ::
 
-    pip install -U pyflagser
+    python -m pip install -U pyflagser
 
 Documentation
 -------------
 
-- HTML documentation (stable release): https://docs-pyflagser.giotto.ai
+API reference (stable release): https://docs-pyflagser.giotto.ai
 
 Contributing
 ------------
 
-We welcome new contributors of all experience levels. The Giotto
-community goals are to be helpful, welcoming, and effective. To learn more about
-making a contribution to pyflagser, please see the `CONTRIBUTING.rst
-<https://github.com/giotto-ai/pyflagser/blob/master/CONTRIBUTING.rst>`_ file.
+We welcome new contributors of all experience levels. The Giotto community goals are to be helpful, welcoming, and effective. To learn more about making a contribution to ``pyflagser``, please see the `CONTRIBUTING.rst <https://github.com/giotto-ai/pyflagser/blob/master/CONTRIBUTING.rst>`_ file.
 
 Developer installation
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -95,7 +83,7 @@ From the cloned repository's root directory, run
 
 .. code-block:: bash
 
-   pip install -e .
+   python -m pip install -e .
 
 This way, you can pull the library's latest changes and make them immediately available on your machine.
 
