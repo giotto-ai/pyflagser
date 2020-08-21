@@ -225,3 +225,9 @@ def test_filtrations_d5(flag_file, filtration):
             assert are_matrices_equal(tmp, tmp2), \
                 "Diagrams {} \n and {} \n are not equal"\
                 .format(tmp, tmp2)
+
+
+def test_higher_coefficients(flag_file):
+    x = np.random.random((5, 5))
+    np.fill_diagonal(x, 0.)
+    flagser_weighted(x, coeff=3)
