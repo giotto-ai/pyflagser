@@ -220,8 +220,8 @@ def test_filtrations_d5(flag_file, filtration):
                            directed=False, filtration=filtration)
     for filt, tests in filtrations_results.items():
         if filtration == filt:
-            tmp = np.array(res["dgms"]).tolist()
-            tmp2 = np.array(tests["dgms"]).tolist()
+            tmp = res["dgms"]
+            tmp2 = tests["dgms"]
             assert are_matrices_equal(tmp, tmp2), \
                 "Diagrams {} \n and {} \n are not equal"\
                 .format(tmp, tmp2)
