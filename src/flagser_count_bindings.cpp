@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <iostream>
 
-#include <flagser/include/argparser.h>
 #include <flagser/src/flagser-count.cpp>
 
 #include <pybind11/pybind11.h>
@@ -10,7 +9,6 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(flagser_count_pybind, m) {
-
   m.doc() = "Python interface for flagser_count";
 
   m.def("compute_cell_count", [](std::vector<value_t>& vertices,
@@ -19,14 +17,14 @@ PYBIND11_MODULE(flagser_count_pybind, m) {
     // Save std::cout status
     auto cout_buff = std::cout.rdbuf();
 
-    // flagser-count's routine needs to be passed command line arguments
-    named_arguments_t named_arguments;
+    // flagser-count's parameters
+    flagser_parameters params;
 
     // Building the filtered directed graph
     auto graph = filtered_directed_graph_t(vertices, directed);
 
     HAS_EDGE_FILTRATION has_edge_filtration =
-      HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
+        HAS_EDGE_FILTRATION::TOO_EARLY_TO_DECIDE;
 
     // If we have at least one edge
     if (edges.size() && has_edge_filtration == HAS_EDGE_FILTRATION::MAYBE) {
@@ -58,7 +56,7 @@ PYBIND11_MODULE(flagser_count_pybind, m) {
     std::cout.rdbuf(nullptr);
 
     // Running flagser-count's count_cells routine
-    auto cell_count = count_cells(graph, named_arguments);
+    auto cell_count = count_cells(graph, params);
 
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
