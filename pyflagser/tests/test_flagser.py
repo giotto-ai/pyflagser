@@ -229,6 +229,7 @@ def test_filtrations_d5(flag_file, filtration):
 
 @pytest.mark.timeout(30)
 def test_higher_coefficients():
+    """Regression test for issue #45"""
     x = np.random.random((5, 5))
     np.fill_diagonal(x, 0.)
     flagser_weighted(x, coeff=3)
