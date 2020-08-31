@@ -50,6 +50,7 @@ INSTALL_REQUIRES = requirements
 EXTRAS_REQUIRE = {
     'tests': [
         'pytest',
+        'pytest-timeout',
         'pytest-cov',
         'pytest-azurepipelines',
         'pytest-benchmark',
