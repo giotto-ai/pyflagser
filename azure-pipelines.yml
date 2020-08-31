@@ -24,7 +24,7 @@ jobs:
     failOnStderr: true
     displayName: 'Upgrade pip and setuptools'
 
-  - script: pip install -e ".[tests, doc]"
+  - script: python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
@@ -58,7 +58,7 @@ jobs:
     failOnStderr: true
     displayName: 'Upgrade pip and setuptools'
 
-  - script: pip install -e ".[tests, doc]"
+  - script: python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
@@ -91,12 +91,12 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools
+      python -m python -m pip install --upgrade pip setuptools
     failOnStderr: true
     displayName: 'Upgrade pip and setuptools'
 
   - script: |
-      pip install -e ".[tests, doc]"
+      python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
@@ -148,12 +148,12 @@ jobs:
       python -m pip install --upgrade pip
     displayName: 'Upgrade pip and setuptools'
 
-  - script: pip install dist/*.whl
+  - script: python -m pip install dist/*.whl
     failOnStderr: true
     displayName: 'Install the wheels'
 
   - script: |
-      pip install pytest pytest-cov pytest-azurepipelines pytest-benchmark flake8 hypothesis
+      python -m pip install pytest pytest-cov pytest-timeout pytest-azurepipelines pytest-benchmark flake8 hypothesis
       mkdir tmp_test_cov
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
@@ -196,7 +196,7 @@ jobs:
     failOnStderr: true
     displayName: 'Upgrade pip and setuptools'
 
-  - script: pip install -e ".[tests, doc]"
+  - script: python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
@@ -212,18 +212,18 @@ jobs:
     displayName: 'Uninstall pyflagser dev'
 
   - script: |
-      pip install wheel
+      python -m pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
 
   - script: |
       set -e
-      pip install twine
+      python -m pip install twine
       twine check dist/*
     displayName: 'Check distribution with twine'
 
-  - script: pip install dist/*.whl
+  - script: python -m pip install dist/*.whl
     failOnStderr: true
     displayName: 'Install the wheels'
 
@@ -290,7 +290,7 @@ jobs:
     displayName: 'Upgrade pip and setuptools'
 
   - script: |
-      pip install -e ".[tests, doc]"
+      python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
@@ -307,12 +307,12 @@ jobs:
 
   - bash: |
       sed -i $'s/\r$//' README.rst
-      pip install wheel
+      python -m pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
 
-  - bash: pip install dist/*.whl
+  - bash: python -m pip install dist/*.whl
     failOnStderr: true
     displayName: 'Install the wheels'
 
