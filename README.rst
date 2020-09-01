@@ -38,8 +38,8 @@ Dependencies
 ``pyflagser`` requires:
 
 - Python (>= 3.6)
-- ``NumPy`` (>= 1.17.0)
-- ``SciPy`` (>= 0.17.0)
+- NumPy (>= 1.17.0)
+- SciPy (>= 0.17.0)
 
 User installation
 ~~~~~~~~~~~~~~~~~
@@ -83,15 +83,14 @@ From the cloned repository's root directory, run
 
 .. code-block:: bash
 
-   python -m pip install -e .
+   python -m pip install -e ".[tests]"
 
 This way, you can pull the library's latest changes and make them immediately available on your machine.
 
 Testing
 ~~~~~~~
 
-After installation, you can launch the test suite from outside the
-source directory::
+After installation, you can launch the test suite from outside the source directory::
 
     pytest pyflagser
 
