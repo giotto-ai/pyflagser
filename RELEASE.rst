@@ -3,7 +3,7 @@ Release 0.4.1
 
 Bug Fixes
 ---------
-A bug was fixed which caused some computations to hang when the field of coefficients used was :math:`\\mathbb{F}_p` for :math:`p > 2`.
+A bug was fixed which caused some computations to hang when the prime for the finite field of coefficients used is greater than 2.
 
 Backwards-Incompatible Changes
 ------------------------------
