@@ -28,7 +28,7 @@ MAINTAINER = 'Guillaume Tauzin, Umberto Lupo'
 MAINTAINER_EMAIL = 'maintainers@giotto.ai'
 URL = 'https://github.com/giotto-ai/pyflagser'
 LICENSE = 'GNU AGPLv3'
-DOWNLOAD_URL = 'https://github.com/giotto-ai/pyflagser/tarball/v0.4.0'
+DOWNLOAD_URL = 'https://github.com/giotto-ai/pyflagser/tarball/v0.4.1'
 VERSION = __version__ # noqa
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',
@@ -50,6 +50,7 @@ INSTALL_REQUIRES = requirements
 EXTRAS_REQUIRE = {
     'tests': [
         'pytest',
+        'pytest-timeout',
         'pytest-cov',
         'pytest-azurepipelines',
         'pytest-benchmark',

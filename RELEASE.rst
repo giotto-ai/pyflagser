@@ -1,5 +1,26 @@
+Release 0.4.1
+=============
+
+Bug Fixes
+---------
+A bug was fixed which caused some computations to hang when the prime for the finite field of coefficients used is greater than 2.
+
+Backwards-Incompatible Changes
+------------------------------
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from many people:
+
+Julian Burella Pérez and Umberto Lupo.
+
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
+
+
 Release 0.4.0
-==============
+=============
 
 Major Features and Improvements
 -------------------------------
@@ -24,12 +45,11 @@ This release contains contributions from many people:
 
 Guillaume Tauzin, Umberto Lupo, and Julian Burella Pérez.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
 
 
 Release 0.3.1
-==============
+=============
 
 Major Features and Improvements
 -------------------------------
@@ -52,8 +72,7 @@ This release contains contributions from many people:
 
 Umberto Lupo and Guillaume Tauzin.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
 
 
 Release 0.3.0
@@ -124,12 +143,11 @@ This release contains contributions from many people:
 
 Guillaume Tauzin, Umberto Lupo, and Julian Burella Pérez.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
 
 
 Release 0.2.1
-==============
+=============
 
 Major Features and Improvements
 -------------------------------
@@ -158,12 +176,11 @@ This release contains contributions from many people:
 
 Julian Burella Pérez, Umberto Lupo, and Guillaume Tauzin.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
 
 
 Release 0.2.0
-==============
+=============
 
 Major Features and Improvements
 -------------------------------
@@ -187,12 +204,11 @@ This release contains contributions from many people:
 
 Julian Burella Pérez, Umberto Lupo, and Guillaume Tauzin.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
 
 
 Release 0.1.0
-==============
+=============
 
 Initial release of ``pyflagser``.
 
@@ -220,5 +236,4 @@ This release contains contributions from many people:
 
 Guillaume Tauzin, Julian Burella Pérez and Umberto Lupo.
 
-We are also grateful to all who filed issues or helped resolve them, asked and
-answered questions, and were part of inspiring discussions.
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.

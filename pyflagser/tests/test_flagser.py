@@ -2,7 +2,7 @@
 
 import os
 import numpy as np
-
+import pytest
 from numpy.testing import assert_almost_equal
 
 from pyflagser import load_unweighted_flag, load_weighted_flag, \
@@ -220,8 +220,16 @@ def test_filtrations_d5(flag_file, filtration):
                            directed=False, filtration=filtration)
     for filt, tests in filtrations_results.items():
         if filtration == filt:
-            tmp = np.array(res["dgms"]).tolist()
-            tmp2 = np.array(tests["dgms"]).tolist()
+            tmp = res["dgms"]
+            tmp2 = tests["dgms"]
             assert are_matrices_equal(tmp, tmp2), \
                 "Diagrams {} \n and {} \n are not equal"\
                 .format(tmp, tmp2)
+
+
+@pytest.mark.timeout(30)
+def test_higher_coefficients():
+    """Regression test for issue #45"""
+    x = np.random.random((5, 5))
+    np.fill_diagonal(x, 0.)
+    flagser_weighted(x, coeff=3)
