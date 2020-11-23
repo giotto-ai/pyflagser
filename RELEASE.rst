@@ -1,12 +1,42 @@
+Release 0.4.2
+=============
+
+Major Features and Improvements
+-------------------------------
+
+This release adds wheels for Python 3.9.
+
+Bug Fixes
+---------
+
+None.
+
+Backwards-Incompatible Changes
+------------------------------
+
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from many people:
+
+Julian Burella Pérez and Umberto Lupo.
+
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
+
+
 Release 0.4.1
 =============
 
 Bug Fixes
 ---------
+
 A bug was fixed which caused some computations to hang when the prime for the finite field of coefficients used is greater than 2.
 
 Backwards-Incompatible Changes
 ------------------------------
+
 None.
 
 Thanks to our Contributors
@@ -24,6 +54,7 @@ Release 0.4.0
 
 Major Features and Improvements
 -------------------------------
+
 - ``flagser_count_unweighted`` and ``flagser_count_weighted`` were added to provide fast computations of simplex counts per dimension.
 - ``flagser_unweighted`` and ``flagser_weighted``'s performance was improved when ``coeff`` is 2 by using a compiled version of C++ ``flagser`` without the ``USE_COEFFICIENTS`` flag.
 - All C++ library files were moved to ``pyflagser/modules/`` upon compilation.
@@ -32,10 +63,12 @@ Major Features and Improvements
 
 Bug Fixes
 ---------
+
 - A bug was fixed which caused ``flagser_unweighted`` and ``flagser_weighted``'s output persistence diagrams to be of shape ``(0,)`` instead of ``(0, 2)`` if empty.
 
 Backwards-Incompatible Changes
 ------------------------------
+
 None.
 
 Thanks to our Contributors
@@ -53,16 +86,19 @@ Release 0.3.1
 
 Major Features and Improvements
 -------------------------------
+
 - Clarity of the code of ``flagser_unweighted`` and ``flagser_weighted`` was improved.
 - Auditwheel repair is now run in the manylinux jobs.
 - ``twine check`` is now run as part of the CI.
 
 Bug Fixes
 ---------
+
 - Fix bug causing ``flagser_weighted``'s output persistence diagrams to be a list of list of tuples instead of a list of ``numpy.ndarrays`` of shape (n_points, 2).
 
 Backwards-Incompatible Changes
 ------------------------------
+
 - Installation from tarballs is no longer supported.
 
 Thanks to our Contributors

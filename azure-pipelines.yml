@@ -13,6 +13,8 @@ jobs:
         python.version: '3.7'
       Python38:
         python.version: '3.8'
+      Python39:
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -47,6 +49,8 @@ jobs:
         python.version: '3.7'
       Python38:
         python.version: '3.8'
+      Python39:
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -84,6 +88,9 @@ jobs:
       Python38:
         python_ver: '38'
         python.version: '3.8'
+      Python39:
+        python_ver: '39'
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -130,6 +137,11 @@ jobs:
         plat: manylinux2010_x86_64
         python_ver: '38'
         python.version: '3.8'
+      Python39:
+        arch: x86_64
+        plat: manylinux2010_x86_64
+        python_ver: '39'
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -185,6 +197,8 @@ jobs:
         python.version: '3.7'
       Python38:
         python.version: '3.8'
+      Python39:
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -278,6 +292,9 @@ jobs:
       Python38:
         python_ver: '38'
         python.version: '3.8'
+      Python39:
+        python_ver: '39'
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
