@@ -8,7 +8,7 @@ Major Features and Improvements
 - The ``flagser`` submodule has been updated to the latest upstream version, integrating the following changes:
 
   - ``flagser`` now trows exceptions instead of exiting the computation;
-  - ``flagser`` now supports a number of threads as input parameter and, by default, it will use the maximum numbre of logic cores available.
+  - ``flagser`` now supports a number of threads as input parameter and, by default, it will use the maximum number of logic cores available.
 
 Bug Fixes
 ---------
