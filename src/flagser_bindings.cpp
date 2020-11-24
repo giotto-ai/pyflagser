@@ -74,8 +74,9 @@ PYBIND11_MODULE(flagser_pybind, m) {
     // Directed parameter
     params.directed = directed;
 
-    // Output file is not used but set to an arbitrary file
-    params.output_name = std::string("output_flagser_file");
+    // Output file is not used but set to an temporary file
+    // See: https://en.cppreference.com/w/cpp/io/c/tmpnam
+    params.output_name = std::string(std::tmpnam(nullptr));
 
     // Remove output file if already present
     remove(params.output_name.c_str());
