@@ -125,7 +125,7 @@ PYBIND11_MODULE(flagser_pybind, m) {
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
 
-    // Remove generate output file
+    // Remove generated output file
     if (remove(params.output_name.c_str()) != 0) {
       throw std::runtime_error("Error deleting flagser output file");
     }

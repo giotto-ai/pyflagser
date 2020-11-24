@@ -228,17 +228,13 @@ def test_filtrations_d5(flag_file, filtration):
                 .format(tmp, tmp2)
 
 
-def compute_weighted(adjacency_matrix):
-    return flagser_unweighted(adjacency_matrix)
-
-
 def test_concurrent(flag_file):
     nb_workers = 3
     adjacency_matrix = load_weighted_flag(flag_file, fmt='coo')
     data_list = nb_workers * [adjacency_matrix]
     pool = Pool(processes=len(data_list))
 
-    pool.map(compute_weighted, data_list)
+    pool.map(flagser_unweighted, data_list)
 
 
 @pytest.mark.timeout(30)
