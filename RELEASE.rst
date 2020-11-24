@@ -4,12 +4,16 @@ Release 0.4.2
 Major Features and Improvements
 -------------------------------
 
-This release adds wheels for Python 3.9.
+- Wheels for Python 3.9 have been added.
+- The ``flagser`` submodule has been updated to the latest upstream version, integrating the following changes:
+
+  - ``flagser`` now trows exceptions instead of exiting the computation;
+  - ``flagser`` now supports a number of threads as input parameter and, by default, it will use the maximum number of logic cores available.
 
 Bug Fixes
 ---------
 
-None.
+An error encountered when running multiple instances of ``pyflagser`` in parallel (due to clashes between temporary file names) has been fixed.
 
 Backwards-Incompatible Changes
 ------------------------------
