@@ -5,11 +5,15 @@ Major Features and Improvements
 -------------------------------
 
 This release adds wheels for Python 3.9.
+Update to latest release of `flagser`, the latest version integrates the following changes:
+
+- `flagser` now trows exception instead of exiting the computation.
+- `flagser` now support a number of thread as input parameter, by default it will use the maximum of logic cores available.
 
 Bug Fixes
 ---------
 
-None.
+Fixes issue #46 error encountered when running multiple instances of `pyflagser` in parallel.
 
 Backwards-Incompatible Changes
 ------------------------------
