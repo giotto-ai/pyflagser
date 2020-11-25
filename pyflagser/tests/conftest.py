@@ -40,10 +40,11 @@ def fetch_flag_files(webdl):
             flag_file_names = f.read().decode("utf8").splitlines()
             flag_files = []
             for fname in flag_file_names:
-                url = bucket_url + fname
-                fpath = os.path.join(temp_dir, fname)
-                urlretrieve(url, fpath)
-                flag_files.append(fpath)
+                if fname not in ['medium-test-data.flag', 'd10.flag']:
+                    url = bucket_url + fname
+                    fpath = os.path.join(temp_dir, fname)
+                    urlretrieve(url, fpath)
+                    flag_files.append(fpath)
         return flag_files
 
 
