@@ -5,6 +5,7 @@ from urllib.request import urlopen, urlretrieve
 from ..modules.flagser_pybind import AVAILABLE_FILTRATIONS
 
 files_with_filtration_results = ["d5.flag"]
+extensive_test = ['medium-test-data.flag', 'd10.flag']
 
 
 def pytest_addoption(parser):
@@ -22,6 +23,10 @@ def fetch_flag_files(webdl):
         dirname = os.path.join(os.path.dirname(__file__), "../../flagser/test")
         try:
             fnames = os.listdir(dirname)
+            print(fnames)
+            for elem in extensive_test:
+                fnames.remove(elem)
+            print(fnames)
             flag_files = [os.path.join(dirname, fname) for fname in fnames
                           if fname.endswith(".flag")]
             return flag_files
@@ -40,7 +45,7 @@ def fetch_flag_files(webdl):
             flag_file_names = f.read().decode("utf8").splitlines()
             flag_files = []
             for fname in flag_file_names:
-                if fname not in ['medium-test-data.flag', 'd10.flag']:
+                if fname not in extensive_test:
                     url = bucket_url + fname
                     fpath = os.path.join(temp_dir, fname)
                     urlretrieve(url, fpath)
