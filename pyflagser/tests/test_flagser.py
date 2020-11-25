@@ -243,6 +243,7 @@ def test_concurrent(flag_file):
     pool = Pool(processes=len(data_list))
 
     pool.map(flagser_unweighted, data_list)
+    pool.join()
 
 
 @pytest.mark.timeout(30)
