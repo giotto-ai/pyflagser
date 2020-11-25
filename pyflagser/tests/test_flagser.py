@@ -233,15 +233,7 @@ def test_concurrent(flag_file):
     adjacency_matrix = load_weighted_flag(flag_file, fmt='coo')
     data_list = nb_workers * [adjacency_matrix]
 
-    try:
-        from pytest_cov.embed import cleanup_on_sigterm
-    except ImportError:
-        pass
-    else:
-        cleanup_on_sigterm()
-
     pool = Pool(processes=len(data_list))
-
     pool.map(flagser_unweighted, data_list)
     pool.close()
     pool.join()
