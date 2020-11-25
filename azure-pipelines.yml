@@ -295,7 +295,7 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pytest --cov pyflagser --cov-report xml
+      pytest pyflagser --no-cov --no-coverage-upload
       flake8
     failOnStderr: true
     displayName: 'Test with pytest and flake8'
