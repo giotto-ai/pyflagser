@@ -234,7 +234,7 @@ def test_concurrent(flag_file):
     data_list = nb_workers * [adjacency_matrix]
 
     try:
-    from pytest_cov.embed import cleanup_on_sigterm
+        from pytest_cov.embed import cleanup_on_sigterm
     except ImportError:
         pass
     else:
