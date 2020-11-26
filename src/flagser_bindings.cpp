@@ -74,12 +74,10 @@ PYBIND11_MODULE(flagser_pybind, m) {
     // Directed parameter
     params.directed = directed;
 
-    // Output file is not used but set to an temporary file
-    // See: https://en.cppreference.com/w/cpp/io/c/tmpnam
-    params.output_name = std::string(std::tmpnam(nullptr));
-
-    // Remove output file if already present
-    remove(params.output_name.c_str());
+    // Output file is not used
+    params.output_name = std::string("to_delete.flag");
+    // Calls Trivial output, disable the generation of an output file
+    params.output_format = std::string("none");
 
     // Building the filtered directed graph
     auto graph = filtered_directed_graph_t(vertices, params.directed);
@@ -124,11 +122,6 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
-
-    // Remove generated output file
-    if (remove(params.output_name.c_str()) != 0) {
-      throw std::runtime_error("Error deleting flagser output file");
-    }
 
     return subgraph_persistence_computer;
   });
