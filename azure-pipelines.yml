@@ -153,6 +153,7 @@ jobs:
       filePath: .azure-ci/build_manylinux2010.sh
       failOnStderr: false
     env:
+      not_run_pytest: $(variables['test_wheels'])
       python_ver: $(python_ver)
     displayName: 'Run the docker, install and uninstall dev environment, test with pytest and flake8, build the wheels'
 
