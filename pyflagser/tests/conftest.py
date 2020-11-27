@@ -5,6 +5,7 @@ from urllib.request import urlopen, urlretrieve
 from ..modules.flagser_pybind import AVAILABLE_FILTRATIONS
 
 files_with_filtration_results = ["d5.flag"]
+large_files = ['medium-test-data.flag', 'd10.flag']
 
 
 def pytest_addoption(parser):
@@ -53,13 +54,13 @@ def pytest_generate_tests(metafunc):
     if FlagFiles.paths is None:
         webdl = metafunc.config.option.webdl
         FlagFiles.paths = fetch_flag_files(webdl)
+    paths = FlagFiles.paths
     if "filtration" in metafunc.fixturenames:
         metafunc.parametrize("filtration", AVAILABLE_FILTRATIONS)
-        paths = [
-            path for path in FlagFiles.paths
-            if os.path.split(path)[1] in files_with_filtration_results
-        ]
-    else:
-        paths = FlagFiles.paths
+        paths = [p for p in paths
+                 if os.path.split(p)[1] in files_with_filtration_results]
     if "flag_file" in metafunc.fixturenames:
         metafunc.parametrize("flag_file", paths)
+    elif "flag_file_small" in metafunc.fixturenames:
+        metafunc.parametrize("flag_file_small",
+                             [p for p in paths if p not in large_files])
