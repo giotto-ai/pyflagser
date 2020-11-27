@@ -48,21 +48,17 @@ CLASSIFIERS = ['Intended Audience :: Science/Research',
 KEYWORDS = 'topological data analysis, persistent ' + \
     'homology, directed flags complex, persistence diagrams'
 INSTALL_REQUIRES = requirements
-EXTRAS_REQUIRE = {
-    'tests': [
-        'pytest',
-        'pytest-timeout',
-        'pytest-cov',
-        'pytest-azurepipelines',
-        'pytest-benchmark',
-        'flake8'],
-    'doc': [
-        'sphinx',
-        'sphinx-gallery',
-        'sphinx-issues',
-        'sphinx_rtd_theme',
-        'numpydoc'],
-}
+EXTRAS_REQUIRE = {'tests': ['pytest',
+                            'pytest-timeout',
+                            'pytest-cov',
+                            'pytest-azurepipelines',
+                            'pytest-benchmark',
+                            'flake8'],
+                  'doc': ['sphinx',
+                          'sphinx-gallery',
+                          'sphinx-issues',
+                          'sphinx_rtd_theme',
+                          'numpydoc']}
 
 
 class CMakeExtension(Extension):
