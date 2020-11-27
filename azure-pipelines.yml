@@ -1,5 +1,6 @@
 # These jobs test the code and build the wheels and docs.
 
+jobs:
 - job: 'manylinux2010'
   condition: eq(variables['build_check'], 'true')
   pool:
