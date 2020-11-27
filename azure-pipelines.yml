@@ -207,9 +207,9 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools
+      python -m pip install --upgrade pip setuptools wheel
     failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: python -m pip install -e ".[tests, doc]"
     failOnStderr: true
@@ -231,7 +231,6 @@ jobs:
     displayName: 'Uninstall pyflagser dev'
 
   - script: |
-      python -m pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
@@ -308,9 +307,9 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools
+      python -m pip install --upgrade pip setuptools wheel
     failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: |
       python -m pip install -e ".[tests, doc]"
@@ -329,7 +328,6 @@ jobs:
 
   - bash: |
       sed -i $'s/\r$//' README.rst
-      python -m pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
