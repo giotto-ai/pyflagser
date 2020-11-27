@@ -7,8 +7,8 @@ Welcome to pyflagser's API reference!
 =====================================
 
 
-:mod:`pyflagser`: Flag Complexes I/O and Persistence Homology
-=============================================================
+:mod:`pyflagser`: Flag Complexes I/O and Persistent Homology
+============================================================
 
 .. automodule:: pyflagser
    :no-members:

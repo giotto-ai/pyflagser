@@ -1,114 +1,6 @@
-# These jobs are triggered automatically and they test the code and the examples.
+# These jobs test the code and build the wheels and docs.
 
 jobs:
-- job: 'test_ubuntu1604'
-  condition: eq(variables['build_check'], 'false')
-  pool:
-    vmImage: 'ubuntu-16.04'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-      Python38:
-        python.version: '3.8'
-
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-
-  - script: |
-      python -m pip install --upgrade pip setuptools
-    failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
-
-  - script: python -m pip install -e ".[tests, doc]"
-    failOnStderr: true
-    displayName: 'Install dev environment'
-
-  - script: |
-      pytest --cov pyflagser --cov-report xml
-      flake8
-    failOnStderr: true
-    displayName: 'Test with pytest and flake8'
-
-
-- job: 'test_macOS1014'
-  condition: eq(variables['build_check'], 'false')
-  pool:
-    vmImage: 'macOS-10.14'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-      Python38:
-        python.version: '3.8'
-
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-
-  - script: |
-      python -m pip install --upgrade pip setuptools
-    failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
-
-  - script: python -m pip install -e ".[tests, doc]"
-    failOnStderr: true
-    displayName: 'Install dev environment'
-
-  - script: |
-      pytest --cov pyflagser --cov-report xml
-      flake8
-    failOnStderr: true
-    displayName: 'Test with pytest and flake8'
-
-
-- job: 'test_win2016'
-  condition: eq(variables['build_check'], 'false')
-  pool:
-    vmImage: 'vs2017-win2016'
-  strategy:
-    matrix:
-      Python36:
-        python_ver: '36'
-        python.version: '3.6'
-      Python37:
-        python_ver: '37'
-        python.version: '3.7'
-      Python38:
-        python_ver: '38'
-        python.version: '3.8'
-
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-
-  - script: |
-      python -m python -m pip install --upgrade pip setuptools
-    failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
-
-  - script: |
-      python -m pip install -e ".[tests, doc]"
-    failOnStderr: true
-    displayName: 'Install dev environment'
-
-  - script: |
-      pytest --cov pyflagser --cov-report xml
-      flake8
-    failOnStderr: true
-    displayName: 'Test with pytest and flake8'
-
-
-# These jobs are triggered manually and they test the code and the examples and build the wheels and docs.
-
 - job: 'manylinux2010'
   condition: eq(variables['build_check'], 'true')
   pool:
@@ -130,6 +22,11 @@ jobs:
         plat: manylinux2010_x86_64
         python_ver: '38'
         python.version: '3.8'
+      Python39:
+        arch: x86_64
+        plat: manylinux2010_x86_64
+        python_ver: '39'
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -145,8 +42,8 @@ jobs:
     displayName: 'Run the docker, install and uninstall dev environment, test with pytest and flake8, build the wheels'
 
   - script: |
-      python -m pip install --upgrade pip
-    displayName: 'Upgrade pip and setuptools'
+      python -m pip install --upgrade pip setuptools wheel
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: python -m pip install dist/*.whl
     failOnStderr: true
@@ -158,6 +55,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - task: CopyFiles@2
@@ -185,6 +83,8 @@ jobs:
         python.version: '3.7'
       Python38:
         python.version: '3.8'
+      Python39:
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -192,19 +92,23 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools
+      python -m pip install --upgrade pip setuptools wheel
     failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: python -m pip install -e ".[tests, doc]"
     failOnStderr: true
     displayName: 'Install dev environment'
 
   - script: |
-      pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
-    displayName: 'Test with pytest and flake8'
+    displayName: 'Run flake8'
+
+  - script: |
+      pytest --cov pyflagser --cov-report xml
+    failOnStderr: true
+    displayName: 'Test dev install with pytest'
 
   - script: |
       pip uninstall -y pyflagser
@@ -212,7 +116,7 @@ jobs:
     displayName: 'Uninstall pyflagser dev'
 
   - script: |
-      python -m pip install wheel
+      pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
@@ -232,6 +136,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - script: |
@@ -278,6 +183,9 @@ jobs:
       Python38:
         python_ver: '38'
         python.version: '3.8'
+      Python39:
+        python_ver: '39'
+        python.version: '3.9'
 
   steps:
   - task: UsePythonVersion@0
@@ -285,9 +193,9 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools
+      python -m pip install --upgrade pip setuptools wheel
     failOnStderr: true
-    displayName: 'Upgrade pip and setuptools'
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: |
       python -m pip install -e ".[tests, doc]"
@@ -295,10 +203,9 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pytest --cov pyflagser --cov-report xml
-      flake8
+      pytest pyflagser --no-cov --no-coverage-upload
     failOnStderr: true
-    displayName: 'Test with pytest and flake8'
+    displayName: 'Test dev install with pytest'
 
   - script: |
       pip uninstall -y pyflagser
@@ -307,7 +214,7 @@ jobs:
 
   - bash: |
       sed -i $'s/\r$//' README.rst
-      python -m pip install wheel
+      pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
@@ -321,6 +228,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - task: CopyFiles@2
