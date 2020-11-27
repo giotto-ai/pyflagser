@@ -62,5 +62,5 @@ def pytest_generate_tests(metafunc):
     if "flag_file" in metafunc.fixturenames:
         metafunc.parametrize("flag_file", paths)
     elif "flag_file_small" in metafunc.fixturenames:
-        metafunc.parametrize("flag_file_small",
-                             [p for p in paths if p not in large_files])
+        paths = [p for p in paths if os.path.split(p)[1] not in large_files]
+        metafunc.parametrize("flag_file_small", paths)
