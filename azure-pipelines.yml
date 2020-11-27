@@ -41,8 +41,8 @@
     displayName: 'Run the docker, install and uninstall dev environment, test with pytest and flake8, build the wheels'
 
   - script: |
-      python -m pip install --upgrade pip
-    displayName: 'Upgrade pip and setuptools'
+      python -m pip install --upgrade pip setuptools wheel
+    displayName: 'Upgrade pip and setuptools, install wheel package'
 
   - script: python -m pip install dist/*.whl
     failOnStderr: true
