@@ -170,6 +170,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - task: CopyFiles@2
@@ -215,10 +216,15 @@ jobs:
     displayName: 'Install dev environment'
 
   - script: |
-      pytest --cov pyflagser --cov-report xml
       flake8
     failOnStderr: true
-    displayName: 'Test with pytest and flake8'
+    displayName: 'Run flake8'
+
+  - script: |
+      pytest --cov pyflagser --cov-report xml
+    failOnStderr: true
+    condition: eq(variables['test_wheels'], 'false')
+    displayName: 'Test dev install with pytest'
 
   - script: |
       pip uninstall -y pyflagser
@@ -246,6 +252,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - script: |
@@ -313,9 +320,9 @@ jobs:
 
   - script: |
       pytest pyflagser --no-cov --no-coverage-upload
-      flake8
     failOnStderr: true
-    displayName: 'Test with pytest and flake8'
+    condition: eq(variables['test_wheels'], 'false')
+    displayName: 'Test dev install with pytest'
 
   - script: |
       pip uninstall -y pyflagser
@@ -338,6 +345,7 @@ jobs:
       cd tmp_test_cov
       python -m pyflagser.tests --webdl --no-cov --no-coverage-upload
     failOnStderr: true
+    condition: eq(variables['test_wheels'], 'true')
     displayName: 'Test the wheels with pytest'
 
   - task: CopyFiles@2
