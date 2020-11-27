@@ -5,7 +5,6 @@ from urllib.request import urlopen, urlretrieve
 from ..modules.flagser_pybind import AVAILABLE_FILTRATIONS
 
 files_with_filtration_results = ["d5.flag"]
-extensive_test = ['medium-test-data.flag', 'd10.flag']
 
 
 def pytest_addoption(parser):
