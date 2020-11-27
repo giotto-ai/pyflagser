@@ -9,6 +9,7 @@ Major Features and Improvements
 
   - ``flagser`` now trows exceptions instead of exiting the computation;
   - ``flagser`` now supports a number of threads as input parameter and, by default, it will use the maximum number of logic cores available.
+- ``flagser`` no longer produces output files.
 
 Bug Fixes
 ---------
