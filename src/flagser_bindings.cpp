@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <iostream>
+#include <string>
+#include <stdio.h>
 
 #include <flagser/src/flagser.cpp>
 
@@ -73,11 +74,10 @@ PYBIND11_MODULE(flagser_pybind, m) {
     // Directed parameter
     params.directed = directed;
 
-    // Output file is not used but set to an arbitrary file
-    params.output_name = std::string("output_flagser_file");
-
-    // Remove output file if already present
-    remove(params.output_name.c_str());
+    // Output file is not used
+    params.output_name = std::string("to_delete.flag");
+    // Calls Trivial output, disable the generation of an output file
+    params.output_format = std::string("none");
 
     // Building the filtered directed graph
     auto graph = filtered_directed_graph_t(vertices, params.directed);
@@ -98,14 +98,16 @@ PYBIND11_MODULE(flagser_pybind, m) {
         graph.add_edge(edge[0], edge[1]);
       } else {
         if (edge[2] < std::max(vertices[edge[0]], vertices[edge[1]])) {
-          std::cerr << "The data contains an edge "
-                       "filtration that contradicts the vertex "
-                       "filtration, the edge ("
-                    << edge[0] << ", " << edge[1] << ") has filtration value "
-                    << edge[2] << ", which is lower than min("
-                    << vertices[edge[0]] << ", " << vertices[edge[1]]
-                    << "), the filtrations of its edges.";
-          exit(-1);
+          std::string err_msg =
+              "The data contains an edge "
+              "filtration that contradicts the vertex "
+              "filtration, the edge (" +
+              std::to_string(edge[0]) + ", " + std::to_string(edge[1]) +
+              ") has filtration value " + std::to_string(edge[2]) +
+              ", which is lower than min(" + std::to_string(vertices[edge[0]]) +
+              ", " + std::to_string(vertices[edge[1]]) +
+              "), the filtrations of its edges.";
+          throw std::runtime_error(err_msg);
         }
         graph.add_filtered_edge((vertex_index_t)edge[0],
                                 (vertex_index_t)edge[1], edge[2]);
@@ -120,10 +122,6 @@ PYBIND11_MODULE(flagser_pybind, m) {
 
     // Re-enable again cout
     std::cout.rdbuf(cout_buff);
-
-    // Remove generate output file
-    if (remove(params.output_name.c_str()) != 0)
-      perror("Error deleting flagser output file");
 
     return subgraph_persistence_computer;
   });

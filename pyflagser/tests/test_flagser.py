@@ -3,6 +3,7 @@
 import os
 import numpy as np
 import pytest
+from multiprocessing import Pool
 from numpy.testing import assert_almost_equal
 
 from pyflagser import load_unweighted_flag, load_weighted_flag, \
@@ -225,6 +226,19 @@ def test_filtrations_d5(flag_file, filtration):
             assert are_matrices_equal(tmp, tmp2), \
                 "Diagrams {} \n and {} \n are not equal"\
                 .format(tmp, tmp2)
+
+
+def test_concurrent(flag_file):
+    nb_workers = 3
+    adjacency_matrix = load_weighted_flag(flag_file, fmt='coo')
+    data_list = nb_workers * [adjacency_matrix]
+
+    pool = Pool(processes=len(data_list))
+    pool.map(flagser_unweighted, data_list)
+
+    # close and join are needed by pytest-cov
+    pool.close()
+    pool.join()
 
 
 @pytest.mark.timeout(30)
