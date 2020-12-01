@@ -21,7 +21,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         (n_vertices, n_vertices), required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote abstent edges while non-``0`` or ``True`` values denote edges
+        denote absent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
     min_dimension : int, optional, default: ``0``
@@ -133,7 +133,7 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
         zero values denote zero-weighted edges. If the matrix is a sparse
         ``scipy.sparse`` matrix, explicitly stored off-diagonal zeros and all
         diagonal zeros denote zero-weighted edges. Off-diagonal values that
-        have not been explicitely stored are treated by ``scipy.sparse`` as
+        have not been explicitly stored are treated by ``scipy.sparse`` as
         zeros but will be understood as infinitely-valued edges, i.e., edges
         absent from the filtration.
 
