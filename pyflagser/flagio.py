@@ -32,7 +32,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
         `fmt`
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote abstent edges while non-``0`` or ``True`` values denote edges
+        denote absent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
     Notes
@@ -168,11 +168,10 @@ def save_unweighted_flag(fname, adjacency_matrix):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote abstent edges while non-``0`` or ``True`` values denote edges
+        denote absent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
     Notes
@@ -206,8 +205,7 @@ def save_weighted_flag(fname, adjacency_matrix, max_edge_weight=None):
     fname : file, str, or pathlib.Path, required
         Filename of extension ``.flag``.
 
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights. The way zero values are handled depends on
         the format of the matrix. If the matrix is a dense ``numpy.ndarray``,
