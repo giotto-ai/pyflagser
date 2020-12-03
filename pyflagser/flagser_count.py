@@ -1,14 +1,11 @@
 """Implementation of the python API for the cell count of the flagser C++
 library."""
 
-import numpy as np
-
 from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 from .modules.flagser_count_pybind import compute_cell_count
 
 
-def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
-                             max_dimension=np.inf, directed=True):
+def flagser_count_unweighted(adjacency_matrix, directed=True):
     """Compute the cell count per dimension of a directed/undirected unweighted
     flag complex.
 
@@ -17,15 +14,14 @@ def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote abstent edges while non-``0`` or ``True`` values denote edges
+        denote absent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes homology for the directed flad complex determined
+        If ``True``, computes homology for the directed flag complex determined
         by `adjacency_matrix`. If ``False``, computes homology for the
         undirected flag complex obtained by considering all edges as
         undirected, and it is therefore sufficient (but not necessary)
@@ -70,8 +66,7 @@ def flagser_count_weighted(adjacency_matrix, max_edge_weight=None,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights. The way zero values are handled depends on
         the format of the matrix. If the matrix is a dense ``numpy.ndarray``,

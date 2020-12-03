@@ -17,11 +17,10 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Adjacency matrix of a directed/undirected unweighted graph. It is
         understood as a boolean matrix. Off-diagonal, ``0`` or ``False`` values
-        denote abstent edges while non-``0`` or ``True`` values denote edges
+        denote absent edges while non-``0`` or ``True`` values denote edges
         which are present. Diagonal values are ignored.
 
     min_dimension : int, optional, default: ``0``
@@ -31,7 +30,7 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         Maximum homology dimension to compute.
 
     directed : bool, optional, default: ``True``
-        If ``True``, computes homology for the directed flad complex determined
+        If ``True``, computes homology for the directed flag complex determined
         by `adjacency_matrix`. If ``False``, computes homology for the
         undirected flag complex obtained by considering all edges as
         undirected, and it is therefore sufficient (but not necessary)
@@ -125,15 +124,14 @@ def flagser_weighted(adjacency_matrix, max_edge_weight=None, min_dimension=0,
 
     Parameters
     ----------
-    adjacency_matrix : 2d ndarray or scipy.sparse matrix of shape \
-        (n_vertices, n_vertices), required
+    adjacency_matrix : 2d ndarray or scipy.sparse matrix, required
         Matrix representation of a directed/undirected weighted graph. Diagonal
         elements are vertex weights. The way zero values are handled depends on
         the format of the matrix. If the matrix is a dense ``numpy.ndarray``,
         zero values denote zero-weighted edges. If the matrix is a sparse
         ``scipy.sparse`` matrix, explicitly stored off-diagonal zeros and all
         diagonal zeros denote zero-weighted edges. Off-diagonal values that
-        have not been explicitely stored are treated by ``scipy.sparse`` as
+        have not been explicitly stored are treated by ``scipy.sparse`` as
         zeros but will be understood as infinitely-valued edges, i.e., edges
         absent from the filtration.
 
