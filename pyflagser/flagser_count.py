@@ -1,14 +1,11 @@
 """Implementation of the python API for the cell count of the flagser C++
 library."""
 
-import numpy as np
-
 from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 from .modules.flagser_count_pybind import compute_cell_count
 
 
-def flagser_count_unweighted(adjacency_matrix, min_dimension=0,
-                             max_dimension=np.inf, directed=True):
+def flagser_count_unweighted(adjacency_matrix, directed=True):
     """Compute the cell count per dimension of a directed/undirected unweighted
     flag complex.
 
