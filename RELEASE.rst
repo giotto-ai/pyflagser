@@ -1,3 +1,31 @@
+Release 0.4.3
+=============
+
+Major Features and Improvements
+-------------------------------
+
+All functions in ``pyflagser`` now accept rectangular adjacency matrices. However, warnings remain in the case of non-square dense input.
+
+Bug Fixes
+---------
+
+None.
+
+Backwards-Incompatible Changes
+------------------------------
+
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from:
+
+Umberto Lupo.
+
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
+
+
 Release 0.4.2
 =============
 
