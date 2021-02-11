@@ -71,7 +71,7 @@ def _extract_weighted_graph(adjacency_matrix, max_edge_weight):
         mask = row != column
 
     # Mask infinite or thresholded weights
-    if np.issubdtype(adjacency_matrix.dtype, np.float_):
+    if np.issubdtype(adjacency_matrix.dtype, np.floating):
         if (max_edge_weight is None) or np.isposinf(max_edge_weight):
             mask = np.logical_and(mask, np.isfinite(data))
         else:

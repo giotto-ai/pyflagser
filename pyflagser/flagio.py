@@ -122,7 +122,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=float, infinity_value=None):
             # Get the maximum value depending on adjacency_matrix.dtype
             if np.issubdtype(dtype, np.integer):
                 _infinity_value = np.iinfo(dtype).max
-            elif np.issubdtype(dtype, np.float_):
+            elif np.issubdtype(dtype, np.floating):
                 _infinity_value = np.inf
             else:
                 _infinity_value = 0
