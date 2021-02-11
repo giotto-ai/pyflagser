@@ -7,7 +7,7 @@ import scipy.sparse as sp
 from ._utils import _extract_unweighted_graph, _extract_weighted_graph
 
 
-def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
+def load_unweighted_flag(fname, fmt='csr', dtype=bool):
     """Load a ``.flag`` file and return the adjacency matrix of the
     directed/undirected unweighted graph it describes.
 
@@ -23,7 +23,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
         returned. Keep in mind that some matrix formats do not track zero
         values.
 
-    dtype : data-type, optional, default: ``np.bool``
+    dtype : data-type, optional, default: ``bool``
         Data-type of the resulting array.
 
     Returns
@@ -65,7 +65,7 @@ def load_unweighted_flag(fname, fmt='csr', dtype=np.bool):
     return adjacency_matrix.asformat(fmt)
 
 
-def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
+def load_weighted_flag(fname, fmt='csr', dtype=float, infinity_value=None):
     """Load a ``.flag`` file and return the adjacency matrix of the
     directed/undirected weighted graph it describes.
 
@@ -81,7 +81,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
         returned. Keep in mind that some matrix formats do not track zero
         values.
 
-    dtype : data-type, optional, default: ``np.float``
+    dtype : data-type, optional, default: ``float``
         Data-type of the resulting array.
 
     infinity_value : int or float or None, optional, default: ``None``
@@ -122,7 +122,7 @@ def load_weighted_flag(fname, fmt='csr', dtype=np.float, infinity_value=None):
             # Get the maximum value depending on adjacency_matrix.dtype
             if np.issubdtype(dtype, np.integer):
                 _infinity_value = np.iinfo(dtype).max
-            elif np.issubdtype(dtype, np.float_):
+            elif np.issubdtype(dtype, np.floating):
                 _infinity_value = np.inf
             else:
                 _infinity_value = 0

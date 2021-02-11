@@ -1,3 +1,31 @@
+Release 0.4.4
+=============
+
+Major Features and Improvements
+-------------------------------
+
+None.
+
+Bug Fixes
+---------
+
+A fatal error in ``save_unweighted_flag`` has been fixed (Florian Unger).
+
+Backwards-Incompatible Changes
+------------------------------
+
+None.
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from:
+
+Florian Unger and Umberto Lupo.
+
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
+
+
 Release 0.4.3
 =============
 
