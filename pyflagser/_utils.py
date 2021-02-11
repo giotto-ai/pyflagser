@@ -14,7 +14,7 @@ def _extract_unweighted_graph(adjacency_matrix):
 
     # Extract vertices and give them weight one
     n_vertices = max(input_shape)
-    vertices = np.ones(n_vertices, dtype=np.float)
+    vertices = np.ones(n_vertices, dtype=float)
 
     # Extract edge indices
     if isinstance(adjacency_matrix, np.ndarray):
