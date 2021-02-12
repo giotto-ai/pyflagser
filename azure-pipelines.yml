@@ -116,7 +116,6 @@ jobs:
     displayName: 'Uninstall pyflagser dev'
 
   - script: |
-      pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'
@@ -214,7 +213,6 @@ jobs:
 
   - bash: |
       sed -i $'s/\r$//' README.rst
-      pip install wheel
       python setup.py bdist_wheel
     failOnStderr: false
     displayName: 'Build the wheels'

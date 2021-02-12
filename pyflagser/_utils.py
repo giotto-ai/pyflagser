@@ -14,7 +14,7 @@ def _extract_unweighted_graph(adjacency_matrix):
 
     # Extract vertices and give them weight one
     n_vertices = max(input_shape)
-    vertices = np.ones(n_vertices, dtype=np.float)
+    vertices = np.ones(n_vertices, dtype=float)
 
     # Extract edge indices
     if isinstance(adjacency_matrix, np.ndarray):
@@ -71,7 +71,7 @@ def _extract_weighted_graph(adjacency_matrix, max_edge_weight):
         mask = row != column
 
     # Mask infinite or thresholded weights
-    if np.issubdtype(adjacency_matrix.dtype, np.float_):
+    if np.issubdtype(adjacency_matrix.dtype, np.floating):
         if (max_edge_weight is None) or np.isposinf(max_edge_weight):
             mask = np.logical_and(mask, np.isfinite(data))
         else:
