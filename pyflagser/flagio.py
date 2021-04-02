@@ -191,8 +191,8 @@ def save_unweighted_flag(fname, adjacency_matrix):
     vertices, edges = _extract_unweighted_graph(adjacency_matrix)
 
     with open(fname, 'w') as f:
-        np.savetxt(f, vertices.reshape((1, -1)), delimiter=' ', header='dim 0',
-                   fmt='%i')
+        np.savetxt(f, vertices.reshape((1, -1)), delimiter=' ', comments='', 
+                header='dim 0', fmt='%i')
         np.savetxt(f, edges, comments='', header='dim 1', fmt='%i %i %i')
 
 
