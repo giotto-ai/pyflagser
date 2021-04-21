@@ -61,6 +61,5 @@ jobs:
       - name: Upload as artifac builded documentation
         if: ${{ runner.os == 'macOS' }}
         uses: actions/upload-artifact@v1
-        name: DocumentationHTML
         with:
           path: doc/_build/html/
