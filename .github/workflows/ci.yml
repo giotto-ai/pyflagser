@@ -29,7 +29,7 @@ jobs:
           path: ${{ matrix.path }}
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
 
-      - name: Install dependencies
+      - name: Install dependencies for ${{ github.event.repository.name }}
         run: |
           # The --upgrade and --upgrade-strategy eager flags ensure that pip will always install the latest allowed version of all the dependencies.
           python -m pip install --upgrade --upgrade-strategy eager -r requirements.txt
@@ -38,7 +38,16 @@ jobs:
         run: |
           python -m pip install -e ".[doc, tests]"
 
+      - name: Install dependencies for testing and validation
+        run: |
+          python -m pip install pytest pytest-cov pytest-timeout pytest-benchmark flake8 hypothesis
+
+
+      - name: Run flake8 on Mac
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          flake8
+
       - name: Run test
         run: |
-          python -m pip install pytest 
           python -m pytest --no-cov --no-coverage-upload
