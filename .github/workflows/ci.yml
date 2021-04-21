@@ -52,14 +52,14 @@ jobs:
         run: |
           python -m pytest --no-cov --no-coverage-upload
 
-      - name: Build sphinx doc on Mac
+      - name: Build sphinx doc on Linux
         uses: ammaraskar/sphinx-action@master
-        if: ${{ runner.os == 'macOS' }}
+        if: ${{ runner.os == 'Linux' }}
         with:
           docs-folder: "doc/"
 
       - name: Upload as artifac builded documentation
-        if: ${{ runner.os == 'macOS' }}
+        if: ${{ runner.os == 'Linux' }}
         uses: actions/upload-artifact@v1
         with:
           path: doc/_build/html/
