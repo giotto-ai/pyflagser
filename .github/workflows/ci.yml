@@ -58,6 +58,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         with:
           docs-folder: "doc/"
+          pre-build-command: "python -m pip install numpydoc"
 
       - name: Upload as artifac builded documentation
         if: ${{ runner.os == 'Linux' }}
