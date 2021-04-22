@@ -64,4 +64,4 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         uses: actions/upload-artifact@v1
         with:
-          path: doc/_build/html/
+          path: doc/build/html/
