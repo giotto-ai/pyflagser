@@ -18,7 +18,7 @@ import sys
 # the documentation
 sys.path.insert(0, os.path.abspath('../'))
 
-from pyflagser import __version__
+from pyflagser import __version__ # noqa
 
 
 # -- Project information -----------------------------------------------------
