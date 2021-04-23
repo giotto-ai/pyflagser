@@ -34,3 +34,19 @@ jobs:
         name: Upload wheels
         with:
           path: ./wheelhouse/*.whl
+
+  build_wheels_apple_silicon:
+    name: Build wheels for apple silicon
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: joerick/cibuildwheel@v1.10.0
+        env:
+          CIBW_ARCHS_MACOS: arm64
+
+      - uses: actions/upload-artifact@v2
+        name: Upload ARM wheels
+        with:
+          path: ./wheelhouse/*.whl
