@@ -6,7 +6,7 @@ set -x
 # TODO: Monitor status of pip versions
 PYTHON_PATH=$(eval find "/opt/python/*${python_ver}*" -print)
 export PATH=${PYTHON_PATH}/bin:${PATH}
-pip install --upgrade pip==20.2.4 setuptools
+pip install --upgrade pip setuptools
 
 # Install CMake
 pip install cmake
