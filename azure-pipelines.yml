@@ -210,7 +210,7 @@ jobs:
       python setup.py bdist_wheel
     displayName: 'Build the wheels'
 
-  - script: |
+  - bash: |
       set -e
       python -m pip install dist/*.whl
     displayName: 'Install the wheels'
