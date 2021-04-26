@@ -50,9 +50,9 @@ def flagser_unweighted(adjacency_matrix, min_dimension=0, max_dimension=np.inf,
         used. For more details, please refer to [1]_.
 
     in_memory: bool, optional, default: ``False``
-        If ``True`` increase memory consumption by speeding up computation.
-        Enable an efficient lookup in the data structure instead of relying on
-        hashing for looking up indices of simplices.
+        If ``True``, speeds up computation at the cost of increased memory
+        consumption, by enabling an efficient lookup in the data structure
+        instead of relying on hashing for looking up simplex indices.
 
     Returns
     -------
