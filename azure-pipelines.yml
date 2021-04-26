@@ -36,17 +36,14 @@ jobs:
   - task: Bash@3
     inputs:
       filePath: .azure-ci/build_manylinux2010.sh
-      failOnStderr: false
     env:
       python_ver: $(python_ver)
     displayName: 'Run the docker, install and uninstall dev environment, test with pytest and flake8, build the wheels'
 
   - script: |
-      python -m pip install --upgrade pip setuptools wheel
-    displayName: 'Upgrade pip and setuptools, install wheel package'
-
-  - script: python -m pip install dist/*.whl
-    failOnStderr: true
+      set -e
+      python -m pip install --upgrade pip
+      python -m pip install dist/*manylinux2010*.whl
     displayName: 'Install the wheels'
 
   - script: |
@@ -92,13 +89,11 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools wheel
-    failOnStderr: true
-    displayName: 'Upgrade pip and setuptools, install wheel package'
-
-  - script: python -m pip install -e ".[tests, doc]"
-    failOnStderr: true
-    displayName: 'Install dev environment'
+      set -e
+      python -m pip install --upgrade pip setuptools
+      python -m pip install wheel
+      python -m pip install -e ".[tests, doc]"
+    displayName: 'Install dependencies and dev environment'
 
   - script: |
       flake8
@@ -111,7 +106,7 @@ jobs:
     displayName: 'Test dev install with pytest'
 
   - script: |
-      pip uninstall -y pyflagser
+      python -m pip uninstall -y pyflagser
     failOnStderr: true
     displayName: 'Uninstall pyflagser dev'
 
@@ -126,8 +121,9 @@ jobs:
       twine check dist/*
     displayName: 'Check distribution with twine'
 
-  - script: python -m pip install dist/*.whl
-    failOnStderr: true
+  - script: |
+      set -e
+      python -m pip install dist/*.whl
     displayName: 'Install the wheels'
 
   - script: |
@@ -192,14 +188,11 @@ jobs:
       versionSpec: '$(python.version)'
 
   - script: |
-      python -m pip install --upgrade pip setuptools wheel
-    failOnStderr: true
-    displayName: 'Upgrade pip and setuptools, install wheel package'
-
-  - script: |
+      set -e
+      python -m pip install --upgrade pip setuptools
+      python -m pip install wheel
       python -m pip install -e ".[tests, doc]"
-    failOnStderr: true
-    displayName: 'Install dev environment'
+    displayName: 'Install dependencies and dev environment'
 
   - script: |
       pytest pyflagser --no-cov --no-coverage-upload
@@ -217,8 +210,9 @@ jobs:
     failOnStderr: false
     displayName: 'Build the wheels'
 
-  - bash: python -m pip install dist/*.whl
-    failOnStderr: true
+  - script: |
+      set -e
+      python -m pip install dist/*.whl
     displayName: 'Install the wheels'
 
   - script: |
