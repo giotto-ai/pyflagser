@@ -72,9 +72,12 @@ jobs:
         with:
           docs-folder: "doc/"
 
-      - name: Upload as artifac builded documentation
+      - name: Upload as artifac builded documentation and coverage
         if: ${{ runner.os == 'Linux' }}
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          name: DocumentationHTML
-          path: doc/build/html/
+          name: ArtifactsCI
+          if-no-files-found: ignore
+          path: |
+            doc/build/html/
+            ./coverage.xml
