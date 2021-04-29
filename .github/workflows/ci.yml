@@ -56,7 +56,13 @@ jobs:
           python -m pip install flake8
           flake8
 
-      - name: Run test
+      - name: Run test on Mac with coverage generated
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          pytest --cov pyflagser --cov-report xml
+
+      - name: Run test on Linux and Windows with no coverage generated
+        if: ${{ runner.os != 'macOS' }}
         run: |
           python -m pytest --no-cov --no-coverage-upload
 
