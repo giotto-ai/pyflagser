@@ -248,7 +248,7 @@ def test_higher_coefficients():
     flagser_weighted(x, coeff=3)
 
 
-def test_really_huge_graphs():
+def test_huge_graphs():
     """Regression test for issue #65"""
     from scipy.sparse import coo_matrix
     x = coo_matrix(([1], ([0], [1])), shape=(2**16, 2**16))
