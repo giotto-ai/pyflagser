@@ -88,7 +88,7 @@ From the cloned repository's root directory, run
 This way, you can pull the library's latest changes and make them immediately available on your machine.
 
 Testing
-~~~~~~~
+'''''''
 
 After installation, you can launch the test suite from outside the source directory::
 
