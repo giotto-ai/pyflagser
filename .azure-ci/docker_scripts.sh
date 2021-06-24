@@ -4,7 +4,7 @@ set -x
 
 # Upgrade pip and setuptools, install wheel package
 # TODO: Monitor status of pip versions
-PYTHON_PATH=$(eval find "/opt/python/*${python_ver}*" -print)
+PYTHON_PATH=$(eval find "/opt/python/*cp${python_ver}*" -print)
 export PATH=${PYTHON_PATH}/bin:${PATH}
 pip install --upgrade pip setuptools
 
