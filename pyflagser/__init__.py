@@ -18,7 +18,8 @@ try:
                 'flagser_unweighted',
                 'flagser_weighted',
                 'flagser_count_unweighted',
-                'flagser_count_weighted'
+                'flagser_count_weighted',
+                'modules'
                 ]
 except Exception:
     pass
