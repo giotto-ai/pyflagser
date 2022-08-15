@@ -1,6 +1,6 @@
 name: Build Wheels
 
-on : push
+on : workflow_dispatch
 
 jobs:
 
@@ -26,8 +26,8 @@ jobs:
           CIBW_BEFORE_BUILD: python -m pip install cmake
           CIBW_TEST_COMMAND: python -m pytest {package}/pyflagser/tests --webdl
           CIBW_TEST_REQUIRES: pytest hypothesis
-          # Should generate universal2 wheels for CP3.8 and CP3.9
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          # Should generate universal2 wheels for CP3.8 and CP3.9
           CIBW_ARCHS_MACOS: universal2
 
       - uses: actions/upload-artifact@v2

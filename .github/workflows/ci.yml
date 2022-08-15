@@ -1,6 +1,6 @@
 name: Build package on different OSs and Python versions
 
-on : [workflow_dispatch]
+on : [push, pull_request]
 
 jobs:
 
