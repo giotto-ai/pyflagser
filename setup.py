@@ -41,10 +41,10 @@ CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Operating System :: POSIX',
                'Operating System :: Unix',
                'Operating System :: MacOS',
-               'Programming Language :: Python :: 3.6',
                'Programming Language :: Python :: 3.7',
                'Programming Language :: Python :: 3.8',
-               'Programming Language :: Python :: 3.9']
+               'Programming Language :: Python :: 3.9',
+               'Programming Language :: Python :: 3.10']
 KEYWORDS = 'topological data analysis, persistent ' + \
     'homology, directed flags complex, persistence diagrams'
 INSTALL_REQUIRES = requirements
