@@ -27,7 +27,7 @@ jobs:
           CIBW_TEST_COMMAND: python -m pytest --pyargs pyflagser.tests --webdl
           CIBW_TEST_REQUIRES: pytest hypothesis
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          # Should generate universal2 wheels for CP3.8 and CP3.9
+          # Should generate universal2 wheels for CP3.8 -- CP3.10
           CIBW_ARCHS_MACOS: x86_64 universal2
 
       - uses: actions/upload-artifact@v2
