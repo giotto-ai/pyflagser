@@ -1,7 +1,5 @@
 from ._version import __version__
 
-# Allows to have access to the version information without
-# installating package + dependencies
 from .flagio import load_unweighted_flag, load_weighted_flag, \
     save_unweighted_flag, save_weighted_flag
 from .flagser import flagser_unweighted, flagser_weighted
