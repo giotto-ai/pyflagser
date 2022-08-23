@@ -56,10 +56,11 @@ jobs:
           python -m pytest --no-cov --no-coverage-upload
 
       - name: Build sphinx doc on Linux
-        uses: ammaraskar/sphinx-action@master
         if: ${{ runner.os == 'Linux' }}
-        with:
-          docs-folder: "doc/"
+        run: |
+          cd doc
+          pip install -r requirements.txt
+          sphinx-build -b html . build
 
       - name: Upload as artifac builded documentation and coverage
         uses: actions/upload-artifact@v2
