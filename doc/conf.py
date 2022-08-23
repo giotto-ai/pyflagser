@@ -24,7 +24,7 @@ from pyflagser import __version__ # noqa
 # -- Project information -----------------------------------------------------
 
 project = 'pyflagser'
-copyright = '2020, L2F'
+copyright = '2022, L2F'
 author = 'Guillaume Tauzin, Julian Burella Pérez, Umberto Lupo'
 
 # The full version, including alpha/beta/rc tags
