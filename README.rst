@@ -37,7 +37,7 @@ Dependencies
 
 ``pyflagser`` requires:
 
-- Python (>= 3.6)
+- Python (>= 3.7)
 - NumPy (>= 1.17.0)
 - SciPy (>= 0.17.0)
 
@@ -66,7 +66,6 @@ C++ dependencies:
 
 -  C++14 compatible compiler
 -  CMake >= 3.9
--  Boost >= 1.56
 
 Source code
 '''''''''''
