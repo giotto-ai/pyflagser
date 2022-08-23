@@ -68,6 +68,6 @@ jobs:
           name: ArtifactsCI
           if-no-files-found: ignore
           path: |
-            doc/build/html/
+            doc/build
             coverage.xml
             htmlcov
