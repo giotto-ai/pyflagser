@@ -18,9 +18,7 @@ try:
                 'flagser_unweighted',
                 'flagser_weighted',
                 'flagser_count_unweighted',
-                'flagser_count_weighted',
-                'modules',
-                'tests'
+                'flagser_count_weighted'
                 ]
 except Exception:
     pass
