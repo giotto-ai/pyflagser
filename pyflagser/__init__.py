@@ -16,5 +16,4 @@ __all__ = ['load_unweighted_flag',
            'flagser_weighted',
            'flagser_count_unweighted',
            'flagser_count_weighted',
-           '__version__'
-           ]
+           '__version__']
