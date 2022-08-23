@@ -63,7 +63,7 @@ jobs:
           python -m pip install -r requirements.txt
           sphinx-build -b html . build
 
-      - name: Upload as artifac builded documentation and coverage
+      - name: Upload built documentation and coverage as artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ArtifactsCI

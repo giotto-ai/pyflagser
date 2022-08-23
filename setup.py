@@ -12,7 +12,10 @@ from pkg_resources.extern.packaging import version
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-version_file = os.path.join('pyflagser', '_version.py')
+
+PACKAGE_DIR = "pyflagser"
+
+version_file = os.path.join(PACKAGE_DIR, "_version.py")
 with open(version_file) as f:
     exec(f.read())
 
@@ -28,7 +31,8 @@ MAINTAINER = 'Guillaume Tauzin, Umberto Lupo'
 MAINTAINER_EMAIL = 'maintainers@giotto.ai'
 URL = 'https://github.com/giotto-ai/pyflagser'
 LICENSE = 'GNU AGPLv3'
-DOWNLOAD_URL = 'https://github.com/giotto-ai/pyflagser/tarball/v0.4.4'
+VERSION = __version__  # noqa
+DOWNLOAD_URL = f"https://github.com/giotto-ai/pyflagser/tarball/v{VERSION}"
 VERSION = __version__ # noqa
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',

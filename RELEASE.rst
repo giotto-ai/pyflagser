@@ -1,3 +1,33 @@
+Release 0.4.5
+=============
+
+Major Features and Improvements
+-------------------------------
+
+- Wheels for Python 3.10 are now available (`#70 <https://github.com/giotto-ai/pyflagser/pull/70>`_).
+- Wheels for Apple Silicon are now available for Python versions 3.8, 3.9 and 3.10 (`#70 <https://github.com/giotto-ai/pyflagser/pull/70>`_).
+- A ``MANY_VERTICES`` compilation flag has been added to enable computations on graphs with more than 2^16 vertices (Florian Unger, `#68 <https://github.com/giotto-ai/pyflagser/pull/68>`_).
+
+Bug Fixes
+---------
+
+- A bug in ``save_unweighted_flag`` has been fixed (Florian Unger, `#69 <https://github.com/giotto-ai/pyflagser/pull/69>`_).
+
+Backwards-Incompatible Changes
+------------------------------
+
+Python 3.6 is no longer supported, and the manylinux standard has been bumped from manylinux2010 to manylinux2014 (`#70 <https://github.com/giotto-ai/pyflagser/pull/70>`_).
+
+Thanks to our Contributors
+--------------------------
+
+This release contains contributions from:
+
+Julian Burella Pérez, Umberto Lupo, and Florian Unger.
+
+We are also grateful to all who filed issues or helped resolve them, asked and answered questions, and were part of inspiring discussions.
+
+
 Release 0.4.4
 =============
 
