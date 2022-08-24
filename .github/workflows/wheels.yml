@@ -27,7 +27,7 @@ jobs:
           CIBW_BEFORE_BUILD_LINUX: python -m pip install cmake && python -m pip install --upgrade pip setuptools
           CIBW_BEFORE_BUILD_MACOS: python -m pip install cmake && python -m pip install --upgrade pip setuptools
           CIBW_TEST_COMMAND: python -m pyflagser.tests --webdl
-          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -w {dest_dir} {wheel}"
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -vv -w {dest_dir} {wheel}"
           CIBW_TEST_REQUIRES: pytest hypothesis
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           # Should generate universal2 wheels for CP3.8 -- CP3.10
