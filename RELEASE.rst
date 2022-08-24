@@ -16,7 +16,7 @@ Bug Fixes
 Backwards-Incompatible Changes
 ------------------------------
 
-Python 3.6 is no longer supported, and the manylinux standard has been bumped from manylinux2010 to manylinux2014 (`#70 <https://github.com/giotto-ai/pyflagser/pull/70>`_).
+Python 3.6 is no longer supported, and the manylinux standard has been bumped from ``manylinux2010`` to ``manylinux2014`` (`#70 <https://github.com/giotto-ai/pyflagser/pull/70>`_).
 
 Thanks to our Contributors
 --------------------------
