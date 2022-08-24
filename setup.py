@@ -8,11 +8,14 @@ import sys
 import platform
 import subprocess
 
-from distutils.version import LooseVersion
+from pkg_resources.extern.packaging import version
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-version_file = os.path.join('pyflagser', '_version.py')
+
+PACKAGE_DIR = "pyflagser"
+
+version_file = os.path.join(PACKAGE_DIR, "_version.py")
 with open(version_file) as f:
     exec(f.read())
 
@@ -28,7 +31,8 @@ MAINTAINER = 'Guillaume Tauzin, Umberto Lupo'
 MAINTAINER_EMAIL = 'maintainers@giotto.ai'
 URL = 'https://github.com/giotto-ai/pyflagser'
 LICENSE = 'GNU AGPLv3'
-DOWNLOAD_URL = 'https://github.com/giotto-ai/pyflagser/tarball/v0.4.4'
+VERSION = __version__  # noqa
+DOWNLOAD_URL = f"https://github.com/giotto-ai/pyflagser/tarball/v{VERSION}"
 VERSION = __version__ # noqa
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',
@@ -41,10 +45,10 @@ CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Operating System :: POSIX',
                'Operating System :: Unix',
                'Operating System :: MacOS',
-               'Programming Language :: Python :: 3.6',
                'Programming Language :: Python :: 3.7',
                'Programming Language :: Python :: 3.8',
-               'Programming Language :: Python :: 3.9']
+               'Programming Language :: Python :: 3.9',
+               'Programming Language :: Python :: 3.10']
 KEYWORDS = 'topological data analysis, persistent ' + \
     'homology, directed flags complex, persistence diagrams'
 INSTALL_REQUIRES = requirements
@@ -77,9 +81,9 @@ class CMakeBuild(build_ext):
                                " , ".join(e.name for e in self.extensions))
 
         if platform.system() == "Windows":
-            cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)',
-                                                   out.decode()).group(1))
-            if cmake_version < '3.1.0':
+            cmake_version = version.parse(re.search(r'version\s*([\d.]+)',
+                                                    out.decode()).group(1))
+            if cmake_version < version.parse("3.1.0"):
                 raise RuntimeError("CMake >= 3.1.0 is required on Windows")
 
         self.install_dependencies()
@@ -117,6 +121,13 @@ class CMakeBuild(build_ext):
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             build_args += ['--', '-j2']
+
+        if sys.platform.startswith("darwin"):
+            # Cross-compile support for macOS - respect ARCHFLAGS if set
+            archs = re.findall(r"-arch (\S+)", os.environ.get("ARCHFLAGS", ""))
+            if archs:
+                cmake_args += \
+                    ["-DCMAKE_OSX_ARCHITECTURES={}".format(";".join(archs))]
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(

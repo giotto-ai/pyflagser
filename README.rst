@@ -1,16 +1,13 @@
 .. image:: https://raw.githubusercontent.com/giotto-ai/pyflagser/master/doc/images/Giotto_logo_RGB.svg
    :width: 590
 
-|Azure|_ |Azure-cov|_ |Azure-test|_
+|wheels|_ |ci|_ |Twitter-follow|_ |Slack-join|_
 
-.. |Azure| image:: https://dev.azure.com/maintainers/Giotto/_apis/build/status/giotto-ai.pyflagser?branchName=master
-.. _Azure: https://dev.azure.com/maintainers/Giotto/_build?definitionId=5&_a=summary&repositoryFilter=5&branchFilter=116&requestedForFilter=ae4334d8-48e3-4663-af95-cb6c654474ea
+.. |wheels| image:: https://github.com/giotto-ai/pyflagser/actions/workflows/wheels.yml/badge.svg
+.. _wheels:
 
-.. |Azure-cov| image:: https://img.shields.io/azure-devops/coverage/maintainers/Giotto/5/master
-.. _Azure-cov: 
-
-.. |Azure-test| image:: https://img.shields.io/azure-devops/tests/maintainers/Giotto/5/master
-.. _Azure-test:
+.. |ci| image:: https://github.com/giotto-ai/pyflagser/actions/workflows/ci.yml/badge.svg
+.. _ci:
 
 .. |Twitter-follow| image:: https://img.shields.io/twitter/follow/giotto_ai?label=Follow%20%40giotto_ai&style=social
 .. _Twitter-follow: https://twitter.com/intent/follow?screen_name=giotto_ai
@@ -18,9 +15,9 @@
 .. |Slack-join| image:: https://img.shields.io/badge/Slack-Join-yellow
 .. _Slack-join: https://slack.giotto.ai/
 
+=========
 pyflagser
 =========
-
 
 ``pyflagser`` is a python API for the flagser C++ library by Daniel Lütgehetmann which computes the homology of directed flag complexes. Please check out the original `luetge/flagser <https://github.com/luetge/flagser>`_ GitHub repository for more information.
 
@@ -37,7 +34,7 @@ Dependencies
 
 ``pyflagser`` requires:
 
-- Python (>= 3.6)
+- Python (>= 3.7)
 - NumPy (>= 1.17.0)
 - SciPy (>= 0.17.0)
 
@@ -66,7 +63,6 @@ C++ dependencies:
 
 -  C++14 compatible compiler
 -  CMake >= 3.9
--  Boost >= 1.56
 
 Source code
 '''''''''''
@@ -88,7 +84,7 @@ From the cloned repository's root directory, run
 This way, you can pull the library's latest changes and make them immediately available on your machine.
 
 Testing
-~~~~~~~
+'''''''
 
 After installation, you can launch the test suite from outside the source directory::
 
