@@ -110,3 +110,10 @@ venv.bak/
 
 # Pybind11
 pybind11
+
+# macOS
+*.DS_Store
+
+# IDEs
+.idea/*
+.vscode/*
