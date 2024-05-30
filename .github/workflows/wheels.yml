@@ -26,17 +26,21 @@ jobs:
           CIBW_BEFORE_BUILD_WINDOWS: pip install twine && pip install -e ".[tests]" && sed -i $'s/\r$//' README.rst && python -m pip install delvewheel
           CIBW_BEFORE_BUILD_LINUX: pip install twine && pip install -e ".[tests]"
           CIBW_BEFORE_BUILD_MACOS: pip install twine && pip install -e ".[tests]"
-          CIBW_TEST_COMMAND: pytest --pyargs pyflagser
+          CIBW_BEFORE_TEST: ls -a && pytest --pyargs pyflagser
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -vv -w {dest_dir} {wheel}"
-          CIBW_TEST_REQUIRES: pytest hypothesis
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           # Should generate universal2 wheels for CP3.8 -- CP3.11
           CIBW_ARCHS_MACOS: x86_64 universal2
 
-      - name: Publish
+      - name: Set-up python 3.10 for upload
+        uses: actions/setup-python@v5
+        with:
+          pytho-version: "3.10"
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      - name: Publish
         run: |
+          pip install twine
           twine check ./wheelhouse/*.whl
           twine upload --skip-existing ./wheelhouse/*.whl
