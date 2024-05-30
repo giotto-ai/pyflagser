@@ -34,7 +34,7 @@ Dependencies
 
 ``pyflagser`` requires:
 
-- Python (>= 3.7)
+- Python (>= 3.8)
 - NumPy (>= 1.17.0)
 - SciPy (>= 0.17.0)
 
