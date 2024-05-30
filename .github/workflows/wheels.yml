@@ -26,7 +26,7 @@ jobs:
           CIBW_BEFORE_BUILD_WINDOWS: pip install --upgrade pip setuptools && sed -i $'s/\r$//' README.rst && python -m pip install delvewheel
           CIBW_BEFORE_BUILD_LINUX: pip install --upgrade pip setuptools
           CIBW_BEFORE_BUILD_MACOS: brew install cmake && pip install --upgrade pip setuptools
-          CIBW_TEST_COMMAND: python -m pyflagser.tests --webdl
+          CIBW_TEST_COMMAND: python -m pytest
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -vv -w {dest_dir} {wheel}"
           CIBW_TEST_REQUIRES: pytest hypothesis
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
